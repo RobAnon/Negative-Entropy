@@ -33,8 +33,9 @@ import { ViewerScript } from '../components/ViewerScript'
   let data;
   let mintText;
 
-  let name = 'asdf';
-  let description = 'asdf';
+  //FORM PRELIMINARY JSON STRUCTURE FOR UPLOAD
+  let name = '';
+  let description = 'An NFT of Negative Entropy: Series 1: Thomas'; //TODO include minter address in here + number it is
   let attributes = {};
   let image = '';
   let dependencies = [];
@@ -707,6 +708,11 @@ var webMfile = writable();
 
 let formData;
 async function onRecordingEnd() {
+  //FORM JSON 
+  name = seed; //Name the NFT after it's seed
+  //TODO: Add number to description here
+
+
   console.log(seed)
   recording = false;
   recorder.stop();
