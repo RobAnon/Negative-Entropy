@@ -36,7 +36,7 @@ import { ViewerScript } from '../components/ViewerScript'
   //FORM PRELIMINARY JSON STRUCTURE FOR UPLOAD
   let name = '';
   let description = 'An NFT of Negative Entropy: Series 1: Thomas'; //TODO include minter address in here + number it is
-  let attributes = {};
+  let attributes = [];
   let image = '';
   let dependencies = [];
   let code = defaultCode;
@@ -225,8 +225,8 @@ export const init = async () => {
 			'"Series":"Series 1: Thomas"' + ', ' +
 			'"Tier"' +':"' + getTier(rarity.toFixed(0)) + '"}';
 
-
  
+  	attributes = [getProperty("Shiny", (props.metal ? 'True' : 'False')), getProperty("Y-Rotation", (props.yRot ? (random2 > 0 ? 'Positive' : 'Negative') : 'None')), getProperty("X-Rotation", (props.xRot ? (random3 > 0 ? 'Positive' : 'Negative') : 'None')), getProperty("Z-Rotation", (props.zRot ? (random4 > 0 ? 'Positive' : 'Negative') : 'None')), getProperty("Number of Particles", count.toFixed(0), "number"),getProperty("Size of Particles", size.toFixed(3), "number"), getProperty("Speed Multiplier", random.toFixed(3), "number"), getProperty("Series", "Series 1: Thomas"), getProperty("Tier", getTier(rarity.toFixed(0)))]
 
 	camera = new PerspectiveCamera( 60, (innerWidth / innerHeight), 0.1, 1000 );
 	camera.position.set( 77, 77, 77 );
@@ -339,6 +339,23 @@ function reset() {
 	renderer.renderLists.dispose();
 
 	init();
+}
+
+function getProperty(namee, val, display="string") {
+	var property;
+	if(display == "string") {
+		property = {
+			trait_type: namee,
+			value: val
+		}
+	} else {
+		property = {
+			display_type: display,
+			trait_type: namee,
+			value: val
+		}
+	}
+	return property;
 }
 
 const cleanMaterial = material => {
@@ -708,9 +725,11 @@ var webMfile = writable();
 
 let formData;
 async function onRecordingEnd() {
+  
   //FORM JSON 
   name = seed; //Name the NFT after it's seed
   //TODO: Add number to description here
+  //FORM ATTRIBUTES
 
 
   console.log(seed)
