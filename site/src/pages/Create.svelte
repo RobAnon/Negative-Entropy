@@ -226,7 +226,7 @@ export const init = async () => {
 			'"Tier"' +':"' + getTier(rarity.toFixed(0)) + '"}';
 
  
-  	attributes = [getProperty("Shiny", (props.metal ? 'True' : 'False')), getProperty("Y-Rotation", (props.yRot ? (random2 > 0 ? 'Positive' : 'Negative') : 'None')), getProperty("X-Rotation", (props.xRot ? (random3 > 0 ? 'Positive' : 'Negative') : 'None')), getProperty("Z-Rotation", (props.zRot ? (random4 > 0 ? 'Positive' : 'Negative') : 'None')), getProperty("Number of Particles", count.toFixed(0), "number"),getProperty("Size of Particles", size.toFixed(3), "number"), getProperty("Speed Multiplier", random.toFixed(3), "number"), getProperty("Series", "Series 1: Thomas"), getProperty("Tier", getTier(rarity.toFixed(0)))]
+  	attributes = [getProperty("Shiny", (props.metal ? 'True' : 'False')), getProperty("Y-Rotation", (props.yRot ? (random2 > 0 ? 'Positive' : 'Negative') : 'None')), getProperty("X-Rotation", (props.xRot ? (random3 > 0 ? 'Positive' : 'Negative') : 'None')), getProperty("Z-Rotation", (props.zRot ? (random4 > 0 ? 'Positive' : 'Negative') : 'None')), getProperty("Number of Particles", count.toFixed(0), "number"),getProperty("Size of Particles", size.toFixed(3), "number"), getProperty("Speed Multiplier", random.toFixed(3), "number"), getProperty("Series", "Series 1: Thomas"), getProperty("Tier", getTier(rarity.toFixed(0))), getProperty("seed", seed)]
 
 	camera = new PerspectiveCamera( 60, (innerWidth / innerHeight), 0.1, 1000 );
 	camera.position.set( 77, 77, 77 );
