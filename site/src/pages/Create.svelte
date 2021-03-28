@@ -11,62 +11,11 @@ import CCapture from '../components/ccapture.js/src/CCapture.js'
 import { get, writable } from 'svelte/store';
 import { ViewerScript } from '../components/ViewerScript'
 
-// import { RGBA_ASTC_10x10_Format } from 'three/build/module';
-// import * as CCapture from '../../../node_modules/ccap
-  
-  // import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-  // import { HemisphereLight, Box3, Object3D, Vector3, PerspectiveCamera, PointLight, SphereGeometry, MeshStandardMaterial, InstancedMesh, Matrix4, AxesHelper, WebGLRenderer } from 'three'
-  // import seedrandom from 'seedrandom'
-  // // import createCanvasContext from 'canvas-context'
-  // import createCanvasRecorder from 'canvas-recorder'
 
   
-  // const width = 100;
-  // const height = 100;
-  // const depth = 100;
-  // const { context, canvas } = createCanvasContext("3d", {
-  //   width,
-  //   height,
-  //   depth
-  // });
-  // const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
-
-  // async function record() {
-  //   // Create recorder
-  //   const canvasRecorder = createCanvasRecorder(canvas);
-  //   canvasRecorder.start();
-
-  //   // Start canvas animation
-  //   animate();
-
-  //   // Let it run for 2 seconds
-  //   await sleep(2000);
-
-  //   // Stop and dispose
-  //   canvasRecorder.stop();
-  //   canvasRecorder.dispose();
-  // }
-
-  // record();
-  // const CCapture = require('../components/ccapture.js/src/CCapture')
-  // import CCapture from '../components/ccapture.js/src/CCapture'
-// import * as CCapture from '../../../node_modules/ccapture.js/build/CCapture.all.min.js'
-// import download from '../../../node_modules/ccapture.js/src/download'
-// const CCapture = require('../../../node_modules/ccapture.js/src/CCapture)
-// import CCapture from './ccapture.js/CCapture'
-// import download from "./ccapture.js/download"
-// import WebMWriter from "./ccapture.js/webm-writer-0.2.0"
-//Stabilization likely should *always* be on
-//TODO: Enable tweening of camera viewpoint
-// import 
-  // onMount(()=>init())
-  //Stabilization likely should *always* be on
-//TODO: Enable tweening of camera viewpoint
   const app = getContext('app');
   const dispatch = createEventDispatcher();
   const myApp = writable({camera: null, renderer: null})
-  // export const innerHeight = writable(100)
-  // export const innerWidth = writable(100)
   export let innerHeight;
   export let innerWidth;
   onMount(()=>{
@@ -76,10 +25,7 @@ import { ViewerScript } from '../components/ViewerScript'
 	
 	document.getElementById('canvas').setAttribute('style', 'width: 100%; height: 100%;' )
 	onWindowResize();
-    // document.body.appendChild()
   })
-//   $: console.log(innerHeight, innerWidth, document.getElementById('start'), document)
-//   console.log(innerHeight, innerWidth, document.getElementById('start'), document)
   let contract = $app.contract;
   let account = $app.account;
 
@@ -100,12 +46,10 @@ import { ViewerScript } from '../components/ViewerScript'
   let attrValue = '';
   let dependency = '';
   let dependencyType = 'script';
-  // export let myApp = writable({});
+
   let _camera, _recorder;
   $: view && code && data && renderSandbox();
-  // $: {
-  //   init(); animate();
-  // }
+
   $: {
     let _data = {
       name,
@@ -185,9 +129,7 @@ import { ViewerScript } from '../components/ViewerScript'
     delete attributes[key];
     attributes = attributes;
   }
-  let seed = 'Buck';
-//Stabilization likely should *always* be on
-//TODO: Enable tweening of camera viewpoint
+let seed = 'Buck';
 let camera, scene, renderer, mesh, headlight, stableOld, lockOld;
 
 //Declare constants
@@ -237,7 +179,6 @@ function getTier(rarity) {
 let rand, random, b, dummy, visPos, pos, totalAve, offsets, recording, frame, speedMult, count, amount, newSeed, palette;
 let size, intensityBoost, metaly, rough, emissivity, random2, random3, random4, rotationRate, rotationRate2, rotationRate3, controls, container;
 
-setupButtons();
 
 
 export const init = async () => {
@@ -273,23 +214,24 @@ export const init = async () => {
 		zRot: (rotationRate3 > 0)
 	};
 	var rarity = 1/((props.metal ? 0.2 : 0.8) * (props.yRot ? 0.25 : 0.75) * (props.xRot ? 0.25*0.25 : (1-0.25*0.25)) * (props.zRot ? 0.25*0.25*0.25 : (1-0.25*0.25*0.25)));
-	attr = "Metallic: " + (props.metal ? "True" : "False") + "\n" +
-			"Has y-rotation: " + (props.yRot ? "True" : "False") + "\n" +
-			"Has x-rotation: " + (props.xRot ? "True" : "False") + "\n" +
-			"Has z-rotation: " + (props.zRot ? "True" : "False") + "\n" +
-			"Number of Particles: " + count + "\n" +
-			"Size of Particles: " + size + "\n" +
-			"Speed mutliplier: " + random + "\n" + 
-			"Rarity: 1 in " + rarity.toFixed(0);
+	var attr =  '{"Shiny"'+':"' + (props.metal ? 'Yes' : 'No') + '", ' +
+			'"Y-Rotation"' +':"'+ (props.yRot ? (random2 > 0 ? 'Positive' : 'Negative') : 'None') + '", ' +
+			'"X-Rotation"'+':"' + (props.xRot ? (random3 > 0 ? 'Positive' : 'Negative') : 'None') + '", ' +
+			'"Z-Rotation"'+':"' + (props.zRot ? (random4 > 0 ? 'Positive' : 'Negative') : 'None') + '", ' +
+			'"Number of Particles"' +':"'+ count.toFixed(0) + '", ' +
+			'"Size of Particles"' +':"' + size.toFixed(3) + '", ' +
+			'"Speed mutliplier"' +':"'+ random.toFixed(3) + '", ' + 
+			'"Series":"Series 1: Thomas"' + ', ' +
+			'"Tier"' +':"' + getTier(rarity.toFixed(0)) + '"}';
 
-	// $attributes.value = attr;
+
  
 
 	camera = new PerspectiveCamera( 60, (innerWidth / innerHeight), 0.1, 1000 );
 	camera.position.set( 77, 77, 77 );
 	camera.lookAt( 0, 0, 0 );
-  myApp.set({camera: camera})
-  console.log('camera', camera,myApp.camera)
+  	myApp.set({camera: camera})
+  	console.log('camera', camera,myApp.camera)
 	scene = new Scene();
 	scene.background = new Color( 0x444444 );
 	initLights(scene, camera);
@@ -534,8 +476,6 @@ function initLights(scene, camera) {
 }
 
 function onWindowResize() {
-  // const { camera } = myApp;
-  // const { camera , renderer} = myApp;
   
   setAttributes();
   const _camera = get(myApp)
@@ -572,8 +512,7 @@ const $start = document.getElementById('start');
   const $lock = document.getElementById('lock');
   const $reset = document.getElementById('reset');
   const $hide = document.getElementById('reset');
-  //e.preventDefault();
-	// $start.style.display = 'none';
+
   $start.textContent = "Recording & Minting..."
   $headlamp.style.display = 'none';
   $stabilize.style.display = 'none';
@@ -595,7 +534,6 @@ const $start = document.getElementById('start');
 export const headlamp = e => {
   const $headlamp = document.getElementById('headlamp');
   console.log($headlamp, 'asdf')
-  // //e.preventDefault();
 	if(HEADLAMP) {
 			$headlamp.style.fill = "black";
 			HEADLAMP = false;
@@ -622,9 +560,8 @@ export const stabilize = e => {
 
 export const lock = e => {
 
-
 	const $lock = document.getElementById('lock');
-    //e.preventDefault();
+
 		if(params.lock) {
 			//$lock.innerHTML = "Enable Camera-Lock"
 			$lock.style.fill = "black";
@@ -648,7 +585,6 @@ export const hide = () => {
 			//Already hidden, unhide
 			$hide.style.fill = "black";
 			document.getElementById("inner_div").style.visibility = "visible";
-			//$hide.style.opacity = 1;
 			params.hide = false;
 			opct = 1;
 		} else {
@@ -656,7 +592,6 @@ export const hide = () => {
 			$hide.style.fill = "red";
 			document.getElementById("inner_div").style.visibility = "hidden";
 			params.hide = true;
-			//$hide.style.opacity = 0;
 			opct = 0;
   }
 
@@ -678,55 +613,6 @@ function hideExit() {
 	}
 }
 	
-
-
-function setupButtons(){
-	
-	// $start.addEventListener('clickseed', e => {
-	// 	//e.preventDefault();
-	// 	resize(sizes,sizes);
-	// 	recorder.start();
-	// 	$start.style.display = 'none';
-	// 	recording = true;
-	// 	speedMult = OVER_POWER;
-	// }, false);
-	// $headlamp.addEventListener('click', e => {
-	// 	
-
-	// }, false);
-	// $stabilize.addEventListener('click', e => {
-	
-
-	// }, false);
-	// $lock.addEventListener('click', e => {
-	// 	//e.preventDefault();
-	// 	if(params.lock) {
-	// 		$lock.innerHTML = "Enable Camera-Lock"
-	// 		params.lock = false;
-	// 	} else {
-	// 		$lock.innerHTML = "Disable Camera-Lock"
-	// 		params.lock = true;
-	// 	}
-
-	// }, false);
-	// $reset.addEventListener('click', e => {
-	// 	//e.preventDefault();
-	// 	newSeed = document.getElementById("textareaID").value;
-
-	// 	reset();
-	// }, false);
-}
-
-// export const onRecordingEnd = () => {
-// 	recording = false;
-// 	recorder.stop();
-// 	recorder.save();
-
-// 	onWindowResize();
-// 	const $start = document.getElementById('start');
-// 	$start.style.display = 'inline';
-// 	speedMult = 1;
-// }
 
 export const resize = (width, height) =>{
 	camera.aspect = width / height;
@@ -818,7 +704,7 @@ animate();
 console.log(document.getElementById('start'))
 
 var webMfile = writable();
-// var blob = new Blob();
+
 let formData;
 async function onRecordingEnd() {
   console.log(seed)
@@ -834,16 +720,6 @@ async function onRecordingEnd() {
     mint(new File([blob], "blob.webm"), _code)
   })
   
-  // const file = new File([blob], "BlobFile.webm")
-  // formData = new FormData();
-  // formData.append('blobFile.webM', blob)
-  // console.log(formData.entries().next().value)
-  // webMfile.update((f)=>formData.entries().next().value[1]);
-  
-    //recorder.save( function( blob ) { /* ... */ 
-    //This is where stuff is done with the blob
-    //console.log(blob);
-  // } );
   onWindowResize();
 	speedMult = 1;
 	controls.enabled = true;
@@ -877,17 +753,6 @@ async function mint(file, code) {
 
     mintText = 'Uploading image to ipfs...';
     await ipfs.connect('https://ipfs.infura.io:5001');
-    // console.log(image)
-    // console.log([blob])
-    // const file2 = new File([blob], `video${new Date()}.webm`, {
-    //   type: "video/webm",
-    //   lastModified: new Date(),
-    //   size: 6,
-    // });
-    // console.log(file2)
-    // console.log(file2)
-    // file2.size = blob.size
-    // console.log(file2)
     let file_ = await ipfs.add(file);
     console.log(file_)
     const image_uri = `https://gateway.ipfs.io/ipfs/${file_.path}`;
