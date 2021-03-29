@@ -14,7 +14,7 @@
 body {
     text-align: center;
     color: white;
-    background-color: #505050 !important
+    background-color: #505050 !important;
 }
 
 
