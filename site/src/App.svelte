@@ -10,7 +10,7 @@
   import Home from './pages/Home.svelte';
   
   
-
+  let buttonDisplay = "Connect Web-Wallet";
   let mode = 'Mint';
 
   const app = writable({});
@@ -18,13 +18,22 @@
   export const innerWidth = writable(1000)
   setContext('app', app);
 
-  initProvider(app);
 
   // export let getAccounts = async () => {
   //   await $app.provider.send('eth_requestAccounts').then((res)=>{
   //       console.log(res); 
   //     $app.accounts = res.result[0]})
   // }
+
+  //I THINK we can fix this with a promise
+  async function connectEthProvider() {
+    if(!app.contract) {
+      initProvider(app);
+      buttonDisplay = app.account;
+      
+    }
+    //TODO: Else we will want it to show THEIR NFT's
+  }
 </script>
 
 <style>
@@ -98,7 +107,7 @@
         </ul>
       </div>
       <div style="float: right;">
-        <button class="btn btn-dark">{$app.account}</button>
+        <button class="btn btn-dark" on:click={connectEthProvider}>{buttonDisplay}</button>
       </div>
 
     </div>
@@ -124,7 +133,6 @@
 <svelte:window bind:innerWidth={$innerWidth} bind:innerHeight={$innerHeight}/>
 <main>
   
-  {#if $app.contract}
     {#if mode === 'list'}
       <List />
     {:else if mode === 'Mint'}
@@ -135,5 +143,4 @@
       <About />
     {/if}
     
-  {:else}Connecting to ethereum provider ...{/if}
 </main>
