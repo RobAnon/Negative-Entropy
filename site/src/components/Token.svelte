@@ -37,9 +37,10 @@
     name = json.name;
 
     data = json;
+    console.log(json);
     attributes = [];
     Object.keys(data.attributes).forEach((key) => {
-      attributes.push({ key, value: data.attributes[key] });
+      attributes.push({ key: data.attributes[key].trait_type, value: data.attributes[key].value });
     });
   });
 </script>
