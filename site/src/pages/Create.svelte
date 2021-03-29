@@ -1,4 +1,7 @@
 <script>
+  //TODO: Fix bug created by minting not necessarily being connected to web3
+  //TODO URGENT: Minting is broken because asynchronously setting web3 breaks the context...
+  
   import { createEventDispatcher, getContext, onMount } from 'svelte';
   import defaultCode from '../conf/code.js';
   import Sandbox from '@beyondnft/sandbox';
@@ -519,9 +522,14 @@ export const setAttributes = () => {
 }
 
 export const start = (e) => {
-  console.log('adkafdslkjfadjlkfds')
 
-const $start = document.getElementById('start');
+  if($app.contract == null) {
+  	//We are not set up with Web3, alert user and return
+  	alert("Web3 is not Connected!");
+  	return;
+  }
+
+  const $start = document.getElementById('start');
 
   const $headlamp = document.getElementById('headlamp');
 
@@ -775,6 +783,10 @@ async function mint(file, code) {
     ) {
       return;
     }
+
+
+    contract = $app.contract;
+    account = $app.account;
 
     mintText = 'Uploading image to ipfs...';
     await ipfs.connect('https://ipfs.infura.io:5001');

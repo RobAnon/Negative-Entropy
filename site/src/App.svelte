@@ -104,6 +104,10 @@
               <li><a class="dropdown-item" href="#" on:click={() => (mode = 'Gallery')}>My Sculptures</a></li>
             </ul>
           </li>
+          <li class="nav-item" class:selected={mode === 'List'}>
+            <span class="nav-link" on:click={() => (mode = 'List')}>List</span>
+          </li>
+
         </ul>
       </div>
       <div style="float: right;">

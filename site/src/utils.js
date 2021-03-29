@@ -44,6 +44,7 @@ export async function initProvider(app) {
     provider,
     account,
   });
+  app = app;
 }
 
 export const ipfs = {
