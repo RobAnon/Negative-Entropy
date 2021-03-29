@@ -28,9 +28,9 @@
   //I THINK we can fix this with a promise
   async function connectEthProvider() {
     if(!app.contract) {
-      initProvider(app);
-      buttonDisplay = app.account;
-      
+      await initProvider(app);
+      buttonDisplay = $app.account;
+      console.log($app.account);
     }
     //TODO: Else we will want it to show THEIR NFT's
   }
