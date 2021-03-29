@@ -93,17 +93,18 @@
           <li class="nav-item" class:selected={mode === 'Mint'}>
             <span class="nav-link" on:click={() => (mode = 'Mint')}>Mint</span>
           </li>
+          
           <li class="nav-item" class:selected={mode === 'About'}>
             <span class="nav-link" on:click={() => (mode = 'About')}>About</span>
           </li>
-          <li class="nav-item dropdown" class:selected={mode === 'Gallery'}>
-            <span class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Gallery
-            </span>
-            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-              <li><a class="dropdown-item" href="#">Public Gallery</a></li>
-              <li><a class="dropdown-item" href="#" on:click={() => (mode = 'Gallery')}>My Sculptures</a></li>
-            </ul>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Gallery
+            </a>
+            <div class="dropdown-menu bg-dark" aria-labelledby="navbarDropdownMenuLink">
+              <span class="dropdown-item text-white " href="#" on:click={() => (mode = 'publicgallery')}>Public Gallery</span>
+              <span class="dropdown-item text-white" href="#" on:click={() => (mode = 'mysculptures')}>My Sculptures</span>
+            </div>
           </li>
           <li class="nav-item" class:selected={mode === 'List'}>
             <span class="nav-link" on:click={() => (mode = 'list')}>List</span>
