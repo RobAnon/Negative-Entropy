@@ -9,7 +9,6 @@
   // app is a store, reading its value using $app will
   // create a subscriber to the store changes
   const app = getContext('app');
-  console.log("Loaded");
   // so now when $app change,
   // if contract is now set in it
   // we can request things from Blockchain
@@ -67,6 +66,11 @@
     padding: 10px 0;
     position: relative;
   }
+  video {
+  height: 230px;
+  width: 100%;
+  }
+
 </style>
 
 <section>

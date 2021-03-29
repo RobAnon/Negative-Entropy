@@ -126,12 +126,15 @@
     text-align: left;
     flex: 1;
   }
+  video {
+  height: 230px;
+  width: 100%;
+  }
 </style>
-
 <article class:big>
   {#if !big}
     <div class="preview" on:click={() => (big = true)}>
-      <div><img src={image} alt={name} /></div>
+      <div><video autoplay loop src={image} alt={name} type='video/webm'></video></div>
       <strong>{name}</strong>
     </div>
   {:else}

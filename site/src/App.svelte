@@ -1,4 +1,5 @@
 <script>
+
   import { setContext } from 'svelte';
   import { writable } from 'svelte/store';
 
@@ -105,7 +106,7 @@
             </ul>
           </li>
           <li class="nav-item" class:selected={mode === 'List'}>
-            <span class="nav-link" on:click={() => (mode = 'List')}>List</span>
+            <span class="nav-link" on:click={() => (mode = 'list')}>List</span>
           </li>
 
         </ul>
@@ -122,7 +123,7 @@
       <li class:selected={mode === 'Home'} on:click={() => (mode = 'Home')}>
         Home
       </li>
-      <li class:selected={mode === 'Gallery'} on:click={() => (mode = 'List')}>
+      <li class:selected={mode === 'Gallery'} on:click={() => (mode = 'list')} >
         Gallery
       </li>
       <li class:selected={mode === 'Mint'} on:click={() => (mode = 'Mint')}>
@@ -131,6 +132,7 @@
       <li class:selected={mode === 'About'} on:click={() => (mode = 'About')}>
         About
       </li>
+     
     </ul>
   </nav> -->
 </header>
