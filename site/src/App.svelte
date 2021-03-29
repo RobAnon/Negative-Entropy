@@ -69,7 +69,7 @@
   }
 
   .bg-light {
-    background-color: #f8f9fa !important
+    background-color: #f8f9fa 
   }
 
 </style>
@@ -139,7 +139,7 @@
       <Create on:minted={() => (mode = 'list')} innerHeight={$innerHeight/2} innerWidth={$innerWidth/2} />
     {:else if mode === 'Home'}
       <Home />
-    {:else if mode === 'Home'}
+    {:else if mode === 'About'}
       <About />
     {/if}
     
