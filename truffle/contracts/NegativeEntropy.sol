@@ -45,7 +45,11 @@ contract NegativeEntropy is Context, AccessControl, ERC721Burnable, ERC721Pausab
 
    	//Initial maximum quantity
    	uint256 public maxQuantity = 1000;
+   	//Price a constant value – what units should this be in?
    	uint256 public constant PRICE = 0.15;
+   	//This should be set in the constructor
+   	address payable public treasuryAddress;
+
 
 
     Counters.Counter private _tokenIdTracker;
@@ -71,11 +75,12 @@ contract NegativeEntropy is Context, AccessControl, ERC721Burnable, ERC721Pausab
         //We do not need to set baseURI in the constructor
     }*/
 
-    constructor() public ERC721("NegativeEntropy", "NGTV") {
+    constructor(address payable _tA) public ERC721("NegativeEntropy", "NGTV") {
         address payable msgSender = msg.sender;
         _setupRole(MINTER_ROLE, _msgSender());
 		_setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
 		_setupRole(PAUSER_ROLE, _msgSender());
+		treasuryAddress = _tA;
 		//No need to set baseURI
     }
 
@@ -103,6 +108,7 @@ contract NegativeEntropy is Context, AccessControl, ERC721Burnable, ERC721Pausab
      * Mint a token to to with a configurationURI already set
      * !! using a minter
      * Primary endpoing for performing mint operations
+     * TODO: DOES THIS NEED THE PAYABLE PREFIX?!
      */
     function mint(
         uint256 tokenId,
@@ -121,6 +127,8 @@ contract NegativeEntropy is Context, AccessControl, ERC721Burnable, ERC721Pausab
         require(_tokenIdTracker.current() < maxQuantity, "NegativeEntropy: All NFTs have been claimed for this series"); 
         require(msg.value >= PRICE, "NegativeEntropy: Insufficient funds to mint a Negative Entropy NFT")
 
+        treasuryAddress.transfer(price);
+    	to.transfer(msg.value.sub(price));
 
         mint(tokenId, to, tokenURI);
     }
