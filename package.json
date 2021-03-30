@@ -21,5 +21,8 @@
   "bugs": {
     "url": "https://github.com/BeyondNFT/starter-site/issues"
   },
-  "homepage": "https://github.com/BeyondNFT/starter-site#readme"
+  "homepage": "https://github.com/BeyondNFT/starter-site#readme",
+  "dependencies": {
+    "@openzeppelin/contracts": "^3.4.1"
+  }
 }
