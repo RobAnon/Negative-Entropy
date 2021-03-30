@@ -798,10 +798,18 @@ async function mint(file, code) {
     data.image = image_uri;
     console.log('IMAGE URL', image_uri);
 
-    
     let nextId = await contract.methods.totalSupply().call();
     // here is where you'd set external_url in the json
 
+    //Send JSON to backend
+
+    //Backend verifies that seed is unique, uploads JSON to IPFS
+
+    //Backend signs message (seed+URI) and returns signed message
+
+    //Take signed message, communicate with contract, and mint
+
+    //TODO: this needs to be a backend function
     mintText = 'Uploading NFT metadata to ipfs...';
     file_ = await ipfs.add(JSON.stringify(data));
     const json_uri = `https://gateway.ipfs.io/ipfs/${file_.path}`;
@@ -810,6 +818,7 @@ async function mint(file, code) {
       'Adding NFT to blockchain - See MetaMask (or the like) for transaction';
     console.log('JSON URL', json_uri);
 
+    //TODO: Implement real contract behavior here
     // await contract.methods.mint(nextId, account, json_uri).send();
     const value = 0.15;
     const pay = await contract.methods.pay($app.web3.utils.toWei("0.15", 'ether'), nextId, account, json_uri).send({from: $app.account, value: $app.web3.utils.toWei("0.15", 'ether')})
