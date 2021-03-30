@@ -8,6 +8,10 @@ const Web3 = require("web3");
 const HDWalletProvider = require("@truffle/hdwallet-provider");
 const app = express();
  
+//Parse JSON 
+app.use(express.json());
+
+
 app.get('/', (req, res) => {
 	let provider = new HDWalletProvider({
 		privateKeys:[process.env.PRIVATE_KEY], 
@@ -20,10 +24,27 @@ app.get('/', (req, res) => {
   res.send(response);
 });
 
-app.post('/signature', (req, res) => {
-  	
+app.post('/signature', (req, res) => {  	
+	let provider = new HDWalletProvider({
+		privateKeys:[process.env.PRIVATE_KEY], 
+		providerOrUrl: process.env.NETWORK, 
+		pollingInterval:10000
+	});
+  	const web3 = new Web3(provider);
 
-  	return res.send('POST HTTP method on user resource');
+  	var seed = "";
+  	for(var i = 0; i < req.body.attributes.length; i++){
+  		var attribute = req.body.attributes[i];
+  		if(attribute["trait_type"] == "seed") {
+  			seed = attribute["value"];
+  		}
+ 	 }
+
+
+  	var response =  web3.eth.accounts.sign(seed, process.env.PRIVATE_KEY);
+  	provider.engine.stop();
+
+  	return res.send(response);
 });
 
 app.listen(process.env.PORT, () =>
