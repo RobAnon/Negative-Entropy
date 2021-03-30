@@ -53,7 +53,6 @@ contract NegativeEntropy is Context, AccessControl, ERC721Burnable, ERC721Pausab
 
 
     Counters.Counter private _tokenIdTracker;
-    //Automatically should generate a getter
     EnumerableSet.Bytes32Set private seedSet;
 
     ModifiedEnumerableMap.UintToBytes32Map private seedMap;
@@ -108,7 +107,8 @@ contract NegativeEntropy is Context, AccessControl, ERC721Burnable, ERC721Pausab
      * Mint a token to to with a configurationURI already set
      * !! using a minter
      * Primary endpoing for performing mint operations
-     * TODO: DOES THIS NEED THE PAYABLE PREFIX?!
+     * TODO: Remove tokenId and replace with something useful like seed
+     * 
      */
     function mint(
         uint256 tokenId,
@@ -130,7 +130,8 @@ contract NegativeEntropy is Context, AccessControl, ERC721Burnable, ERC721Pausab
         treasuryAddress.transfer(PRICE);
     	to.transfer(msg.value.sub(PRICE));
 
-        mint(tokenId, to, tokenURI);
+        mint(_tokenIdTracker.current(), to, tokenURI);
+        _tokenIdTracker.increment();
     }
 
     // Minter detection helper

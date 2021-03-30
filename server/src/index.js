@@ -41,6 +41,8 @@ app.post('/signature', (req, res) => {
  	 }
 
 
+
+
   	var response =  web3.eth.accounts.sign(seed, process.env.PRIVATE_KEY);
   	provider.engine.stop();
 
@@ -50,3 +52,38 @@ app.post('/signature', (req, res) => {
 app.listen(process.env.PORT, () =>
   console.log(`Example app listening on port ${process.env.PORT}!`),
 );
+
+function getSignature(web3, address, account, seed, jsonURL){
+
+	const data = web3.utils.soliditySha3(
+      address,
+      account,
+      seed,
+      jsonURL
+    );
+
+    // minter sign
+    const signature = web3.eth.sign(data, accounts[1]);
+    const r = signature.slice(0, 66);
+    const s = '0x' + signature.slice(66, 130);
+    let v = '0x' + signature.slice(130, 132);
+
+   return { _tokenId, _account, v, r, s, jsonURL }
+}
+
+function formJSON() {
+	//FORM PRELIMINARY JSON STRUCTURE FOR UPLOAD
+	  let name = '';
+	  let description = 'An NFT of Negative Entropy: Series 1: Thomas'; //TODO include minter address in here + number it is
+	  let attributes = [];
+	  let image = '';
+	  let dependencies = [];
+	  let code = defaultCode;
+	  let valid = false;
+
+	  // temp values
+	  let attrKey = '';
+	  let attrValue = '';
+	  let dependency = '';
+	  let dependencyType = 'script';
+}
