@@ -1,7 +1,5 @@
-
-export const ViewerScript = (seed) => {
+export const ViewerScript = () => {
  return `
-
 <script src="https://threejs.org/build/three.js"></script>
 <script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/seedrandom/3.0.5/seedrandom.min.js">
@@ -205,7 +203,15 @@ svg:hover {
     </button>
 </div>
 <script type="text/javascript">
-let seed = ${seed};
+let seed = "";
+var i = 0;
+while (seed == "" && i < window.context.nft_json.attributes.length) {
+   var att = window.context.nft_json.attributes[i];
+   if(att["trait_type"]=="seed") {
+      seed = att["value"];
+   }
+   i++;
+}
 //Stabilization likely should *always* be on
 //TODO: Enable tweening of camera viewpoint
 let camera, scene, renderer, mesh, headlight, stableOld, lockOld;
@@ -549,5 +555,6 @@ function render() {
     renderer.render(scene, camera);
 }
 </script>
+
 `
 }

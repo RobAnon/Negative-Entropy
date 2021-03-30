@@ -42,8 +42,10 @@ import { ViewerScript } from '../components/ViewerScript'
   let attributes = [];
   let image = '';
   let dependencies = [];
-  let code = defaultCode;
+  let code = '';
   let valid = false;
+  //TODO: Standardize to IPFS://, maybe store this in .env
+  let code_uri = "https://gateway.ipfs.io/ipfs/Qma3kCuqMiTrgUCKvLSArrMwbHyyDcjZjYpwobHsjDHUR5";
 
   // temp values
   let attrKey = '';
@@ -64,7 +66,7 @@ import { ViewerScript } from '../components/ViewerScript'
 
     if (code) {
       _data.interactive_nft = {
-        code,
+        code_uri,
         dependencies,
       };
 
@@ -748,7 +750,7 @@ async function onRecordingEnd() {
     console.log(_blob)
     blob = _blob;
     console.log(blob, 'in function')
-    const _code = ViewerScript('"'+seed+'"'); //TODO: Replace this with window.properties.seed or something along those lines
+    const _code = ViewerScript(); //TODO: Replace this with window.properties.seed or something along those lines
     console.log(_code)
     mint(new File([blob], "blob.webm"), _code)
   })
@@ -796,13 +798,7 @@ async function mint(file, code) {
     data.image = image_uri;
     console.log('IMAGE URL', image_uri);
 
-    mintText = 'Uploading code to ipfs...';
-    file_ = await ipfs.add(code);
-    const code_uri = `https://gateway.ipfs.io/ipfs/${file_.path}`;
-    console.log('CODE URL', code_uri);
-    delete data.interactive_nft.code;
-    data.interactive_nft.code_uri = code_uri;
-
+    
     let nextId = await contract.methods.totalSupply().call();
     // here is where you'd set external_url in the json
 
