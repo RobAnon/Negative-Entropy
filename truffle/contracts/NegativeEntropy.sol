@@ -252,7 +252,7 @@ contract NegativeEntropy is Context, AccessControl, ERC721Burnable, ERC721Pausab
 
     //Note: Do I actually need this if I have a getter?
     function seedClaimed(string memory checkSeed) public view returns (bool) {
-    	return EnumerableSet.contains(seedSet, keccak256(bytes (checkSeed)));
+    	return seedSet.contains(keccak256(bytes (checkSeed)));
     }
 
     function isMinter(address _address) public view returns (bool) {
