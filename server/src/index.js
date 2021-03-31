@@ -3,14 +3,20 @@ dotenv.config("../.env");
 import abi from './conf/abi.json';
 import cors from 'cors';
 import express from 'express';
+import fs from 'fs'
 
 
 const Web3 = require("web3");
 const HDWalletProvider = require("@truffle/hdwallet-provider");
+const createClient = require('ipfs-http-client')
+
 const app = express();
+const ipfs = createClient('https://ipfs.infura.io:5001');
+
  
 //Parse JSON 
 app.use(express.json());
+app.use(cors());
 
 
 app.get('/', (req, res) => {
@@ -31,12 +37,14 @@ app.post('/signature', (req, res) => {
 		providerOrUrl: process.env.NETWORK
 	});
   	const web3 = new Web3(provider);
+  	var customer = req.body.customer;
+  	console.log(customer);
 	var address;
   	//TODO: Need to verify JSON somewhere in here
 
   	var seed = "";
-  	for(var i = 0; i < req.body.attributes.length; i++){
-		var attribute = req.body.attributes[i];
+  	for(var i = 0; i < req.body.nft.attributes.length; i++){
+		var attribute = req.body.nft.attributes[i];
 		if(attribute["trait_type"] == "seed") {
 				seed = attribute["value"];
 		}
@@ -52,11 +60,23 @@ app.post('/signature', (req, res) => {
  	})
  	.then(function(seeded) {
  		console.log("seed is claimed: " + seeded);
- 		var signature =  web3.eth.accounts.sign(seed, process.env.PRIVATE_KEY);
- 		return res.send(signature);
- 		/*file_ = await ipfs.add(JSON.stringify(data));
-    	const json_uri = `https://gateway.ipfs.io/ipfs/${file_.path}`;
-  		provider.engine.stop();*/
+
+ 		if(seeded){
+ 			//Seed exists, deny request
+ 			res.status(401);
+			return res.send("Seed already exists! Choose a seed that doesn't already exist!");
+ 		} else {
+	    	//console.log(json_uri);
+	    	getURI(JSON.stringify(req.body.nft))
+	    	.then(function(json_uri) {
+	    		//TODO: This is where we can finally sign the message with URI + seed
+	    		console.log(json_uri);
+		 		var signature =  getSignature(web3, process.env.CONTRACT_ADDRESS, address, seed, json_uri)
+		 		return res.send(JSON.stringify(signature));
+	    	});
+
+	  		provider.engine.stop();
+ 		}
  	})
 
 
@@ -77,7 +97,8 @@ app.listen(process.env.PORT, () =>
 );
 
 function getSignature(web3, address, account, seed, jsonURL){
-
+	//Address = contact address
+	//account = signing account (THEIR account – need to get in request)
 	const data = web3.utils.soliditySha3(
       address,
       account,
@@ -86,12 +107,15 @@ function getSignature(web3, address, account, seed, jsonURL){
     );
 
     // minter sign
-    const signature = web3.eth.sign(data, accounts[1]);
-    const r = signature.slice(0, 66);
-    const s = '0x' + signature.slice(66, 130);
-    let v = '0x' + signature.slice(130, 132);
-
-   	return { _tokenId, _account, v, r, s, jsonURL }
+    const signature = web3.eth.accounts.sign(data, process.env.PRIVATE_KEY);
+    var payload = {};
+    payload["v"] = signature.v;
+    payload["r"] = signature.r;
+    payload["s"] = signature.s;
+    payload["seed"] = seed;
+    payload["customer"] = account;
+    payload["URI"] = jsonURL;
+   	return payload;
 }
 
 async function getAccounts(web3) {
@@ -104,6 +128,7 @@ async function getAccounts(web3) {
 	});	
 }
 
+//NOTE: Having from in here is very important
 async function seedClaimed(contract, seed, address) {
 	return new Promise(async (resolve, reject) => {
 		console.log(typeof(seed));
@@ -111,14 +136,15 @@ async function seedClaimed(contract, seed, address) {
 		.then((result) => {
   			resolve(result);
 		});
-		//console.log(claimed);
-		//resolve(claimed)
 	});
 }
 
-function getURI(json_data) {
+async function getURI(data) {
 	return new Promise(async (resolve, reject) => {
-
+ 		await ipfs.add(data)
+ 		.then((result => {
+ 			resolve(`https://gateway.ipfs.io/ipfs/${result.path}`)
+ 		}))
 	});
 }
 
@@ -138,3 +164,4 @@ function formJSON() {
 	  let dependency = '';
 	  let dependencyType = 'script';
 }
+

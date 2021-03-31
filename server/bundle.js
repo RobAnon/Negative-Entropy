@@ -4,8 +4,9 @@ var _typeof = require('@babel/runtime/helpers/typeof');
 var _asyncToGenerator = require('@babel/runtime/helpers/asyncToGenerator');
 var _regeneratorRuntime = require('@babel/runtime/regenerator');
 var dotenv = require('dotenv');
-require('cors');
+var cors = require('cors');
 var express = require('express');
+require('fs');
 
 function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
 
@@ -13,6 +14,7 @@ var _typeof__default = /*#__PURE__*/_interopDefaultLegacy(_typeof);
 var _asyncToGenerator__default = /*#__PURE__*/_interopDefaultLegacy(_asyncToGenerator);
 var _regeneratorRuntime__default = /*#__PURE__*/_interopDefaultLegacy(_regeneratorRuntime);
 var dotenv__default = /*#__PURE__*/_interopDefaultLegacy(dotenv);
+var cors__default = /*#__PURE__*/_interopDefaultLegacy(cors);
 var express__default = /*#__PURE__*/_interopDefaultLegacy(express);
 
 dotenv__default['default'].config("../.env");
@@ -744,9 +746,13 @@ var Web3 = require("web3");
 
 var HDWalletProvider = require("@truffle/hdwallet-provider");
 
-var app = express__default['default'](); //Parse JSON 
+var createClient = require('ipfs-http-client');
+
+var app = express__default['default']();
+var ipfs = createClient('https://ipfs.infura.io:5001'); //Parse JSON 
 
 app.use(express__default['default'].json());
+app.use(cors__default['default']());
 app.get('/', function (req, res) {
   var provider = new HDWalletProvider({
     privateKeys: [process.env.PRIVATE_KEY],
@@ -764,12 +770,14 @@ app.post('/signature', function (req, res) {
     providerOrUrl: process.env.NETWORK
   });
   var web3 = new Web3(provider);
+  var customer = req.body.customer;
+  console.log(customer);
   var address; //TODO: Need to verify JSON somewhere in here
 
   var seed = "";
 
-  for (var i = 0; i < req.body.attributes.length; i++) {
-    var attribute = req.body.attributes[i];
+  for (var i = 0; i < req.body.nft.attributes.length; i++) {
+    var attribute = req.body.nft.attributes[i];
 
     if (attribute["trait_type"] == "seed") {
       seed = attribute["value"];
@@ -784,11 +792,21 @@ app.post('/signature', function (req, res) {
     return seedClaimed(contract, seed, address);
   }).then(function (seeded) {
     console.log("seed is claimed: " + seeded);
-    var signature = web3.eth.accounts.sign(seed, process.env.PRIVATE_KEY);
-    return res.send(signature);
-    /*file_ = await ipfs.add(JSON.stringify(data));
-     	const json_uri = `https://gateway.ipfs.io/ipfs/${file_.path}`;
-    	provider.engine.stop();*/
+
+    if (seeded) {
+      //Seed exists, deny request
+      res.status(401);
+      return res.send("Seed already exists! Choose a seed that doesn't already exist!");
+    } else {
+      //console.log(json_uri);
+      getURI(JSON.stringify(req.body.nft)).then(function (json_uri) {
+        //TODO: This is where we can finally sign the message with URI + seed
+        console.log(json_uri);
+        var signature = getSignature(web3, process.env.CONTRACT_ADDRESS, address, seed, json_uri);
+        return res.send(JSON.stringify(signature));
+      });
+      provider.engine.stop();
+    }
   });
   return express__default['default'].Router();
 });
@@ -796,31 +814,48 @@ app.listen(process.env.PORT, function () {
   return console.log("Example app listening on port ".concat(process.env.PORT, "!"));
 });
 
-function getAccounts(_x) {
-  return _getAccounts.apply(this, arguments);
+function getSignature(web3, address, account, seed, jsonURL) {
+  //Address = contact address
+  //account = signing account (THEIR account – need to get in request)
+  var data = web3.utils.soliditySha3(address, account, seed, jsonURL); // minter sign
+
+  var signature = web3.eth.accounts.sign(data, process.env.PRIVATE_KEY);
+  var payload = {};
+  payload["v"] = signature.v;
+  payload["r"] = signature.r;
+  payload["s"] = signature.s;
+  payload["seed"] = seed;
+  payload["customer"] = account;
+  payload["URI"] = jsonURL;
+  return payload;
 }
 
+function getAccounts(_x) {
+  return _getAccounts.apply(this, arguments);
+} //NOTE: Having from in here is very important
+
+
 function _getAccounts() {
-  _getAccounts = _asyncToGenerator__default['default']( /*#__PURE__*/_regeneratorRuntime__default['default'].mark(function _callee3(web3) {
-    return _regeneratorRuntime__default['default'].wrap(function _callee3$(_context3) {
+  _getAccounts = _asyncToGenerator__default['default']( /*#__PURE__*/_regeneratorRuntime__default['default'].mark(function _callee2(web3) {
+    return _regeneratorRuntime__default['default'].wrap(function _callee2$(_context2) {
       while (1) {
-        switch (_context3.prev = _context3.next) {
+        switch (_context2.prev = _context2.next) {
           case 0:
-            return _context3.abrupt("return", new Promise( /*#__PURE__*/function () {
-              var _ref2 = _asyncToGenerator__default['default']( /*#__PURE__*/_regeneratorRuntime__default['default'].mark(function _callee2(resolve, reject) {
+            return _context2.abrupt("return", new Promise( /*#__PURE__*/function () {
+              var _ref = _asyncToGenerator__default['default']( /*#__PURE__*/_regeneratorRuntime__default['default'].mark(function _callee(resolve, reject) {
                 var accounts;
-                return _regeneratorRuntime__default['default'].wrap(function _callee2$(_context2) {
+                return _regeneratorRuntime__default['default'].wrap(function _callee$(_context) {
                   while (1) {
-                    switch (_context2.prev = _context2.next) {
+                    switch (_context.prev = _context.next) {
                       case 0:
-                        _context2.next = 2;
+                        _context.next = 2;
                         return web3.eth.getAccounts();
 
                       case 2:
-                        accounts = _context2.sent;
+                        accounts = _context.sent;
 
                         if (accounts.length) {
-                          _context2.next = 5;
+                          _context.next = 5;
                           break;
                         }
 
@@ -831,23 +866,23 @@ function _getAccounts() {
 
                       case 6:
                       case "end":
-                        return _context2.stop();
+                        return _context.stop();
                     }
                   }
-                }, _callee2);
+                }, _callee);
               }));
 
-              return function (_x7, _x8) {
-                return _ref2.apply(this, arguments);
+              return function (_x6, _x7) {
+                return _ref.apply(this, arguments);
               };
             }()));
 
           case 1:
           case "end":
-            return _context3.stop();
+            return _context2.stop();
         }
       }
-    }, _callee3);
+    }, _callee2);
   }));
   return _getAccounts.apply(this, arguments);
 }
@@ -857,19 +892,19 @@ function seedClaimed(_x2, _x3, _x4) {
 }
 
 function _seedClaimed() {
-  _seedClaimed = _asyncToGenerator__default['default']( /*#__PURE__*/_regeneratorRuntime__default['default'].mark(function _callee5(contract, seed, address) {
-    return _regeneratorRuntime__default['default'].wrap(function _callee5$(_context5) {
+  _seedClaimed = _asyncToGenerator__default['default']( /*#__PURE__*/_regeneratorRuntime__default['default'].mark(function _callee4(contract, seed, address) {
+    return _regeneratorRuntime__default['default'].wrap(function _callee4$(_context4) {
       while (1) {
-        switch (_context5.prev = _context5.next) {
+        switch (_context4.prev = _context4.next) {
           case 0:
-            return _context5.abrupt("return", new Promise( /*#__PURE__*/function () {
-              var _ref3 = _asyncToGenerator__default['default']( /*#__PURE__*/_regeneratorRuntime__default['default'].mark(function _callee4(resolve, reject) {
-                return _regeneratorRuntime__default['default'].wrap(function _callee4$(_context4) {
+            return _context4.abrupt("return", new Promise( /*#__PURE__*/function () {
+              var _ref2 = _asyncToGenerator__default['default']( /*#__PURE__*/_regeneratorRuntime__default['default'].mark(function _callee3(resolve, reject) {
+                return _regeneratorRuntime__default['default'].wrap(function _callee3$(_context3) {
                   while (1) {
-                    switch (_context4.prev = _context4.next) {
+                    switch (_context3.prev = _context3.next) {
                       case 0:
                         console.log(_typeof__default['default'](seed));
-                        _context4.next = 3;
+                        _context3.next = 3;
                         return contract.methods.seedClaimed(seed).call({
                           from: address
                         }).then(function (result) {
@@ -877,27 +912,71 @@ function _seedClaimed() {
                         });
 
                       case 3:
-                        _context4.sent;
+                        _context3.sent;
 
                       case 4:
                       case "end":
-                        return _context4.stop();
+                        return _context3.stop();
                     }
                   }
-                }, _callee4);
+                }, _callee3);
               }));
 
-              return function (_x9, _x10) {
+              return function (_x8, _x9) {
+                return _ref2.apply(this, arguments);
+              };
+            }()));
+
+          case 1:
+          case "end":
+            return _context4.stop();
+        }
+      }
+    }, _callee4);
+  }));
+  return _seedClaimed.apply(this, arguments);
+}
+
+function getURI(_x5) {
+  return _getURI.apply(this, arguments);
+}
+
+function _getURI() {
+  _getURI = _asyncToGenerator__default['default']( /*#__PURE__*/_regeneratorRuntime__default['default'].mark(function _callee6(data) {
+    return _regeneratorRuntime__default['default'].wrap(function _callee6$(_context6) {
+      while (1) {
+        switch (_context6.prev = _context6.next) {
+          case 0:
+            return _context6.abrupt("return", new Promise( /*#__PURE__*/function () {
+              var _ref3 = _asyncToGenerator__default['default']( /*#__PURE__*/_regeneratorRuntime__default['default'].mark(function _callee5(resolve, reject) {
+                return _regeneratorRuntime__default['default'].wrap(function _callee5$(_context5) {
+                  while (1) {
+                    switch (_context5.prev = _context5.next) {
+                      case 0:
+                        _context5.next = 2;
+                        return ipfs.add(data).then(function (result) {
+                          resolve("https://gateway.ipfs.io/ipfs/".concat(result.path));
+                        });
+
+                      case 2:
+                      case "end":
+                        return _context5.stop();
+                    }
+                  }
+                }, _callee5);
+              }));
+
+              return function (_x10, _x11) {
                 return _ref3.apply(this, arguments);
               };
             }()));
 
           case 1:
           case "end":
-            return _context5.stop();
+            return _context6.stop();
         }
       }
-    }, _callee5);
+    }, _callee6);
   }));
-  return _seedClaimed.apply(this, arguments);
+  return _getURI.apply(this, arguments);
 }
