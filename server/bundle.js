@@ -71,6 +71,21 @@ var abi = [{
   inputs: [{
     indexed: false,
     internalType: "address",
+    name: "a",
+    type: "address"
+  }, {
+    indexed: false,
+    internalType: "string",
+    name: "message",
+    type: "string"
+  }],
+  name: "DebugMessage",
+  type: "event"
+}, {
+  anonymous: false,
+  inputs: [{
+    indexed: false,
+    internalType: "address",
     name: "account",
     type: "address"
   }],
@@ -590,9 +605,39 @@ var abi = [{
   type: "function"
 }, {
   inputs: [{
-    internalType: "uint256",
-    name: "tokenId",
-    type: "uint256"
+    internalType: "address payable",
+    name: "to",
+    type: "address"
+  }, {
+    internalType: "uint8",
+    name: "v",
+    type: "uint8"
+  }, {
+    internalType: "bytes32",
+    name: "r",
+    type: "bytes32"
+  }, {
+    internalType: "bytes32",
+    name: "s",
+    type: "bytes32"
+  }, {
+    internalType: "string",
+    name: "tokenURI",
+    type: "string"
+  }, {
+    internalType: "string",
+    name: "seedDesired",
+    type: "string"
+  }],
+  name: "mint",
+  outputs: [],
+  stateMutability: "payable",
+  type: "function"
+}, {
+  inputs: [{
+    internalType: "string",
+    name: "seed",
+    type: "string"
   }, {
     internalType: "string",
     name: "tokenURI",
@@ -624,23 +669,13 @@ var abi = [{
   type: "function"
 }, {
   inputs: [{
-    internalType: "address",
-    name: "to",
-    type: "address"
-  }],
-  name: "mint",
-  outputs: [],
-  stateMutability: "nonpayable",
-  type: "function"
-}, {
-  inputs: [{
-    internalType: "uint256",
-    name: "tokenId",
-    type: "uint256"
+    internalType: "string",
+    name: "seed",
+    type: "string"
   }, {
-    internalType: "address payable",
-    name: "to",
-    type: "address"
+    internalType: "string",
+    name: "tokenURI",
+    type: "string"
   }, {
     internalType: "uint8",
     name: "v",
@@ -653,31 +688,13 @@ var abi = [{
     internalType: "bytes32",
     name: "s",
     type: "bytes32"
-  }, {
-    internalType: "string",
-    name: "tokenURI",
-    type: "string"
   }],
-  name: "mint",
-  outputs: [],
-  stateMutability: "payable",
-  type: "function"
-}, {
-  inputs: [{
-    internalType: "uint256",
-    name: "_tokenId",
-    type: "uint256"
-  }, {
-    internalType: "address",
-    name: "_to",
-    type: "address"
-  }, {
-    internalType: "string",
-    name: "_tokenURI",
-    type: "string"
+  name: "_signedByMinter",
+  outputs: [{
+    internalType: "bool",
+    name: "",
+    type: "bool"
   }],
-  name: "mint",
-  outputs: [],
   stateMutability: "nonpayable",
   type: "function"
 }, {
@@ -728,7 +745,7 @@ var abi = [{
     name: "",
     type: "bool"
   }],
-  stateMutability: "view",
+  stateMutability: "nonpayable",
   type: "function"
 }, {
   inputs: [{
@@ -814,6 +831,8 @@ function getSignature(web3, address, account, seed, jsonURL) {
   payload.v = signature.v;
   payload.r = signature.r;
   payload.s = signature.s;
+  payload.signature = signature; //TODO: REMOVE, DEV STATEMENT
+
   payload.seed = seed;
   payload.customer = account;
   payload.URI = jsonURL;

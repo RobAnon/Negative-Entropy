@@ -102,6 +102,7 @@ function getSignature(web3, address, account, seed, jsonURL){
     payload.v = signature.v;
     payload.r = signature.r;
     payload.s = signature.s;
+    payload.signature = signature; //TODO: REMOVE, DEV STATEMENT
     payload.seed = seed;
     payload.customer = account;
     payload.URI = jsonURL;

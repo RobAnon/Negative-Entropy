@@ -102,6 +102,7 @@ contract NegativeEntropy is Context, AccessControl, ERC721Burnable, ERC721Pausab
         string calldata tokenURI,
         string calldata seedDesired
     ) public payable{
+    	emit DebugMessage(_msgSender(), 'Minting started');
     	//Check for signature
         require(
             _signedByMinter(seedDesired, tokenURI, v, r, s),
@@ -162,13 +163,14 @@ contract NegativeEntropy is Context, AccessControl, ERC721Burnable, ERC721Pausab
     }
 
     // signer helper
+    //TODO NEEDS TO BE VIEW AGAIN
     function _signedByMinter(
         string calldata seed,
         string calldata tokenURI,
         uint8 v,
         bytes32 r,
         bytes32 s
-    ) internal view returns (bool) {
+    ) public returns (bool) {
         return
             isMinter(
                 addressFromSignature(seed, tokenURI, _msgSender(), v, r, s)
@@ -230,7 +232,9 @@ contract NegativeEntropy is Context, AccessControl, ERC721Burnable, ERC721Pausab
     	return seedSet.contains(keccak256(bytes (checkSeed)));
     }
 
-    function isMinter(address _address) public view returns (bool) {
+    //TODO SET TO VIEW LATER
+    function isMinter(address _address) public returns (bool) {
+    	emit DebugMessage(_address, 'address found');
         return hasRole(MINTER_ROLE, _address);
     }
 
@@ -261,5 +265,7 @@ contract NegativeEntropy is Context, AccessControl, ERC721Burnable, ERC721Pausab
     	assert(hasRole(MINTER_ROLE, _msgSender()));
     	maxQuantity = quant;
     }
+
+  event DebugMessage(address a, string message);
 
 }
