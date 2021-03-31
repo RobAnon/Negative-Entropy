@@ -1,6 +1,4 @@
 <script>
-  //TODO: Fix bug created by minting not necessarily being connected to web3
-  //TODO URGENT: Minting is broken because asynchronously setting web3 breaks the context...
   
   import { createEventDispatcher, getContext, onMount } from 'svelte';
   import defaultCode from '../conf/code.js';
@@ -42,7 +40,7 @@ import { ViewerScript } from '../components/ViewerScript'
   let attributes = [];
   let image = '';
   let dependencies = [];
-  let code = '';
+  let code = 'defaultCode';
   let valid = false;
   //TODO: Standardize to IPFS://, maybe store this in .env
   let code_uri = "https://gateway.ipfs.io/ipfs/Qma3kCuqMiTrgUCKvLSArrMwbHyyDcjZjYpwobHsjDHUR5";
@@ -751,7 +749,6 @@ async function onRecordingEnd() {
     blob = _blob;
     console.log(blob, 'in function')
     const _code = ViewerScript(); //TODO: Replace this with window.properties.seed or something along those lines
-    console.log(_code)
     mint(new File([blob], "blob.webm"), _code)
   })
   
@@ -785,7 +782,7 @@ async function mint(file, code) {
     ) {
       return;
     }
-
+    console.log(data);
 
     contract = $app.contract;
     account = $app.account;
@@ -793,15 +790,27 @@ async function mint(file, code) {
     mintText = 'Uploading image to ipfs...';
     await ipfs.connect('https://ipfs.infura.io:5001');
     let file_ = await ipfs.add(file);
-    console.log(file_)
+
     const image_uri = `https://gateway.ipfs.io/ipfs/${file_.path}`;
     data.image = image_uri;
     console.log('IMAGE URL', image_uri);
 
     let nextId = await contract.methods.totalSupply().call();
     // here is where you'd set external_url in the json
+    var payload = {}
+    payload.customer = account;
+    payload.nft = data;
+    let response = await fetch(BACKEND, {
+    	method: 'POST',
+    	headers: {
+    		'Content-Type': 'application/json;charset=utf-8'
+    	},
+    	body: JSON.stringify(payload)
+    });
+    let result = await response.json();
+    console.log(result);
 
-    //Send JSON to backend
+
 
     //Backend verifies that seed is unique, uploads JSON to IPFS
 
@@ -810,9 +819,7 @@ async function mint(file, code) {
     //Take signed message, communicate with contract, and mint
 
     //TODO: this needs to be a backend function
-    mintText = 'Uploading NFT metadata to ipfs...';
-    file_ = await ipfs.add(JSON.stringify(data));
-    const json_uri = `https://gateway.ipfs.io/ipfs/${file_.path}`;
+
 
     mintText =
       'Adding NFT to blockchain - See MetaMask (or the like) for transaction';

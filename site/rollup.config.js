@@ -48,7 +48,7 @@ export default {
     replace({
       'process.env.CONTRACT_ADDRESS': JSON.stringify(
         process.env.CONTRACT_ADDRESS
-      ),
+      ), 'BACKEND' :JSON.stringify(process.env.BACKEND),  
     }),
     jsonImport(),
     svelte({
