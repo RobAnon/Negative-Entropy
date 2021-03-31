@@ -45,7 +45,8 @@ contract NegativeEntropy is Context, AccessControl, ERC721Burnable, ERC721Pausab
 
    	//Initial maximum quantity
    	uint256 public maxQuantity = 1000;
-   	//Price a constant value – what units should this be in?
+   	//Price a constant value 
+   	//TODO: Consider making price variable?
    	uint256 public constant PRICE = 15E16;
    	//This should be set in the constructor
    	address payable public treasuryAddress;

@@ -800,6 +800,9 @@ async function mint(file, code) {
     var payload = {}
     payload.customer = account;
     payload.nft = data;
+
+    //Backend verifies that seed is unique, uploads JSON to IPFS
+ 	//Backend signs message (seed+URI) and returns signed message
     let response = await fetch(BACKEND, {
     	method: 'POST',
     	headers: {
@@ -810,24 +813,13 @@ async function mint(file, code) {
     let result = await response.json();
     console.log(result);
 
-
-
-    //Backend verifies that seed is unique, uploads JSON to IPFS
-
-    //Backend signs message (seed+URI) and returns signed message
-
     //Take signed message, communicate with contract, and mint
 
-    //TODO: this needs to be a backend function
-
-
-    mintText =
-      'Adding NFT to blockchain - See MetaMask (or the like) for transaction';
-    console.log('JSON URL', json_uri);
+    mintText = 'Adding NFT to blockchain - See MetaMask (or the like) for transaction';
 
     //TODO: Implement real contract behavior here
-    // await contract.methods.mint(nextId, account, json_uri).send();
-    const value = 0.15;
+
+    //const PRICE = await contract.methods
     const pay = await contract.methods.pay($app.web3.utils.toWei("0.15", 'ether'), nextId, account, json_uri).send({from: $app.account, value: $app.web3.utils.toWei("0.15", 'ether')})
     dispatch('minted');
     console.log(pay)
