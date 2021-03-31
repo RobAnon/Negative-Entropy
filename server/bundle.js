@@ -753,17 +753,6 @@ var ipfs = createClient('https://ipfs.infura.io:5001'); //Parse JSON
 
 app.use(express__default['default'].json());
 app.use(cors__default['default']());
-app.get('/', function (req, res) {
-  var provider = new HDWalletProvider({
-    privateKeys: [process.env.PRIVATE_KEY],
-    providerOrUrl: process.env.NETWORK,
-    pollingInterval: 10000
-  });
-  var web3 = new Web3(provider);
-  var response = web3.eth.accounts.sign("Hello world!", process.env.PRIVATE_KEY);
-  provider.engine.stop();
-  res.send(response);
-});
 app.post('/signature', function (req, res) {
   var provider = new HDWalletProvider({
     privateKeys: [process.env.PRIVATE_KEY],
@@ -795,6 +784,7 @@ app.post('/signature', function (req, res) {
 
     if (seeded) {
       //Seed exists, deny request
+      provider.engine.stop();
       res.status(401);
       return res.send("Seed already exists! Choose a seed that doesn't already exist!");
     } else {
@@ -821,12 +811,12 @@ function getSignature(web3, address, account, seed, jsonURL) {
 
   var signature = web3.eth.accounts.sign(data, process.env.PRIVATE_KEY);
   var payload = {};
-  payload["v"] = signature.v;
-  payload["r"] = signature.r;
-  payload["s"] = signature.s;
-  payload["seed"] = seed;
-  payload["customer"] = account;
-  payload["URI"] = jsonURL;
+  payload.v = signature.v;
+  payload.r = signature.r;
+  payload.s = signature.s;
+  payload.seed = seed;
+  payload.customer = account;
+  payload.URI = jsonURL;
   return payload;
 }
 

@@ -19,18 +19,6 @@ app.use(express.json());
 app.use(cors());
 
 
-app.get('/', (req, res) => {
-	let provider = new HDWalletProvider({
-		privateKeys:[process.env.PRIVATE_KEY], 
-		providerOrUrl: process.env.NETWORK, 
-		pollingInterval:10000
-	});
-  	const web3 = new Web3(provider);
-  	var response =  web3.eth.accounts.sign("Hello world!", process.env.PRIVATE_KEY);
-  	provider.engine.stop();
-  res.send(response);
-});
-
 app.post('/signature', (req, res) => {  	
 	let provider = new HDWalletProvider({
 		privateKeys:[process.env.PRIVATE_KEY], 
@@ -49,6 +37,7 @@ app.post('/signature', (req, res) => {
 				seed = attribute["value"];
 		}
  	}	
+
  	//Promise chain begins
  	getAccounts(web3)
  	.then(function(accounts) {
@@ -63,6 +52,7 @@ app.post('/signature', (req, res) => {
 
  		if(seeded){
  			//Seed exists, deny request
+ 			provider.engine.stop();
  			res.status(401);
 			return res.send("Seed already exists! Choose a seed that doesn't already exist!");
  		} else {
@@ -77,7 +67,7 @@ app.post('/signature', (req, res) => {
 
 	  		provider.engine.stop();
  		}
- 	})
+ 	});
 
 
 
@@ -109,12 +99,12 @@ function getSignature(web3, address, account, seed, jsonURL){
     // minter sign
     const signature = web3.eth.accounts.sign(data, process.env.PRIVATE_KEY);
     var payload = {};
-    payload["v"] = signature.v;
-    payload["r"] = signature.r;
-    payload["s"] = signature.s;
-    payload["seed"] = seed;
-    payload["customer"] = account;
-    payload["URI"] = jsonURL;
+    payload.v = signature.v;
+    payload.r = signature.r;
+    payload.s = signature.s;
+    payload.seed = seed;
+    payload.customer = account;
+    payload.URI = jsonURL;
    	return payload;
 }
 
@@ -146,22 +136,5 @@ async function getURI(data) {
  			resolve(`https://gateway.ipfs.io/ipfs/${result.path}`)
  		}))
 	});
-}
-
-function formJSON() {
-	//FORM PRELIMINARY JSON STRUCTURE FOR UPLOAD
-	  let name = '';
-	  let description = 'An NFT of Negative Entropy: Series 1: Thomas'; //TODO include minter address in here + number it is
-	  let attributes = [];
-	  let image = '';
-	  let dependencies = [];
-	  let code = defaultCode;
-	  let valid = false;
-
-	  // temp values
-	  let attrKey = '';
-	  let attrValue = '';
-	  let dependency = '';
-	  let dependencyType = 'script';
 }
 
