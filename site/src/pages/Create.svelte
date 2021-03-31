@@ -819,7 +819,8 @@ async function mint(file, code) {
 
     //TODO: Implement real contract behavior here
 
-    //const PRICE = await contract.methods
+    
+
     const pay = await contract.methods.pay($app.web3.utils.toWei("0.15", 'ether'), nextId, account, json_uri).send({from: $app.account, value: $app.web3.utils.toWei("0.15", 'ether')})
     dispatch('minted');
     console.log(pay)

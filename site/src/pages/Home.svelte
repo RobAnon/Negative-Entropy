@@ -13,8 +13,15 @@ async function getTokens() {
 
     // feels like the best way to do it in the browser when there are only few items
     const nombre = await contract.methods.name().call();
-    console.log(nombre);
-    const address = contract.address;
+
+    const PRICE = await contract.methods.PRICE().call();
+    const price_act = $app.web3.utils.fromWei(PRICE);
+    console.log("price is: " +price_act);
+
+    const paid = contracts.methods.mint()
+
+
+
 
     /*
     let _totalTokens = totalTokens;
