@@ -12,11 +12,14 @@ async function getTokens() {
     contract = $app.contract;
 
 
-    const testResponse = '{"v":"0x1b","r":"0x45bca04d36dc4f55ac454c5747b18f514201edfd4598cc060edf53d537c97211","s":"0x0120af74b23d647467c52f10662d8d8360ae8d7b06bc8471272d1793ef781545","URI":"https://gateway.ipfs.io/ipfs/QmcZHzGkvUkrksj3voHP8Y3AwL1FkQspAGRh3fpCsAJj7e","hash":"0xa2caa15cc8e152bb7a5b0b001c070a1b61b5121bca0fce55f4fba508da4b1de1"}';    
+    const testResponse = '{"v":"0x1c","r":"0x41187cde767afa7c2704c772ad52772475ce29c237c6309ee7a5a9227534c1d7","s":"0x47660c21af2a6c05545db5e39a7f64715341a316033978cb28fe72550e13f79b","URI":"https://gateway.ipfs.io/ipfs/QmcZHzGkvUkrksj3voHP8Y3AwL1FkQspAGRh3fpCsAJj7e","seed":"Negative Entropy","hash":"0x0a2386488a9470bfccf52266286726936a5da24636d9bcd330dfe1810ab46d50"}';    
 
     var test = JSON.parse(testResponse);
+    console.log(test);
 
-    const PRICE = await contract.methods.PRICE().call();
+    const PRICE = await contract.methods.PRICE().call({from: $app.account});
+    console.log("contract follows");
+    console.log(contract);
     const price_act = $app.web3.utils.fromWei(PRICE);
     console.log("price is: " +price_act);
 

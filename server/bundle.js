@@ -811,6 +811,7 @@ function getSignature(web3, address, account, seed, jsonURL) {
   payload.r = signature.r;
   payload.s = signature.s;
   payload.URI = jsonURL;
+  payload.seed = seed;
   payload.hash = signature.messageHash;
   return payload;
 }
