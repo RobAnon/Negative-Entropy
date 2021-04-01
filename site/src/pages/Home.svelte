@@ -23,10 +23,9 @@ async function getTokens() {
     const price_act = $app.web3.utils.fromWei(PRICE);
     console.log("price is: " +price_act);
 
-    const payment = await contract.methods.mint($app.account, test.v, test.r, test.s, test.URI, test.seed, test.hash).send({from: $app.account, value: PRICE})
-    dispatch('minted');
-    console.log(payment);
-
+    //const payment = await contract.methods.mint($app.account, test.v, test.r, test.s, test.URI, test.seed, test.hash).send({from: $app.account, value: PRICE})
+    //dispatch('minted');
+  //  console.log(payment);
 
 
     /*

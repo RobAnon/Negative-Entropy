@@ -814,14 +814,12 @@ async function mint(file, code) {
     console.log(result);
 
     //Take signed message, communicate with contract, and mint
+    const PRICE = await contract.methods.PRICE().call({from: $app.account});
+    const price_act = $app.web3.utils.fromWei(PRICE);
+    console.log("price is: " +price_act);
 
     mintText = 'Adding NFT to blockchain - See MetaMask (or the like) for transaction';
-
-    //TODO: Implement real contract behavior here
-
-    
-
-    const pay = await contract.methods.pay($app.web3.utils.toWei("0.15", 'ether'), nextId, account, json_uri).send({from: $app.account, value: $app.web3.utils.toWei("0.15", 'ether')})
+    const payment = await contract.methods.mint($app.account, result.v, result.r, result.s, result.URI, result.seed, result.hash).send({from: $app.account, value: PRICE})
     dispatch('minted');
     console.log(pay)
   }
