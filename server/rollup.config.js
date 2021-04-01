@@ -5,7 +5,7 @@ import json from '@rollup/plugin-json';
 const dev = process.env.NODE_ENV !== 'production';
 
 export default {
-  input: 'src/index.js',
+  input: 'api/index.js',
   output: {
     file: 'bundle.js',
     format: 'cjs',

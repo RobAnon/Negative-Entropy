@@ -5,14 +5,12 @@ pragma experimental ABIEncoderV2;
 
 
 import "../node_modules/@openzeppelin/contracts/access/AccessControl.sol";
-import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
 import "../node_modules/@openzeppelin/contracts/utils/Counters.sol";
 import "../node_modules/@openzeppelin/contracts/utils/EnumerableMap.sol";
 import "../node_modules/@openzeppelin/contracts/utils/EnumerableSet.sol";
 import "../node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "../node_modules/@openzeppelin/contracts/token/ERC721/ERC721Burnable.sol";
 import "../node_modules/@openzeppelin/contracts/token/ERC721/ERC721Pausable.sol";
-import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
 import "./ModifiedEnumerableMap.sol";
 
 /**
@@ -57,7 +55,7 @@ contract NegativeEntropy is Context, AccessControl, ERC721Burnable, ERC721Pausab
 
     
 
-    constructor(address payable _tA) public ERC721("NegativeEntropy", "NGTV") {
+    constructor(address payable _tA) public ERC721("Negative Entropy", "NGTV") {
         _setupRole(MINTER_ROLE, _msgSender());
 		_setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
 		_setupRole(PAUSER_ROLE, _msgSender());

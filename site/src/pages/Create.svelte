@@ -1,5 +1,5 @@
 <script>
-  
+  //TODO: ADD IN EXTERNAL_URL FOR OPENSEA
   import { createEventDispatcher, getContext, onMount } from 'svelte';
   import defaultCode from '../conf/code.js';
   import Sandbox from '@beyondnft/sandbox';
