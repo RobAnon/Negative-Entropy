@@ -7,7 +7,7 @@ const dev = process.env.NODE_ENV !== 'production';
 export default {
   input: 'api/index.js',
   output: {
-    file: 'bundle.js',
+    file: 'public/build/bundle.js',
     format: 'cjs',
   },
   plugins: [
