@@ -13,6 +13,13 @@ import "../node_modules/@openzeppelin/contracts/token/ERC721/ERC721Burnable.sol"
 import "../node_modules/@openzeppelin/contracts/token/ERC721/ERC721Pausable.sol";
 import "./ModifiedEnumerableMap.sol";
 
+
+contract OwnableDelegateProxy {}
+
+contract ProxyRegistry {
+    mapping(address => OwnableDelegateProxy) public proxies;
+}
+
 /**
  * @dev {ERC721} token, including:
  *
@@ -46,7 +53,8 @@ contract NegativeEntropy is Context, AccessControl, ERC721Burnable, ERC721Pausab
    	//This should be set in the constructor
    	address payable public treasuryAddress;
     address private _owner;
- 
+    address proxyRegistryAddress;
+
 
     Counters.Counter private tokenCounter;
     EnumerableSet.Bytes32Set private seedSet;
@@ -55,12 +63,13 @@ contract NegativeEntropy is Context, AccessControl, ERC721Burnable, ERC721Pausab
 
     
 
-    constructor(address payable _tA) public ERC721("Negative Entropy", "NGTV") {
+    constructor(address payable _tA, address _proxy) public ERC721("Negative Entropy", "NGTV") {
         _setupRole(MINTER_ROLE, _msgSender());
 		_setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
 		_setupRole(PAUSER_ROLE, _msgSender());
 		treasuryAddress = _tA;
         _owner = _msgSender();
+        proxyRegistryAddress = _proxy;
     }
 
     modifier onlyOwner() {
@@ -217,8 +226,26 @@ contract NegativeEntropy is Context, AccessControl, ERC721Burnable, ERC721Pausab
         return hasRole(MINTER_ROLE, _address);
     }
 
+    //For OS Integration
     function owner() public view returns (address) { return _owner; }
 
+    /**
+     * Override isApprovedForAll to whitelist user's OpenSea proxy accounts to enable gas-less listings.
+     */
+    function isApprovedForAll(address owned, address operator)
+        public
+        view
+        override
+        returns (bool)
+    {
+        // Whitelist OpenSea proxy contract for easy trading.
+        ProxyRegistry proxyRegistry = ProxyRegistry(proxyRegistryAddress);
+        if (address(proxyRegistry.proxies(owned)) == operator) {
+            return true;
+        }
+
+        return super.isApprovedForAll(owned, operator);
+    }
 
     /**
     *
@@ -251,8 +278,5 @@ contract NegativeEntropy is Context, AccessControl, ERC721Burnable, ERC721Pausab
         require(owner_ != address(0), "Cannot zero-out owner");
         _owner = owner_;
     }
-}
-
-
 
 }
