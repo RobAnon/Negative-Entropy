@@ -59,6 +59,7 @@ app.post('/signature', (req, res) => {
 	    	//console.log(json_uri);
 	    	getURI(JSON.stringify(req.body.nft))
 	    	.then(function(json_uri) {
+	    		console.log(json_uri);
 	    		//TODO: This is where we can finally sign the message with URI + seed
 	    		console.log(json_uri);
 		 		var signature =  getSignature(web3, process.env.CONTRACT_ADDRESS, address, seed, json_uri)
@@ -98,14 +99,13 @@ function getSignature(web3, address, account, seed, jsonURL){
 
     // minter sign
     const signature = web3.eth.accounts.sign(data, process.env.PRIVATE_KEY);
+
     var payload = {};
     payload.v = signature.v;
     payload.r = signature.r;
     payload.s = signature.s;
-    payload.signature = signature; //TODO: REMOVE, DEV STATEMENT
-    payload.seed = seed;
-    payload.customer = account;
     payload.URI = jsonURL;
+    payload.hash = signature.messageHash;
    	return payload;
 }
 

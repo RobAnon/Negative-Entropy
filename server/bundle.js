@@ -71,21 +71,6 @@ var abi = [{
   inputs: [{
     indexed: false,
     internalType: "address",
-    name: "a",
-    type: "address"
-  }, {
-    indexed: false,
-    internalType: "string",
-    name: "message",
-    type: "string"
-  }],
-  name: "DebugMessage",
-  type: "event"
-}, {
-  anonymous: false,
-  inputs: [{
-    indexed: false,
-    internalType: "address",
     name: "account",
     type: "address"
   }],
@@ -190,7 +175,8 @@ var abi = [{
     type: "bytes32"
   }],
   stateMutability: "view",
-  type: "function"
+  type: "function",
+  constant: true
 }, {
   inputs: [],
   name: "MINTER_ROLE",
@@ -200,7 +186,8 @@ var abi = [{
     type: "bytes32"
   }],
   stateMutability: "view",
-  type: "function"
+  type: "function",
+  constant: true
 }, {
   inputs: [],
   name: "PAUSER_ROLE",
@@ -210,7 +197,8 @@ var abi = [{
     type: "bytes32"
   }],
   stateMutability: "view",
-  type: "function"
+  type: "function",
+  constant: true
 }, {
   inputs: [],
   name: "PRICE",
@@ -220,7 +208,8 @@ var abi = [{
     type: "uint256"
   }],
   stateMutability: "view",
-  type: "function"
+  type: "function",
+  constant: true
 }, {
   inputs: [{
     internalType: "address",
@@ -248,7 +237,8 @@ var abi = [{
     type: "uint256"
   }],
   stateMutability: "view",
-  type: "function"
+  type: "function",
+  constant: true
 }, {
   inputs: [],
   name: "baseURI",
@@ -258,7 +248,8 @@ var abi = [{
     type: "string"
   }],
   stateMutability: "view",
-  type: "function"
+  type: "function",
+  constant: true
 }, {
   inputs: [{
     internalType: "uint256",
@@ -272,7 +263,8 @@ var abi = [{
     type: "address"
   }],
   stateMutability: "view",
-  type: "function"
+  type: "function",
+  constant: true
 }, {
   inputs: [{
     internalType: "bytes32",
@@ -286,7 +278,8 @@ var abi = [{
     type: "bytes32"
   }],
   stateMutability: "view",
-  type: "function"
+  type: "function",
+  constant: true
 }, {
   inputs: [{
     internalType: "bytes32",
@@ -304,7 +297,8 @@ var abi = [{
     type: "address"
   }],
   stateMutability: "view",
-  type: "function"
+  type: "function",
+  constant: true
 }, {
   inputs: [{
     internalType: "bytes32",
@@ -318,7 +312,8 @@ var abi = [{
     type: "uint256"
   }],
   stateMutability: "view",
-  type: "function"
+  type: "function",
+  constant: true
 }, {
   inputs: [{
     internalType: "bytes32",
@@ -350,7 +345,8 @@ var abi = [{
     type: "bool"
   }],
   stateMutability: "view",
-  type: "function"
+  type: "function",
+  constant: true
 }, {
   inputs: [{
     internalType: "address",
@@ -368,7 +364,8 @@ var abi = [{
     type: "bool"
   }],
   stateMutability: "view",
-  type: "function"
+  type: "function",
+  constant: true
 }, {
   inputs: [],
   name: "maxQuantity",
@@ -378,7 +375,8 @@ var abi = [{
     type: "uint256"
   }],
   stateMutability: "view",
-  type: "function"
+  type: "function",
+  constant: true
 }, {
   inputs: [],
   name: "name",
@@ -388,7 +386,8 @@ var abi = [{
     type: "string"
   }],
   stateMutability: "view",
-  type: "function"
+  type: "function",
+  constant: true
 }, {
   inputs: [{
     internalType: "uint256",
@@ -402,7 +401,8 @@ var abi = [{
     type: "address"
   }],
   stateMutability: "view",
-  type: "function"
+  type: "function",
+  constant: true
 }, {
   inputs: [],
   name: "paused",
@@ -412,7 +412,8 @@ var abi = [{
     type: "bool"
   }],
   stateMutability: "view",
-  type: "function"
+  type: "function",
+  constant: true
 }, {
   inputs: [{
     internalType: "bytes32",
@@ -508,7 +509,8 @@ var abi = [{
     type: "bool"
   }],
   stateMutability: "view",
-  type: "function"
+  type: "function",
+  constant: true
 }, {
   inputs: [],
   name: "symbol",
@@ -518,7 +520,8 @@ var abi = [{
     type: "string"
   }],
   stateMutability: "view",
-  type: "function"
+  type: "function",
+  constant: true
 }, {
   inputs: [{
     internalType: "uint256",
@@ -532,7 +535,8 @@ var abi = [{
     type: "uint256"
   }],
   stateMutability: "view",
-  type: "function"
+  type: "function",
+  constant: true
 }, {
   inputs: [{
     internalType: "address",
@@ -550,7 +554,8 @@ var abi = [{
     type: "uint256"
   }],
   stateMutability: "view",
-  type: "function"
+  type: "function",
+  constant: true
 }, {
   inputs: [{
     internalType: "uint256",
@@ -564,7 +569,8 @@ var abi = [{
     type: "string"
   }],
   stateMutability: "view",
-  type: "function"
+  type: "function",
+  constant: true
 }, {
   inputs: [],
   name: "totalSupply",
@@ -574,7 +580,8 @@ var abi = [{
     type: "uint256"
   }],
   stateMutability: "view",
-  type: "function"
+  type: "function",
+  constant: true
 }, {
   inputs: [{
     internalType: "address",
@@ -602,7 +609,8 @@ var abi = [{
     type: "address"
   }],
   stateMutability: "view",
-  type: "function"
+  type: "function",
+  constant: true
 }, {
   inputs: [{
     internalType: "address payable",
@@ -628,24 +636,21 @@ var abi = [{
     internalType: "string",
     name: "seedDesired",
     type: "string"
+  }, {
+    internalType: "bytes32",
+    name: "hash",
+    type: "bytes32"
   }],
   name: "mint",
   outputs: [],
   stateMutability: "payable",
-  type: "function"
+  type: "function",
+  payable: true
 }, {
   inputs: [{
-    internalType: "string",
-    name: "seed",
-    type: "string"
-  }, {
-    internalType: "string",
-    name: "tokenURI",
-    type: "string"
-  }, {
-    internalType: "address",
-    name: "account",
-    type: "address"
+    internalType: "bytes32",
+    name: "signed",
+    type: "bytes32"
   }, {
     internalType: "uint8",
     name: "v",
@@ -666,37 +671,8 @@ var abi = [{
     type: "address"
   }],
   stateMutability: "view",
-  type: "function"
-}, {
-  inputs: [{
-    internalType: "string",
-    name: "seed",
-    type: "string"
-  }, {
-    internalType: "string",
-    name: "tokenURI",
-    type: "string"
-  }, {
-    internalType: "uint8",
-    name: "v",
-    type: "uint8"
-  }, {
-    internalType: "bytes32",
-    name: "r",
-    type: "bytes32"
-  }, {
-    internalType: "bytes32",
-    name: "s",
-    type: "bytes32"
-  }],
-  name: "_signedByMinter",
-  outputs: [{
-    internalType: "bool",
-    name: "",
-    type: "bool"
-  }],
-  stateMutability: "nonpayable",
-  type: "function"
+  type: "function",
+  constant: true
 }, {
   inputs: [],
   name: "pause",
@@ -732,7 +708,8 @@ var abi = [{
     type: "bool"
   }],
   stateMutability: "view",
-  type: "function"
+  type: "function",
+  constant: true
 }, {
   inputs: [{
     internalType: "address",
@@ -745,8 +722,9 @@ var abi = [{
     name: "",
     type: "bool"
   }],
-  stateMutability: "nonpayable",
-  type: "function"
+  stateMutability: "view",
+  type: "function",
+  constant: true
 }, {
   inputs: [{
     internalType: "uint256",
@@ -807,7 +785,8 @@ app.post('/signature', function (req, res) {
     } else {
       //console.log(json_uri);
       getURI(JSON.stringify(req.body.nft)).then(function (json_uri) {
-        //TODO: This is where we can finally sign the message with URI + seed
+        console.log(json_uri); //TODO: This is where we can finally sign the message with URI + seed
+
         console.log(json_uri);
         var signature = getSignature(web3, process.env.CONTRACT_ADDRESS, address, seed, json_uri);
         return res.send(JSON.stringify(signature));
@@ -831,11 +810,8 @@ function getSignature(web3, address, account, seed, jsonURL) {
   payload.v = signature.v;
   payload.r = signature.r;
   payload.s = signature.s;
-  payload.signature = signature; //TODO: REMOVE, DEV STATEMENT
-
-  payload.seed = seed;
-  payload.customer = account;
   payload.URI = jsonURL;
+  payload.hash = signature.messageHash;
   return payload;
 }
 
