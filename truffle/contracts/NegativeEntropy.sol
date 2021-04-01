@@ -1,5 +1,3 @@
-//TODO: Is there any reason to use Ownable instead of current setup?
-
 // SPDX-License-Identifier: MIT
 
 pragma solidity ^0.6.0;
@@ -115,9 +113,6 @@ contract NegativeEntropy is Context, AccessControl, ERC721Burnable, ERC721Pausab
     	to.transfer(msg.value.sub(PRICE));
 
         mint(tokenCounter.current(), to, tokenURI);
-
-        //We add the ID to our list
-
 
         //Last step
         if(claimSeed(seedDesired, tokenCounter.current())) { 
