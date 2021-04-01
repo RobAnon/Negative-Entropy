@@ -45,8 +45,8 @@ contract NegativeEntropy is Context, AccessControl, ERC721Burnable, ERC721Pausab
    	uint256 public constant PRICE = 15E16;
    	//This should be set in the constructor
    	address payable public treasuryAddress;
-
-
+    address private _owner;
+ 
 
     Counters.Counter private tokenCounter;
     EnumerableSet.Bytes32Set private seedSet;
@@ -60,6 +60,7 @@ contract NegativeEntropy is Context, AccessControl, ERC721Burnable, ERC721Pausab
 		_setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
 		_setupRole(PAUSER_ROLE, _msgSender());
 		treasuryAddress = _tA;
+        _owner = _msgSender();
     }
 
     modifier onlyOwner() {
@@ -216,6 +217,8 @@ contract NegativeEntropy is Context, AccessControl, ERC721Burnable, ERC721Pausab
         return hasRole(MINTER_ROLE, _address);
     }
 
+    function owner() public view returns (address) { return _owner; }
+
 
     /**
     *
@@ -243,6 +246,13 @@ contract NegativeEntropy is Context, AccessControl, ERC721Burnable, ERC721Pausab
     	assert(hasRole(MINTER_ROLE, _msgSender()));
     	maxQuantity = quant;
     }
+
+    function setOwner(address owner_) onlyOwner() public {
+        require(owner_ != address(0), "Cannot zero-out owner");
+        _owner = owner_;
+    }
+}
+
 
 
 }
