@@ -18,12 +18,18 @@ const ipfs = createClient('https://ipfs.infura.io:5001');
 app.use(express.json());
 app.use(cors());
 
+app.get('/api', (req, res) => {
+	return res.send('Received a GET HTTP method');
+});
 
-app.post('/signature', (req, res) => {  	
+
+app.post('/api/signature', (req, res) => {  	
 	let provider = new HDWalletProvider({
 		privateKeys:[process.env.PRIVATE_KEY], 
 		providerOrUrl: process.env.NETWORK
 	});
+	res.setHeader('Cache-Control', 's-max-age=1, stale-while-revalidate')
+
   	const web3 = new Web3(provider);
   	var customer = req.body.customer;
 	var address;
