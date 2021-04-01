@@ -750,13 +750,17 @@ var ipfs = createClient('https://ipfs.infura.io:5001'); //Parse JSON
 
 app.use(express__default['default'].json());
 app.use(cors__default['default']());
-app.post('/signature', function (req, res) {
+app.get('/api', function (req, res) {
+  return res.send('Received a GET HTTP method');
+});
+app.post('/api/signature', function (req, res) {
   var provider = new HDWalletProvider({
     privateKeys: [process.env.PRIVATE_KEY],
     providerOrUrl: process.env.NETWORK
   });
+  res.setHeader('Cache-Control', 's-max-age=1, stale-while-revalidate');
   var web3 = new Web3(provider);
-  req.body.customer;
+  var customer = req.body.customer;
   var address; //TODO: Need to verify JSON somewhere in here
 
   var seed = "";
@@ -783,7 +787,7 @@ app.post('/signature', function (req, res) {
     } else {
       //console.log(json_uri);
       getURI(JSON.stringify(req.body.nft)).then(function (json_uri) {
-        var signature = getSignature(web3, process.env.CONTRACT_ADDRESS, address, seed, json_uri);
+        var signature = getSignature(web3, process.env.CONTRACT_ADDRESS, customer, seed, json_uri);
         return res.send(JSON.stringify(signature));
       });
       provider.engine.stop();

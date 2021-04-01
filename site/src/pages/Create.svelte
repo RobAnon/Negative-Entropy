@@ -798,7 +798,7 @@ async function mint(file, code) {
     let nextId = await contract.methods.totalSupply().call();
     // here is where you'd set external_url in the json
     var payload = {}
-    payload.customer = account;
+    payload.customer = $app.account;
     payload.nft = data;
     //Backend verifies that seed is unique, uploads JSON to IPFS
  	//Backend signs message (seed+URI) and returns signed message

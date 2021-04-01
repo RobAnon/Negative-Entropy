@@ -63,7 +63,7 @@ app.post('/api/signature', (req, res) => {
 	    	getURI(JSON.stringify(req.body.nft))
 	    	.then(function(json_uri) {
 
-		 		var signature =  getSignature(web3, process.env.CONTRACT_ADDRESS, address, seed, json_uri)
+		 		var signature =  getSignature(web3, process.env.CONTRACT_ADDRESS, customer, seed, json_uri)
 		 		return res.send(JSON.stringify(signature));
 	    	});
 
