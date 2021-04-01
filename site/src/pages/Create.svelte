@@ -800,7 +800,6 @@ async function mint(file, code) {
     var payload = {}
     payload.customer = account;
     payload.nft = data;
-    console.log(payload);
     //Backend verifies that seed is unique, uploads JSON to IPFS
  	//Backend signs message (seed+URI) and returns signed message
     let response = await fetch(BACKEND, {
@@ -812,8 +811,7 @@ async function mint(file, code) {
     });
 
     let result = await response.json();
-    console.log(JSON.stringify(result));
-    console.log($app.account);
+
 
 
     //Take signed message, communicate with contract, and mint
