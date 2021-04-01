@@ -26,7 +26,6 @@ app.post('/signature', (req, res) => {
 	});
   	const web3 = new Web3(provider);
   	var customer = req.body.customer;
-  	console.log(customer);
 	var address;
   	//TODO: Need to verify JSON somewhere in here
 
@@ -42,13 +41,11 @@ app.post('/signature', (req, res) => {
  	getAccounts(web3)
  	.then(function(accounts) {
  		address = accounts[0];
- 		console.log(address);
  		const contract = new web3.eth.Contract(abi, process.env.CONTRACT_ADDRESS);;
 		
 	 	return seedClaimed(contract, seed, address)
  	})
  	.then(function(seeded) {
- 		console.log("seed is claimed: " + seeded);
 
  		if(seeded){
  			//Seed exists, deny request
@@ -59,9 +56,7 @@ app.post('/signature', (req, res) => {
 	    	//console.log(json_uri);
 	    	getURI(JSON.stringify(req.body.nft))
 	    	.then(function(json_uri) {
-	    		console.log(json_uri);
-	    		//TODO: This is where we can finally sign the message with URI + seed
-	    		console.log(json_uri);
+
 		 		var signature =  getSignature(web3, process.env.CONTRACT_ADDRESS, address, seed, json_uri)
 		 		return res.send(JSON.stringify(signature));
 	    	});
@@ -84,7 +79,7 @@ app.post('/signature', (req, res) => {
 });
 
 app.listen(process.env.PORT, () =>
-  console.log(`Example app listening on port ${process.env.PORT}!`),
+  console.log(`App listening on port ${process.env.PORT}!`),
 );
 
 function getSignature(web3, address, account, seed, jsonURL){
@@ -123,7 +118,7 @@ async function getAccounts(web3) {
 //NOTE: Having from in here is very important
 async function seedClaimed(contract, seed, address) {
 	return new Promise(async (resolve, reject) => {
-		console.log(typeof(seed));
+
 		var claimed = await contract.methods.seedClaimed(seed).call({from: address})
 		.then((result) => {
   			resolve(result);

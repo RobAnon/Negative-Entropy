@@ -20,7 +20,7 @@ import { ViewerScript } from '../components/ViewerScript'
   export let innerHeight;
   export let innerWidth;
   onMount(()=>{
-    console.log(document.getElementById('canvas'))
+    
     const renderer = document.getElementById('canvas')
     document.getElementById('canvas-container').appendChild(renderer);
 	
@@ -235,7 +235,7 @@ export const init = async () => {
 	camera.position.set( 77, 77, 77 );
 	camera.lookAt( 0, 0, 0 );
   	myApp.set({camera: camera})
-  	console.log('camera', camera,myApp.camera)
+
 	scene = new Scene();
 	scene.background = new Color( 0x444444 );
 	initLights(scene, camera);
@@ -291,7 +291,7 @@ export const init = async () => {
     material.dispose();
 
 	if(typeof newSeed === 'undefined') {
-    console.log(window.innerWidth, 'window.innerWidth')
+
 		renderer = new WebGLRenderer( { antialias: true } );
 		renderer.setPixelRatio( window.devicePixelRatio );
 		renderer.setSize( window.innerWidth/2, window.innerHeight/2);
@@ -307,8 +307,8 @@ export const init = async () => {
     myApp.update(m=>{ 
       m.camera = camera; m.renderer = renderer
     })
-    console.log(myApp.camera)
-		// window.addEventListener( 'resize', onWindowResize );
+
+
 	}
 
 	controls = new OrbitControls(camera, renderer.domElement);
@@ -316,7 +316,7 @@ export const init = async () => {
 
 function reset() {
 	seed = (' ' + newSeed).slice(1);//Force deep copy of newSeed
-  console.log(seed)
+
 	//Remove all
 	scene.traverse(object => {
 		if (!object.isMesh) return
@@ -500,15 +500,15 @@ function onWindowResize() {
   
   setAttributes();
   const _camera = get(myApp)
-  console.log(_camera, camera, renderer, 'onWindowResize')
+
   
-	console.log(renderer, 'asdfkjl')
+
 	if (recording) {
 		return;
 	}
 	camera.aspect = (window.innerWidth / window.innerHeight);
 	camera.updateProjectionMatrix();
-	console.log(window.innerWidth, window.innerHeight)
+
 	renderer.setSize( window.innerWidth/2, window.innerHeight/2);
 	document.getElementById('canvas').setAttribute('style', 'width: 100%; height: 100%;' )
 
@@ -559,7 +559,7 @@ export const start = (e) => {
 }
 export const headlamp = e => {
   const $headlamp = document.getElementById('headlamp');
-  console.log($headlamp, 'asdf')
+
 	if(HEADLAMP) {
 			$headlamp.style.fill = "black";
 			HEADLAMP = false;
@@ -727,7 +727,7 @@ function render() {
 
 animate();
 
-console.log(document.getElementById('start'))
+
 
 var webMfile = writable();
 
@@ -740,14 +740,14 @@ async function onRecordingEnd() {
   //FORM ATTRIBUTES
 
 
-  console.log(seed)
+
   recording = false;
   recorder.stop();
   var blob = new Blob();
   await recorder.save(async (_blob) => {
-    console.log(_blob)
+
     blob = _blob;
-    console.log(blob, 'in function')
+
     const _code = ViewerScript(); //TODO: Replace this with window.properties.seed or something along those lines
     mint(new File([blob], "blob.webm"), _code)
   })
@@ -782,7 +782,7 @@ async function mint(file, code) {
     ) {
       return;
     }
-    console.log(data);
+
 
     contract = $app.contract;
     account = $app.account;
@@ -793,7 +793,7 @@ async function mint(file, code) {
 
     const image_uri = `https://gateway.ipfs.io/ipfs/${file_.path}`;
     data.image = image_uri;
-    console.log('IMAGE URL', image_uri);
+
 
     let nextId = await contract.methods.totalSupply().call();
     // here is where you'd set external_url in the json
@@ -811,22 +811,16 @@ async function mint(file, code) {
     	body: JSON.stringify(payload)
     });
     let result = await response.json();
-    console.log(result);
 
     //Take signed message, communicate with contract, and mint
     const PRICE = await contract.methods.PRICE().call({from: $app.account});
     const price_act = $app.web3.utils.fromWei(PRICE);
-    console.log("price is: " +price_act);
+
 
     mintText = 'Adding NFT to blockchain - See MetaMask (or the like) for transaction';
     const payment = await contract.methods.mint($app.account, result.v, result.r, result.s, result.URI, result.seed, result.hash).send({from: $app.account, value: PRICE})
     dispatch('minted');
-    console.log(pay)
   }
-// export const withdrawFunds = async () => {
-//   await contract.methods.sendValue(account, $app.web3.utils.toWei("0.15", 'ether'));
-
-// }
 </script>
 
   

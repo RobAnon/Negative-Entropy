@@ -1,6 +1,5 @@
 'use strict';
 
-var _typeof = require('@babel/runtime/helpers/typeof');
 var _asyncToGenerator = require('@babel/runtime/helpers/asyncToGenerator');
 var _regeneratorRuntime = require('@babel/runtime/regenerator');
 var dotenv = require('dotenv');
@@ -10,7 +9,6 @@ require('fs');
 
 function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
 
-var _typeof__default = /*#__PURE__*/_interopDefaultLegacy(_typeof);
 var _asyncToGenerator__default = /*#__PURE__*/_interopDefaultLegacy(_asyncToGenerator);
 var _regeneratorRuntime__default = /*#__PURE__*/_interopDefaultLegacy(_regeneratorRuntime);
 var dotenv__default = /*#__PURE__*/_interopDefaultLegacy(dotenv);
@@ -754,8 +752,7 @@ app.post('/signature', function (req, res) {
     providerOrUrl: process.env.NETWORK
   });
   var web3 = new Web3(provider);
-  var customer = req.body.customer;
-  console.log(customer);
+  req.body.customer;
   var address; //TODO: Need to verify JSON somewhere in here
 
   var seed = "";
@@ -771,12 +768,9 @@ app.post('/signature', function (req, res) {
 
   getAccounts(web3).then(function (accounts) {
     address = accounts[0];
-    console.log(address);
     var contract = new web3.eth.Contract(abi, process.env.CONTRACT_ADDRESS);
     return seedClaimed(contract, seed, address);
   }).then(function (seeded) {
-    console.log("seed is claimed: " + seeded);
-
     if (seeded) {
       //Seed exists, deny request
       provider.engine.stop();
@@ -785,9 +779,6 @@ app.post('/signature', function (req, res) {
     } else {
       //console.log(json_uri);
       getURI(JSON.stringify(req.body.nft)).then(function (json_uri) {
-        console.log(json_uri); //TODO: This is where we can finally sign the message with URI + seed
-
-        console.log(json_uri);
         var signature = getSignature(web3, process.env.CONTRACT_ADDRESS, address, seed, json_uri);
         return res.send(JSON.stringify(signature));
       });
@@ -797,7 +788,7 @@ app.post('/signature', function (req, res) {
   return express__default['default'].Router();
 });
 app.listen(process.env.PORT, function () {
-  return console.log("Example app listening on port ".concat(process.env.PORT, "!"));
+  return console.log("App listening on port ".concat(process.env.PORT, "!"));
 });
 
 function getSignature(web3, address, account, seed, jsonURL) {
@@ -889,18 +880,17 @@ function _seedClaimed() {
                   while (1) {
                     switch (_context3.prev = _context3.next) {
                       case 0:
-                        console.log(_typeof__default['default'](seed));
-                        _context3.next = 3;
+                        _context3.next = 2;
                         return contract.methods.seedClaimed(seed).call({
                           from: address
                         }).then(function (result) {
                           resolve(result);
                         });
 
-                      case 3:
+                      case 2:
                         _context3.sent;
 
-                      case 4:
+                      case 3:
                       case "end":
                         return _context3.stop();
                     }
