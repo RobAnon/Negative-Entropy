@@ -81,7 +81,6 @@ contract NegativeEntropy is Context, AccessControl, ERC721Burnable, ERC721Pausab
         address _to,
         string calldata _tokenURI
     ) internal {
-
         _safeMint(_to, _tokenId);
         _setTokenURI(_tokenId, _tokenURI);
     }
@@ -99,19 +98,17 @@ contract NegativeEntropy is Context, AccessControl, ERC721Burnable, ERC721Pausab
         bytes32 r,
         bytes32 s,
         string calldata tokenURI,
-        string calldata seedDesired,
-        bytes32 hash
-
+        string calldata seedDesired
     ) public payable{
     	//Check for signature
         require(
-            _signedByMinter(hash, v, r, s),
+            _signedByMinter(seedDesired, tokenURI, to, v, r, s),
             "Negative Entropy: minter must sign URI and ID!"
         );
         //Check if we can mint based on number remaining
         require(tokenCounter.current() < maxQuantity, "NegativeEntropy: All NFTs have been claimed for this series"); 
         require(msg.value >= PRICE, "NegativeEntropy: Insufficient funds to mint a Negative Entropy NFT");
-        require(!seedClaimed(seedDesired), "NegativeEntropy: Seed has already been claimed – how did you make it this far?");
+        require(!seedClaimed(seedDesired), "NegativeEntropy: Seed has already been claimed–how did you make it this far?");
 
         //Where we get paid
         treasuryAddress.transfer(PRICE);
@@ -132,7 +129,9 @@ contract NegativeEntropy is Context, AccessControl, ERC721Burnable, ERC721Pausab
 
     // Minter detection helper
     function addressFromSignature(
-        bytes32 signed,
+        string calldata seed,
+        string calldata tokenURI,
+        address account,
         uint8 v,
         bytes32 r,
         bytes32 s
@@ -141,19 +140,27 @@ contract NegativeEntropy is Context, AccessControl, ERC721Burnable, ERC721Pausab
             v += 27;
         }
 
+        address _cont = address(this);
+        bytes memory prefix = "\x19Ethereum Signed Message:\n32";
+        bytes32 checkHash = keccak256(abi.encodePacked(_cont, account, seed, tokenURI));
+        bytes memory message = abi.encodePacked(prefix, checkHash);
+        bytes32 signed = keccak256(message);
+
         return ecrecover(signed, v, r, s);
     }
 
     // signer helper
     function _signedByMinter(
-    	bytes32 hash,
+    	string calldata seed,
+        string calldata tokenURI,
+        address account,
         uint8 v,
         bytes32 r,
         bytes32 s
     ) internal view returns (bool) {
         return
             isMinter(
-                addressFromSignature(hash, v, r, s) 
+                addressFromSignature(seed, tokenURI, account, v, r, s) 
             );
     }
 
@@ -202,13 +209,6 @@ contract NegativeEntropy is Context, AccessControl, ERC721Burnable, ERC721Pausab
         	revert();
         }
     }
-
-    function toEthSignedMessageHash(bytes32 hash) internal pure returns (bytes32) {
-        // 32 is the length in bytes of hash,
-        // enforced by the type signature above
-        return keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", hash));
-    }
-
 
     /**
     *

@@ -82,14 +82,15 @@ app.listen(process.env.PORT, () =>
   console.log(`App listening on port ${process.env.PORT}!`),
 );
 
+//TODO: Consider also signing with image we want
 function getSignature(web3, address, account, seed, jsonURL){
 	//Address = contact address
 	//account = signing account (THEIR account – need to get in request)
 	const data = web3.utils.soliditySha3(
-      address,
-      account,
-      seed,
-      jsonURL
+      {type: 'address', value: address},
+      {type: 'address', value: account},
+      {type: 'string', value: seed},
+      {type: 'string', value: jsonURL}
     );
 
     // minter sign
@@ -102,6 +103,7 @@ function getSignature(web3, address, account, seed, jsonURL){
     payload.URI = jsonURL;
     payload.seed = seed;
     payload.hash = signature.messageHash;
+    payload.signature = signature;
    	return payload;
 }
 

@@ -634,10 +634,6 @@ var abi = [{
     internalType: "string",
     name: "seedDesired",
     type: "string"
-  }, {
-    internalType: "bytes32",
-    name: "hash",
-    type: "bytes32"
   }],
   name: "mint",
   outputs: [],
@@ -646,9 +642,17 @@ var abi = [{
   payable: true
 }, {
   inputs: [{
-    internalType: "bytes32",
-    name: "signed",
-    type: "bytes32"
+    internalType: "string",
+    name: "seed",
+    type: "string"
+  }, {
+    internalType: "string",
+    name: "tokenURI",
+    type: "string"
+  }, {
+    internalType: "address",
+    name: "account",
+    type: "address"
   }, {
     internalType: "uint8",
     name: "v",
@@ -789,12 +793,24 @@ app.post('/signature', function (req, res) {
 });
 app.listen(process.env.PORT, function () {
   return console.log("App listening on port ".concat(process.env.PORT, "!"));
-});
+}); //TODO: Consider also signing with image we want
 
 function getSignature(web3, address, account, seed, jsonURL) {
   //Address = contact address
   //account = signing account (THEIR account – need to get in request)
-  var data = web3.utils.soliditySha3(address, account, seed, jsonURL); // minter sign
+  var data = web3.utils.soliditySha3({
+    type: 'address',
+    value: address
+  }, {
+    type: 'address',
+    value: account
+  }, {
+    type: 'string',
+    value: seed
+  }, {
+    type: 'string',
+    value: jsonURL
+  }); // minter sign
 
   var signature = web3.eth.accounts.sign(data, process.env.PRIVATE_KEY);
   var payload = {};
@@ -804,6 +820,7 @@ function getSignature(web3, address, account, seed, jsonURL) {
   payload.URI = jsonURL;
   payload.seed = seed;
   payload.hash = signature.messageHash;
+  payload.signature = signature;
   return payload;
 }
 

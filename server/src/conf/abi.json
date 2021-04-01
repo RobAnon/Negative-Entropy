@@ -795,11 +795,6 @@
           "internalType": "string",
           "name": "seedDesired",
           "type": "string"
-        },
-        {
-          "internalType": "bytes32",
-          "name": "hash",
-          "type": "bytes32"
         }
       ],
       "name": "mint",
@@ -811,9 +806,19 @@
     {
       "inputs": [
         {
-          "internalType": "bytes32",
-          "name": "signed",
-          "type": "bytes32"
+          "internalType": "string",
+          "name": "seed",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "tokenURI",
+          "type": "string"
+        },
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
         },
         {
           "internalType": "uint8",

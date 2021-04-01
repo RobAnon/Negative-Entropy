@@ -800,7 +800,7 @@ async function mint(file, code) {
     var payload = {}
     payload.customer = account;
     payload.nft = data;
-
+    console.log(payload);
     //Backend verifies that seed is unique, uploads JSON to IPFS
  	//Backend signs message (seed+URI) and returns signed message
     let response = await fetch(BACKEND, {
@@ -810,15 +810,19 @@ async function mint(file, code) {
     	},
     	body: JSON.stringify(payload)
     });
+
     let result = await response.json();
+    console.log(JSON.stringify(result));
+    console.log($app.account);
+
 
     //Take signed message, communicate with contract, and mint
-    const PRICE = await contract.methods.PRICE().call({from: $app.account});
-    const price_act = $app.web3.utils.fromWei(PRICE);
+    const cost = await contract.methods.PRICE().call({from: $app.account});
+    const price_act = $app.web3.utils.fromWei(cost);
 
 
     mintText = 'Adding NFT to blockchain - See MetaMask (or the like) for transaction';
-    const payment = await contract.methods.mint($app.account, result.v, result.r, result.s, result.URI, result.seed, result.hash).send({from: $app.account, value: PRICE})
+    const payment = await contract.methods.mint($app.account, result.v, result.r, result.s, result.URI, result.seed).send({from: $app.account, value: cost})
     dispatch('minted');
   }
 </script>
