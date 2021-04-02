@@ -5,17 +5,23 @@ pragma experimental ABIEncoderV2;
 
 
 import "../node_modules/@openzeppelin/contracts/access/AccessControl.sol";
+import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
 import "../node_modules/@openzeppelin/contracts/utils/Counters.sol";
 import "../node_modules/@openzeppelin/contracts/utils/EnumerableMap.sol";
 import "../node_modules/@openzeppelin/contracts/utils/EnumerableSet.sol";
 import "../node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "../node_modules/@openzeppelin/contracts/token/ERC721/ERC721Burnable.sol";
-import "../node_modules/@openzeppelin/contracts/token/ERC721/ERC721Pausable.sol";
 import "./ModifiedEnumerableMap.sol";
 
-
+/**
+* @dev OpenSea utility proxy
+*
+*/
 contract OwnableDelegateProxy {}
 
+/**
+* OpenSea utility proxy
+*/
 contract ProxyRegistry {
     mapping(address => OwnableDelegateProxy) public proxies;
 }
@@ -35,52 +41,54 @@ contract ProxyRegistry {
  * roles, as well as the default admin role, which will let it grant both minter
  * and pauser roles to other accounts.
  */
-contract NegativeEntropy is Context, AccessControl, ERC721Burnable, ERC721Pausable {
+contract NegativeEntropy is Context, AccessControl, ERC721Burnable, Ownable {
     using Counters for Counters.Counter;
     using EnumerableSet for EnumerableSet.Bytes32Set;
     using ModifiedEnumerableMap for ModifiedEnumerableMap.UintToBytes32Map;
 
+    //Role to designate who has approval to mint 
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
-    bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
-   	
-   	//TODO: Add SIGNER_ROLE
+    
+    //Initial maximum quantity
+    uint256 public maxQuantity = 1000;
 
-   	//Initial maximum quantity
-   	uint256 public maxQuantity = 1000;
-   	//Price a constant value 
-   	//TODO: Consider making price variable?
-   	uint256 public constant PRICE = 15E16;
-   	//This should be set in the constructor
-   	address payable public treasuryAddress;
-    address private _owner;
+    //Price a constant value 
+    //TODO: Consider making price variable?
+    uint256 public constant PRICE = 15E16;
+
+    //Address where transactions will be deposited
+    address payable public treasuryAddress;
+
+    //Proxy address for OpenSea, network-specific
     address proxyRegistryAddress;
 
-
+    //Counter to track amount of tokens currently in existence (including burned tokens)
     Counters.Counter private tokenCounter;
+
+    //Set that contains all seeds, allowing for easy checks of existence of a given seed
     EnumerableSet.Bytes32Set private seedSet;
 
+    //Map that holds mapping of tokenId to seed
     ModifiedEnumerableMap.UintToBytes32Map private seedMap;
 
-    
-
+    /**
+    * @dev Primary constructor to create an instance of NegativeEntropy
+    * Grants ADMIN and MINTER_ROLE to whoever creates the contract
+    *
+    */
     constructor(address payable _tA, address _proxy) public ERC721("Negative Entropy", "NGTV") {
         _setupRole(MINTER_ROLE, _msgSender());
-		_setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
-		_setupRole(PAUSER_ROLE, _msgSender());
-		treasuryAddress = _tA;
-        _owner = _msgSender();
+        _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
+        treasuryAddress = _tA;
         proxyRegistryAddress = _proxy;
     }
 
-    modifier onlyOwner() {
-        require(hasRole(MINTER_ROLE, _msgSender()), 'Role: not Admin');
-        _;
-    }
-
-
 
     /**
-     * Mint a token to _to and set the URI
+     * @dev Mint a token to _to and set the URI. TokenID is automatically assigned
+     * and URI is automatically generated based on whatever is passed in
+     *
+     * See {ERC721-_mint}.
      */
     function mint(
         uint256 _tokenId,
@@ -92,11 +100,18 @@ contract NegativeEntropy is Context, AccessControl, ERC721Burnable, ERC721Pausab
     }
 
     /**
-     * Mint a token to to with a configurationURI already set
+     * @dev Mint a token to 'to' with a configurationURI already set
      * using a minter
-     * Primary endpoing for performing mint operations
+     * The public endpoint for performing mint operations
+     *
+     * See {ERC721-_mint}.
      * 
+     * Requirements: 
      * 
+     * - The caller must have a signature (v,r,s) that is properly signed by the minter
+     * - Minting the token must not create more tokens than are allowed to exist
+     * - The caller must have sufficient funds included in the transaction to afford the token
+     * - The caller must not be seeking to claim a seed that is already claimed
      */
     function mint(
         address payable to,
@@ -106,7 +121,7 @@ contract NegativeEntropy is Context, AccessControl, ERC721Burnable, ERC721Pausab
         string calldata tokenURI,
         string calldata seedDesired
     ) public payable{
-    	//Check for signature
+        //Check for signature
         require(
             _signedByMinter(seedDesired, tokenURI, to, v, r, s),
             "Negative Entropy: minter must sign URI and ID!"
@@ -118,19 +133,24 @@ contract NegativeEntropy is Context, AccessControl, ERC721Burnable, ERC721Pausab
 
         //Where we get paid
         treasuryAddress.transfer(PRICE);
-    	to.transfer(msg.value.sub(PRICE));
+        to.transfer(msg.value.sub(PRICE));
 
         mint(tokenCounter.current(), to, tokenURI);
 
         //Last step
         if(claimSeed(seedDesired, tokenCounter.current())) { 
-       		tokenCounter.increment();
+            tokenCounter.increment();
         } else {
-        	revert('NegativeEntropy: Unable to add seed to map or set!');
+            revert('NegativeEntropy: Unable to add seed to map or set!');
         }
     }
 
-    // Minter detection helper
+    /**
+    * @dev Regenerates the public key of the account which created the signature (v, r, s)
+    * using the URI and seed passed into the constructor. Allows for proper signing of transactions
+    * to repell spoofing attacks
+    *
+    */
     function addressFromSignature(
         string calldata seed,
         string calldata tokenURI,
@@ -152,64 +172,33 @@ contract NegativeEntropy is Context, AccessControl, ERC721Burnable, ERC721Pausab
         return ecrecover(signed, v, r, s);
     }
 
-    // signer helper
+    /**
+    * @dev Checks if the passed in signature (v, r, s) was signed by the minter
+    * 
+    */
     function _signedByMinter(
-    	string calldata seed,
+        string calldata seed,
         string calldata tokenURI,
         address account,
         uint8 v,
         bytes32 r,
         bytes32 s
     ) internal view returns (bool) {
-        return
-            isMinter(
-                addressFromSignature(seed, tokenURI, account, v, r, s) 
-            );
-    }
-
-    
-    /**
-     * @dev Pauses all token transfers.
-     *
-     * See {ERC721Pausable} and {Pausable-_pause}.
-     *
-     * Requirements:
-     *
-     * - the caller must have the `PAUSER_ROLE`.
-     */
-    function pause() public virtual {
-        require(hasRole(PAUSER_ROLE, _msgSender()), "ERC721PresetMinterPauserAutoId: must have pauser role to pause");
-        _pause();
+        return hasRole(MINTER_ROLE, addressFromSignature(seed, tokenURI, account, v, r, s));
     }
 
     /**
-     * @dev Unpauses all token transfers.
-     *
-     * See {ERC721Pausable} and {Pausable-_unpause}.
-     *
-     * Requirements:
-     *
-     * - the caller must have the `PAUSER_ROLE`.
-     */
-    function unpause() public virtual {
-        require(hasRole(PAUSER_ROLE, _msgSender()), "ERC721PresetMinterPauserAutoId: must have pauser role to unpause");
-        _unpause();
-    }
-
-    function _beforeTokenTransfer(address from, address to, uint256 tokenId) internal virtual override(ERC721, ERC721Pausable) {
-        super._beforeTokenTransfer(from, to, tokenId);
-    }
-
+    * @dev Burns a token. See {ERC721Burnable}
+    *
+    *
+    */ 
     function burn(uint256 tokenId) public override {
         require(_isApprovedOrOwner(_msgSender(), tokenId), "ERC721Burnable: caller is not owner nor approved");
         require(seedMap.contains(tokenId), 'NegativeEntropy: Token ID not found in storage – Are you sure it exists?');
         require(seedSet.contains(seedMap.get(tokenId)), 'NegativeEntropy: Token ID not found in storage – Are you sure it exists?');
         _burn(tokenId);
-        //If we burn a token, decrease the counter
-        if(removeSeed(tokenId)) {
-            tokenCounter.decrement();
-        } else {
-        	revert();
+        if(!removeSeed(tokenId)) {
+            revert();
         }
     }
 
@@ -219,15 +208,8 @@ contract NegativeEntropy is Context, AccessControl, ERC721Burnable, ERC721Pausab
     *
     */
     function seedClaimed(string memory checkSeed) public view returns (bool) {
-    	return seedSet.contains(keccak256(bytes (checkSeed)));
+        return seedSet.contains(keccak256(bytes (checkSeed)));
     }
-
-    function isMinter(address _address) public view returns (bool) {
-        return hasRole(MINTER_ROLE, _address);
-    }
-
-    //For OS Integration
-    function owner() public view returns (address) { return _owner; }
 
     /**
      * Override isApprovedForAll to whitelist user's OpenSea proxy accounts to enable gas-less listings.
@@ -253,30 +235,25 @@ contract NegativeEntropy is Context, AccessControl, ERC721Burnable, ERC721Pausab
     *
     */
     function claimSeed(string memory clmSeed, uint256 id) internal returns (bool) {
-    	return seedSet.add(keccak256(bytes (clmSeed))) && seedMap.set(id, keccak256(bytes (clmSeed)));
+        return seedSet.add(keccak256(bytes (clmSeed))) && seedMap.set(id, keccak256(bytes (clmSeed)));
     } 
 
     function removeSeed(uint256 id) internal returns (bool) {
-    	if(!seedMap.contains(id)) return false;
-    	bytes32 seedHash = seedMap.get(id);
-    	if(!removeSeed(seedHash)) return false;
-    	if(!seedMap.remove(id)) return false;
-    	return true;
+        if(!seedMap.contains(id)) return false;
+        bytes32 seedHash = seedMap.get(id);
+        if(!removeSeed(seedHash)) return false;
+        if(!seedMap.remove(id)) return false;
+        return true;
     }
 
     function removeSeed(bytes32 seedHash) internal returns (bool) {
-    	return seedSet.remove(seedHash);
+        return seedSet.remove(seedHash);
     }
 
-	//Admin Function    
+    //Admin Function    
     function setMaxQuantity(uint256 quant) onlyOwner() public {
-    	assert(hasRole(MINTER_ROLE, _msgSender()));
-    	maxQuantity = quant;
-    }
-
-    function setOwner(address owner_) onlyOwner() public {
-        require(owner_ != address(0), "Cannot zero-out owner");
-        _owner = owner_;
+        assert(hasRole(MINTER_ROLE, _msgSender()));
+        maxQuantity = quant;
     }
 
 }
