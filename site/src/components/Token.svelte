@@ -98,6 +98,7 @@
     border-radius: 4px;
     display: flex;
     flex-direction: column;
+    background: white;
   }
 
   h2 {
