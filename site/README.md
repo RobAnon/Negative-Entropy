@@ -1,4 +1,4 @@
-# BeyondNFT - Interactive NFTs Starter site
+# Negative Entropy – Getting set up
 
 We are using Svelte here. It is very easy to use and understand if you ever worked with vanilla js, Vue or React.
 

@@ -1,4 +1,4 @@
-# BeyondNFT - Interactive NFTs Starter contracts
+# Negative Entropy – Getting set up
 
 We are using Truffle here, if you don't have in installed, `npm install -g truffle`
 You also might want to read [truffle's guide](https://www.trufflesuite.com/docs/truffle/overview) first.

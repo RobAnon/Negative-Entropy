@@ -124,7 +124,7 @@
       <li class:selected={mode === 'Home'} on:click={() => (mode = 'Home')}>
         Home
       </li>
-      <li class:selected={mode === 'Gallery'} on:click={() => (mode = 'list')} >
+      <li class:selected={mode === 'publicgallery'} on:click={() => (mode = 'list')} >
         Gallery
       </li>
       <li class:selected={mode === 'Mint'} on:click={() => (mode = 'Mint')}>
@@ -148,6 +148,8 @@
       <Home />
     {:else if mode === 'About'}
       <About />
+    {:else if mode === 'publicgallery'}
+      <List />
     {/if}
     
 </main>
