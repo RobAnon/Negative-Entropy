@@ -6,7 +6,7 @@
   let totalTokens = 0;
   let contract;
   const app = getContext('app');
-  $: $app.contract && !contract && getUserTokens();
+  $: $app.contract && !contract && getUserTokens() && getTokenCount(); //TODO: remove these lines, they just call test methods
 
 //Function to get a user's tokens. For frontend people
 async function getUserTokens() {
@@ -29,6 +29,7 @@ async function getUserTokens() {
 //Function to get the total amount of tokens created, including burned tokens – for frontend people
 async function getTokenCount() {
   var count = await $app.contract.methods.getTokenCount().call();
+  console.log(count);
   return count;
 }
 
