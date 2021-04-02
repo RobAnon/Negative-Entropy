@@ -23,7 +23,7 @@ async function getUserTokens() {
         });
     }
     tokens = tokens; //See List.svelte for further example of this
-    console.log(tokens);
+    console.log(JSON.stringify(tokens));
 }
 
 //Function to get the total amount of tokens created, including burned tokens – for frontend people

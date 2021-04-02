@@ -21,6 +21,10 @@ var abi = [{
     internalType: "address payable",
     name: "_tA",
     type: "address"
+  }, {
+    internalType: "address",
+    name: "_proxy",
+    type: "address"
   }],
   stateMutability: "nonpayable",
   type: "constructor"
@@ -67,12 +71,17 @@ var abi = [{
 }, {
   anonymous: false,
   inputs: [{
-    indexed: false,
+    indexed: true,
     internalType: "address",
-    name: "account",
+    name: "previousOwner",
+    type: "address"
+  }, {
+    indexed: true,
+    internalType: "address",
+    name: "newOwner",
     type: "address"
   }],
-  name: "Paused",
+  name: "OwnershipTransferred",
   type: "event"
 }, {
   anonymous: false,
@@ -155,16 +164,6 @@ var abi = [{
   name: "Transfer",
   type: "event"
 }, {
-  anonymous: false,
-  inputs: [{
-    indexed: false,
-    internalType: "address",
-    name: "account",
-    type: "address"
-  }],
-  name: "Unpaused",
-  type: "event"
-}, {
   inputs: [],
   name: "DEFAULT_ADMIN_ROLE",
   outputs: [{
@@ -178,17 +177,6 @@ var abi = [{
 }, {
   inputs: [],
   name: "MINTER_ROLE",
-  outputs: [{
-    internalType: "bytes32",
-    name: "",
-    type: "bytes32"
-  }],
-  stateMutability: "view",
-  type: "function",
-  constant: true
-}, {
-  inputs: [],
-  name: "PAUSER_ROLE",
   outputs: [{
     internalType: "bytes32",
     name: "",
@@ -387,6 +375,17 @@ var abi = [{
   type: "function",
   constant: true
 }, {
+  inputs: [],
+  name: "owner",
+  outputs: [{
+    internalType: "address",
+    name: "",
+    type: "address"
+  }],
+  stateMutability: "view",
+  type: "function",
+  constant: true
+}, {
   inputs: [{
     internalType: "uint256",
     name: "tokenId",
@@ -403,15 +402,10 @@ var abi = [{
   constant: true
 }, {
   inputs: [],
-  name: "paused",
-  outputs: [{
-    internalType: "bool",
-    name: "",
-    type: "bool"
-  }],
-  stateMutability: "view",
-  type: "function",
-  constant: true
+  name: "renounceOwnership",
+  outputs: [],
+  stateMutability: "nonpayable",
+  type: "function"
 }, {
   inputs: [{
     internalType: "bytes32",
@@ -599,6 +593,16 @@ var abi = [{
   stateMutability: "nonpayable",
   type: "function"
 }, {
+  inputs: [{
+    internalType: "address",
+    name: "newOwner",
+    type: "address"
+  }],
+  name: "transferOwnership",
+  outputs: [],
+  stateMutability: "nonpayable",
+  type: "function"
+}, {
   inputs: [],
   name: "treasuryAddress",
   outputs: [{
@@ -676,18 +680,6 @@ var abi = [{
   type: "function",
   constant: true
 }, {
-  inputs: [],
-  name: "pause",
-  outputs: [],
-  stateMutability: "nonpayable",
-  type: "function"
-}, {
-  inputs: [],
-  name: "unpause",
-  outputs: [],
-  stateMutability: "nonpayable",
-  type: "function"
-}, {
   inputs: [{
     internalType: "uint256",
     name: "tokenId",
@@ -713,16 +705,12 @@ var abi = [{
   type: "function",
   constant: true
 }, {
-  inputs: [{
-    internalType: "address",
-    name: "_address",
-    type: "address"
-  }],
-  name: "isMinter",
+  inputs: [],
+  name: "getTokenCount",
   outputs: [{
-    internalType: "bool",
+    internalType: "uint256",
     name: "",
-    type: "bool"
+    type: "uint256"
   }],
   stateMutability: "view",
   type: "function",
