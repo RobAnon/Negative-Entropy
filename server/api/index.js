@@ -7,6 +7,7 @@ import fs from 'fs'
 
 
 const Web3 = require("web3");
+const helmet = require("helmet");
 const HDWalletProvider = require("@truffle/hdwallet-provider");
 const createClient = require('ipfs-http-client')
 
@@ -17,6 +18,7 @@ const ipfs = createClient('https://ipfs.infura.io:5001');
 //Parse JSON 
 app.use(express.json());
 app.use(cors());
+app.use(helmet());
 
 app.get('/api', (req, res) => {
 	return res.send('Received a GET HTTP method');

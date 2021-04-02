@@ -729,6 +729,8 @@ var abi = [{
 
 var Web3 = require("web3");
 
+var helmet = require("helmet");
+
 var HDWalletProvider = require("@truffle/hdwallet-provider");
 
 var createClient = require('ipfs-http-client');
@@ -738,6 +740,7 @@ var ipfs = createClient('https://ipfs.infura.io:5001'); //Parse JSON
 
 app.use(express__default['default'].json());
 app.use(cors__default['default']());
+app.use(helmet());
 app.get('/api', function (req, res) {
   return res.send('Received a GET HTTP method');
 });
