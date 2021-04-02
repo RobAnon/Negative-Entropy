@@ -22,7 +22,6 @@ app.get('/api', (req, res) => {
 	return res.send('Received a GET HTTP method');
 });
 
-
 app.post('/api/signature', (req, res) => {  	
 	let provider = new HDWalletProvider({
 		privateKeys:[process.env.PRIVATE_KEY], 
