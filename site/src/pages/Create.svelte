@@ -600,7 +600,7 @@ export const lock = e => {
 
 export const _reset = e => {
 
-		newSeed = document.getElementById("textareaID").value;
+		newSeed = document.getElementById("textareaID").value.trim();
 
 		reset();
 }
@@ -1110,45 +1110,21 @@ svg:hover {
     <div class="row">
 
       <div class="col">
-       <textarea class="form-control" name="textarea" id="textareaID" placeholder="Customize your attractor with a name and hit Generate New Seed..."></textarea>
+       <textarea class="form-control" name="textarea" id="textareaID" placeholder="Choose a unique name for your NFT and hit Load New Seed..."></textarea>
       </div>
     </div>
   </div>
 
-  <!-- <div class="buttons">
-    <button id="start" on:click={()=>start()}>
-      <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" class="bi bi-record-btn" viewBox="0 0 16 16">
-        <path d="M8 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
-        <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm15 0a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z"/>
-      </svg>
-    </button>
-    <button id="headlamp" on:click={()=>headlamp()}>
-    Enable Headlamp
-    </button>
-    <button id="stabilize" on:click={()=>stabilize()}>
-    Disable Stabilization
-    </button>
-    <button id="lock" on:click={()=>lock()}>
-    Enable Camera-Lock
-    </button>
-     <button id="reset" on:click={()=>reset()}>
-    Reset
-    </button> -->
-
+    
 	<div class="buttons">
-		
     <button class="btn btn-primary" id="reset" on:click={()=>_reset()}>
-   Generate New Seed
+   Load New Seed
    </button>
-   <br />
+   <br><br />
    <div>
    <button class="btn btn-secondary" id="start" on:click={(e)=>start(e)}>Mint</button> 
   </div>
    
-    <!-- <textarea readonly id="attributes" class="">
-    Attributes go here
-    </textarea> -->
-
 
 
  </div>
