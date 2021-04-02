@@ -21,7 +21,7 @@
     const events = await contract.getPastEvents('Transfer', {
       fromBlock: 0,
     });
-    const address = contract.address;
+    const address = contract.options.address;
 
     let _totalTokens = totalTokens;
     for (const event of events) {

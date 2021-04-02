@@ -1,6 +1,7 @@
 <script>
   import { onMount } from 'svelte';
   import Sandbox from '@beyondnft/sandbox';
+import App from '../App.svelte';
 
   export let token;
 
@@ -15,6 +16,8 @@
   let attributes;
 
   let view;
+  const opensea_base = "https://opensea.io/";
+  let opensea = ""; 
 
   $: view && renderSandbox();
 
@@ -42,6 +45,7 @@
     Object.keys(data.attributes).forEach((key) => {
       attributes.push({ key: data.attributes[key].trait_type, value: data.attributes[key].value });
     });
+    opensea = opensea_base + token.contract + "/" + token.id;
   });
 </script>
 
@@ -158,6 +162,7 @@
           {/if}
         </div>
       </div>
+     <a href={opensea} id="os" title="Buy on OpenSea" target="_blank"><img style="width:160px; border-radius:5px; box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.25);" src="https://storage.googleapis.com/opensea-static/opensea-brand/listed-button-white.png" alt="Buy on OpenSea badge" /></a>
     </div>
   {/if}
 </article>
