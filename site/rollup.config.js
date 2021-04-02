@@ -86,5 +86,9 @@ export default {
   ],
   watch: {
     clearScreen: false,
+    include: [
+      "public/global.css",
+      "src/pages/Create.svelte",
+    ]
   },
 };
