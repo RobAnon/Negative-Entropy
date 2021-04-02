@@ -190,7 +190,11 @@ contract NegativeEntropy is Context, AccessControl, ERC721Burnable, Ownable {
     /**
     * @dev Burns a token. See {ERC721Burnable}
     *
-    *
+    * Requirements:
+    * 
+    * - Caller must be owner or approved to burn tokens
+    * - Token must exist in seedMap
+    * - Token must exist in seedSet
     */ 
     function burn(uint256 tokenId) public override {
         require(_isApprovedOrOwner(_msgSender(), tokenId), "ERC721Burnable: caller is not owner nor approved");
@@ -207,12 +211,17 @@ contract NegativeEntropy is Context, AccessControl, ERC721Burnable, Ownable {
     * GETTERS
     *
     */
+
+    /**
+    * @dev Checks if seed is claimed by checking if it is in seedSet
+    *
+    */
     function seedClaimed(string memory checkSeed) public view returns (bool) {
         return seedSet.contains(keccak256(bytes (checkSeed)));
     }
 
     /**
-     * Override isApprovedForAll to whitelist user's OpenSea proxy accounts to enable gas-less listings.
+     * @dev Override isApprovedForAll to whitelist user's OpenSea proxy accounts to enable gas-less listings.
      */
     function isApprovedForAll(address owned, address operator)
         public
@@ -234,10 +243,19 @@ contract NegativeEntropy is Context, AccessControl, ERC721Burnable, Ownable {
     * SETTERS
     *
     */
+
+    /**
+    * @dev Claim a seed and map it to the passed in ID
+    *
+    */ 
     function claimSeed(string memory clmSeed, uint256 id) internal returns (bool) {
         return seedSet.add(keccak256(bytes (clmSeed))) && seedMap.set(id, keccak256(bytes (clmSeed)));
     } 
 
+    /**
+    * @dev Remove a seed from both the map and the set
+    *
+    */
     function removeSeed(uint256 id) internal returns (bool) {
         if(!seedMap.contains(id)) return false;
         bytes32 seedHash = seedMap.get(id);
@@ -246,11 +264,18 @@ contract NegativeEntropy is Context, AccessControl, ERC721Burnable, Ownable {
         return true;
     }
 
+    /**
+    * @dev Remove a seed from the set only
+    *
+    */
     function removeSeed(bytes32 seedHash) internal returns (bool) {
         return seedSet.remove(seedHash);
     }
 
-    //Admin Function    
+    /**
+    * @dev increase the maximum quantity of tokens which are allowed to exist
+    *
+    */
     function setMaxQuantity(uint256 quant) onlyOwner() public {
         assert(hasRole(MINTER_ROLE, _msgSender()));
         maxQuantity = quant;
