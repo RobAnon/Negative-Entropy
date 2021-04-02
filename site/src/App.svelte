@@ -9,6 +9,7 @@
   import Create from './pages/Create.svelte';
   import About from './pages/About.svelte';
   import Home from './pages/Home.svelte';
+import PersonalGallery from './pages/PersonalGallery.svelte';
   
   
   let buttonDisplay = "Connect Web-Wallet";
@@ -103,13 +104,9 @@
             </a>
             <div class="dropdown-menu bg-dark" aria-labelledby="navbarDropdownMenuLink">
               <span class="dropdown-item text-white " href="#" on:click={() => (mode = 'publicgallery')}>Public Gallery</span>
-              <span class="dropdown-item text-white" href="#" on:click={() => (mode = 'mysculptures')}>My Sculptures</span>
+              <span class="dropdown-item text-white" href="#" on:click={() => (mode = 'mysculptures')}>My NFTs</span>
             </div>
           </li>
-          <li class="nav-item" class:selected={mode === 'List'}>
-            <span class="nav-link" on:click={() => (mode = 'list')}>List</span>
-          </li>
-
         </ul>
       </div>
       <div style="float: right;">
@@ -118,24 +115,6 @@
 
     </div>
   </nav>
-  <!-- <h1></h1>
-  <nav>
-    <ul>
-      <li class:selected={mode === 'Home'} on:click={() => (mode = 'Home')}>
-        Home
-      </li>
-      <li class:selected={mode === 'publicgallery'} on:click={() => (mode = 'list')} >
-        Gallery
-      </li>
-      <li class:selected={mode === 'Mint'} on:click={() => (mode = 'Mint')}>
-        Mint
-      </li>
-      <li class:selected={mode === 'About'} on:click={() => (mode = 'About')}>
-        About
-      </li>
-     
-    </ul>
-  </nav> -->
 </header>
 <svelte:window bind:innerWidth={$innerWidth} bind:innerHeight={$innerHeight}/>
 <main>
@@ -150,6 +129,8 @@
       <About />
     {:else if mode === 'publicgallery'}
       <List />
+    {:else if mode = 'mysculptures'}
+      <PersonalGallery />
     {/if}
     
 </main>
