@@ -802,7 +802,8 @@ async function mint(file, code) {
     payload.nft = data;
     //Backend verifies that seed is unique, uploads JSON to IPFS
  	//Backend signs message (seed+URI) and returns signed message
-    let response = await fetch(BACKEND, {
+    var destination = BACKEND+"signature";
+    let response = await fetch(destination, {
     	method: 'POST',
     	headers: {
     		'Content-Type': 'application/json;charset=utf-8'

@@ -12,19 +12,8 @@ import "../node_modules/@openzeppelin/contracts/utils/EnumerableSet.sol";
 import "../node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "../node_modules/@openzeppelin/contracts/token/ERC721/ERC721Burnable.sol";
 import "./ModifiedEnumerableMap.sol";
+import "./ERC721Tradeable.sol";
 
-/**
-* @dev OpenSea utility proxy
-*
-*/
-contract OwnableDelegateProxy {}
-
-/**
-* OpenSea utility proxy
-*/
-contract ProxyRegistry {
-    mapping(address => OwnableDelegateProxy) public proxies;
-}
 
 /**
  * @dev {ERC721} token, including:
@@ -41,7 +30,7 @@ contract ProxyRegistry {
  * roles, as well as the default admin role, which will let it grant both minter
  * and pauser roles to other accounts.
  */
-contract NegativeEntropy is Context, AccessControl, ERC721Burnable, Ownable {
+contract NegativeEntropy is Context, AccessControl, ERC721Tradable {
     using Counters for Counters.Counter;
     using EnumerableSet for EnumerableSet.Bytes32Set;
     using ModifiedEnumerableMap for ModifiedEnumerableMap.UintToBytes32Map;
@@ -59,9 +48,6 @@ contract NegativeEntropy is Context, AccessControl, ERC721Burnable, Ownable {
     //Address where transactions will be deposited
     address payable public treasuryAddress;
 
-    //Proxy address for OpenSea, network-specific
-    address proxyRegistryAddress;
-
     //Counter to track amount of tokens currently in existence (including burned tokens)
     Counters.Counter private tokenCounter;
 
@@ -76,7 +62,7 @@ contract NegativeEntropy is Context, AccessControl, ERC721Burnable, Ownable {
     * Grants ADMIN and MINTER_ROLE to whoever creates the contract
     *
     */
-    constructor(address payable _tA, address _proxy) public ERC721("Negative Entropy", "NGTV") {
+    constructor(address payable _tA, address _proxy) public ERC721Tradable("Negative Entropy", "NGTV", _proxy) {
         _setupRole(MINTER_ROLE, _msgSender());
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
         treasuryAddress = _tA;
@@ -196,7 +182,7 @@ contract NegativeEntropy is Context, AccessControl, ERC721Burnable, Ownable {
     * - Token must exist in seedMap
     * - Token must exist in seedSet
     */ 
-    function burn(uint256 tokenId) public override {
+    function burn(uint256 tokenId) public {
         require(_isApprovedOrOwner(_msgSender(), tokenId), "ERC721Burnable: caller is not owner nor approved");
         require(seedMap.contains(tokenId), 'NegativeEntropy: Token ID not found in storage – Are you sure it exists?');
         require(seedSet.contains(seedMap.get(tokenId)), 'NegativeEntropy: Token ID not found in storage – Are you sure it exists?');
@@ -220,22 +206,14 @@ contract NegativeEntropy is Context, AccessControl, ERC721Burnable, Ownable {
         return seedSet.contains(keccak256(bytes (checkSeed)));
     }
 
-    /**
-     * @dev Override isApprovedForAll to whitelist user's OpenSea proxy accounts to enable gas-less listings.
-     */
-    function isApprovedForAll(address owned, address operator)
-        public
-        view
-        override
-        returns (bool)
-    {
-        // Whitelist OpenSea proxy contract for easy trading.
-        ProxyRegistry proxyRegistry = ProxyRegistry(proxyRegistryAddress);
-        if (address(proxyRegistry.proxies(owned)) == operator) {
-            return true;
-        }
+   
 
-        return super.isApprovedForAll(owned, operator);
+    /**
+     * @dev gets the current number of tokens that have been created (including burned tokens)
+     * This behavior differs from totalSupply(), which returns tokens EXCLUDING those burned
+     */
+    function getTokenCount() public view returns (uint256) {
+        return tokenCounter.current();
     }
 
     /**
