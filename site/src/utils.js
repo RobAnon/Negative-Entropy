@@ -1,6 +1,5 @@
 import detectProvider from '@metamask/detect-provider';
 import abi from './conf/abi.json';
-import abi2 from './conf/abi2.json';
 import fs from 'fs'
 
 export async function initProvider(app) {
