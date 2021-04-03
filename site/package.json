@@ -4,7 +4,7 @@
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
-    "start": "sirv public --no-clear"
+    "start": "sirv public --single"
   },
   "devDependencies": {
     "@beyondnft/embeddable": "0.0.2",
@@ -25,6 +25,7 @@
     "canvas-context": "^2.0.0",
     "canvas-record": "^2.1.0",
     "fs": "0.0.1-security",
+    "page": "^1.11.6",
     "seedrandom": "^3.0.5",
     "sirv-cli": "^1.0.0",
     "svelte-routing": "^1.5.0",
