@@ -1,6 +1,7 @@
 import detectProvider from '@metamask/detect-provider';
 import abi from './conf/abi.json';
 import fs from 'fs'
+import Web3 from 'web3';
 
 export async function initProvider(app) {
   // detect provider
@@ -49,6 +50,10 @@ export async function initProvider(app) {
   app = app;
 }
 
+export function isEthAddress(addr) {
+  return Web3.utils.isAddress(addr);
+}
+
 export const ipfs = {
   ipfsclient: null,
   async connect(config) {
@@ -71,3 +76,4 @@ export const ipfs = {
     return this.ipfsClient;
   },
 };
+

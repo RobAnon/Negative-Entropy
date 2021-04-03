@@ -17,7 +17,8 @@ export default [
 	},
 	{
 		path: '/viewer/:id',
-		component: Viewer
+		component: Viewer,
+		dynamic:true
 	},
 	{
 		path: '/about',
@@ -29,7 +30,8 @@ export default [
 	},
 	{
 		path: '/gallery/:address',
-		component: PersonalGallery
+		component: PersonalGallery,
+		dynamic: true
 	},
 	{
 		path: '*',

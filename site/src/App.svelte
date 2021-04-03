@@ -4,6 +4,7 @@
   import { writable } from 'svelte/store';
 
   import { initProvider } from './utils';
+  import {isEthAddress} from './utils';
   import router from "page";
   import routes from "./routes";
   import List from './routes/List.svelte';
@@ -11,12 +12,14 @@
   import About from './routes/About.svelte';
   import Home from './routes/Home.svelte';
 import PersonalGallery from './routes/PersonalGallery.svelte';
+import { DataUtils } from 'three';
   
   let page = null;
   let params = {};
   let user = false;
   let buttonDisplay = "Connect Web-Wallet";
   let mode = 'Home';
+  let LIMIT = 1000;
 
   const app = writable({});
   export const innerHeight = writable(1000)
@@ -40,7 +43,26 @@ import PersonalGallery from './routes/PersonalGallery.svelte';
         if (route.auth && !user) {
           router.redirect("/");
         } else {
-          page = route.component;
+          if(route.dynamic ) {
+            if(params.id) {
+              var value = params.id;
+              if (value >= LIMIT || !Number.isInteger(value)) {
+                router.redirect("/");
+              } else {
+                page = route.component;
+              }
+            } else {
+              if(params.address) { 
+                if(!isEthAddress(params.address)) {
+                  router.redirect("/");
+                } else {
+                  page = route.component;
+                }
+              }
+            }
+          } else {
+            page = route.component;
+          }
         }
       }
     );
