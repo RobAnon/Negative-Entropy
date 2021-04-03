@@ -10,6 +10,9 @@
 
 //Function to get a user's tokens. For frontend people
 async function getUserTokens() {
+    var test = await fetch(BACKEND + "token?" + 2);
+    console.log(test.json());
+
     contract = $app.contract;
     const balance = await contract.methods.balanceOf($app.account).call();
     for(var i = 0; i < balance; i++) {

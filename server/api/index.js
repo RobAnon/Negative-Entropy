@@ -24,6 +24,24 @@ app.get('/api', (req, res) => {
 	return res.send('Received a GET HTTP method');
 });
 
+app.get('/api/token', (req, res) => {
+	let provider = new HDWalletProvider({
+		privateKeys:[process.env.PRIVATE_KEY], 
+		providerOrUrl: process.env.NETWORK
+	});
+	res.setHeader('Cache-Control', 's-max-age=1, stale-while-revalidate')
+	const web3 = new Web3(provider);
+	const contract = new web3.eth.Contract(abi, process.env.CONTRACT_ADDRESS);
+	var id = req.query.id; //Form of /token?id=STRING
+	getTokenURI(contract, id)
+ 	.then(function(URI) {
+		return res.send(URI);
+	 })
+
+	
+	return express.Router();
+});
+
 app.post('/api/signature', (req, res) => {  	
 	let provider = new HDWalletProvider({
 		privateKeys:[process.env.PRIVATE_KEY], 
@@ -123,6 +141,14 @@ async function getAccounts(web3) {
   		resolve(accounts);
 	});	
 }
+
+async function getTokenURI(contract, id) {
+	return new Promise(async (resolve, reject) => {
+		var URI = await contract.methods.tokenURI(id).call();
+  		resolve(URI);
+	});	
+}
+
 
 //NOTE: Having from in here is very important
 async function seedClaimed(contract, seed, address) {

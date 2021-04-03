@@ -744,6 +744,21 @@ app.use(helmet());
 app.get('/api', function (req, res) {
   return res.send('Received a GET HTTP method');
 });
+app.get('/api/token', function (req, res) {
+  var provider = new HDWalletProvider({
+    privateKeys: [process.env.PRIVATE_KEY],
+    providerOrUrl: process.env.NETWORK
+  });
+  res.setHeader('Cache-Control', 's-max-age=1, stale-while-revalidate');
+  var web3 = new Web3(provider);
+  var contract = new web3.eth.Contract(abi, process.env.CONTRACT_ADDRESS);
+  var id = req.query.id; //Form of /token?id=STRING
+
+  getTokenURI(contract, id).then(function (URI) {
+    return res.send(URI);
+  });
+  return express__default['default'].Router();
+});
 app.post('/api/signature', function (req, res) {
   var provider = new HDWalletProvider({
     privateKeys: [process.env.PRIVATE_KEY],
@@ -821,8 +836,7 @@ function getSignature(web3, address, account, seed, jsonURL) {
 
 function getAccounts(_x) {
   return _getAccounts.apply(this, arguments);
-} //NOTE: Having from in here is very important
-
+}
 
 function _getAccounts() {
   _getAccounts = _asyncToGenerator__default['default']( /*#__PURE__*/_regeneratorRuntime__default['default'].mark(function _callee2(web3) {
@@ -861,7 +875,7 @@ function _getAccounts() {
                 }, _callee);
               }));
 
-              return function (_x6, _x7) {
+              return function (_x8, _x9) {
                 return _ref.apply(this, arguments);
               };
             }()));
@@ -876,33 +890,32 @@ function _getAccounts() {
   return _getAccounts.apply(this, arguments);
 }
 
-function seedClaimed(_x2, _x3, _x4) {
-  return _seedClaimed.apply(this, arguments);
-}
+function getTokenURI(_x2, _x3) {
+  return _getTokenURI.apply(this, arguments);
+} //NOTE: Having from in here is very important
 
-function _seedClaimed() {
-  _seedClaimed = _asyncToGenerator__default['default']( /*#__PURE__*/_regeneratorRuntime__default['default'].mark(function _callee4(contract, seed, address) {
+
+function _getTokenURI() {
+  _getTokenURI = _asyncToGenerator__default['default']( /*#__PURE__*/_regeneratorRuntime__default['default'].mark(function _callee4(contract, id) {
     return _regeneratorRuntime__default['default'].wrap(function _callee4$(_context4) {
       while (1) {
         switch (_context4.prev = _context4.next) {
           case 0:
             return _context4.abrupt("return", new Promise( /*#__PURE__*/function () {
               var _ref2 = _asyncToGenerator__default['default']( /*#__PURE__*/_regeneratorRuntime__default['default'].mark(function _callee3(resolve, reject) {
+                var URI;
                 return _regeneratorRuntime__default['default'].wrap(function _callee3$(_context3) {
                   while (1) {
                     switch (_context3.prev = _context3.next) {
                       case 0:
                         _context3.next = 2;
-                        return contract.methods.seedClaimed(seed).call({
-                          from: address
-                        }).then(function (result) {
-                          resolve(result);
-                        });
+                        return contract.methods.tokenURI(id).call();
 
                       case 2:
-                        _context3.sent;
+                        URI = _context3.sent;
+                        resolve(URI);
 
-                      case 3:
+                      case 4:
                       case "end":
                         return _context3.stop();
                     }
@@ -910,7 +923,7 @@ function _seedClaimed() {
                 }, _callee3);
               }));
 
-              return function (_x8, _x9) {
+              return function (_x10, _x11) {
                 return _ref2.apply(this, arguments);
               };
             }()));
@@ -922,15 +935,15 @@ function _seedClaimed() {
       }
     }, _callee4);
   }));
+  return _getTokenURI.apply(this, arguments);
+}
+
+function seedClaimed(_x4, _x5, _x6) {
   return _seedClaimed.apply(this, arguments);
 }
 
-function getURI(_x5) {
-  return _getURI.apply(this, arguments);
-}
-
-function _getURI() {
-  _getURI = _asyncToGenerator__default['default']( /*#__PURE__*/_regeneratorRuntime__default['default'].mark(function _callee6(data) {
+function _seedClaimed() {
+  _seedClaimed = _asyncToGenerator__default['default']( /*#__PURE__*/_regeneratorRuntime__default['default'].mark(function _callee6(contract, seed, address) {
     return _regeneratorRuntime__default['default'].wrap(function _callee6$(_context6) {
       while (1) {
         switch (_context6.prev = _context6.next) {
@@ -942,11 +955,16 @@ function _getURI() {
                     switch (_context5.prev = _context5.next) {
                       case 0:
                         _context5.next = 2;
-                        return ipfs.add(data).then(function (result) {
-                          resolve("https://gateway.ipfs.io/ipfs/".concat(result.path));
+                        return contract.methods.seedClaimed(seed).call({
+                          from: address
+                        }).then(function (result) {
+                          resolve(result);
                         });
 
                       case 2:
+                        _context5.sent;
+
+                      case 3:
                       case "end":
                         return _context5.stop();
                     }
@@ -954,7 +972,7 @@ function _getURI() {
                 }, _callee5);
               }));
 
-              return function (_x10, _x11) {
+              return function (_x12, _x13) {
                 return _ref3.apply(this, arguments);
               };
             }()));
@@ -965,6 +983,50 @@ function _getURI() {
         }
       }
     }, _callee6);
+  }));
+  return _seedClaimed.apply(this, arguments);
+}
+
+function getURI(_x7) {
+  return _getURI.apply(this, arguments);
+}
+
+function _getURI() {
+  _getURI = _asyncToGenerator__default['default']( /*#__PURE__*/_regeneratorRuntime__default['default'].mark(function _callee8(data) {
+    return _regeneratorRuntime__default['default'].wrap(function _callee8$(_context8) {
+      while (1) {
+        switch (_context8.prev = _context8.next) {
+          case 0:
+            return _context8.abrupt("return", new Promise( /*#__PURE__*/function () {
+              var _ref4 = _asyncToGenerator__default['default']( /*#__PURE__*/_regeneratorRuntime__default['default'].mark(function _callee7(resolve, reject) {
+                return _regeneratorRuntime__default['default'].wrap(function _callee7$(_context7) {
+                  while (1) {
+                    switch (_context7.prev = _context7.next) {
+                      case 0:
+                        _context7.next = 2;
+                        return ipfs.add(data).then(function (result) {
+                          resolve("https://gateway.ipfs.io/ipfs/".concat(result.path));
+                        });
+
+                      case 2:
+                      case "end":
+                        return _context7.stop();
+                    }
+                  }
+                }, _callee7);
+              }));
+
+              return function (_x14, _x15) {
+                return _ref4.apply(this, arguments);
+              };
+            }()));
+
+          case 1:
+          case "end":
+            return _context8.stop();
+        }
+      }
+    }, _callee8);
   }));
   return _getURI.apply(this, arguments);
 }
