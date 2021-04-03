@@ -13,11 +13,12 @@
   // if contract is now set in it
   // we can request things from Blockchain
   $: $app.contract && !contract && getUserTokens();
-//Function to get a user's tokens. For frontend people
 
+//Function to get a user's tokens. For frontend people
 async function getUserTokens() {
     contract = $app.contract;
     const balance = await contract.methods.balanceOf($app.account).call();
+    let _totalTokens = totalTokens;
     for(var i = 0; i < balance; i++) {
       var tokenId = await contract.methods.tokenOfOwnerByIndex($app.account, i).call();
       var tokenURI = await contract.methods.tokenURI(tokenId).call();
@@ -27,9 +28,10 @@ async function getUserTokens() {
           owner: $app.account,
           contract: $app.address,
         });
-        totalTokens++;
+        _totalTokens++;
     }
     tokens = tokens; //See List.svelte for further example of this
+    totalTokens = _totalTokens;
     console.log(JSON.stringify(tokens));
 }
 
