@@ -141,18 +141,6 @@
 <main>
   <svelte:component this={page} {params} />
 
-  {#if mode === 'publicgallery'}
-    {route('gallery')}
-  {:else if mode === 'Mint'}
-    <Create on:minted={() => (mode = 'publicgallery')} innerHeight={$innerHeight/2} innerWidth={$innerWidth/2} />
-<!--- I will be modifying the above function later to route to the personal viewr –shoudnt affect yrou work-->
-  {:else if mode === 'Home'}
-  {route('/')}
-  {:else if mode === 'About'}
-  {route('about')}
-  {:else if mode = 'mysculptures'}
-  {route("/gallery/"+$app.account)}
-  {/if}
   
 </main>
 <svelte:window bind:innerWidth={$innerWidth} bind:innerHeight={$innerHeight}/>
