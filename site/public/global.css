@@ -15,6 +15,7 @@
   --xwhite: #ddd;
   --xgrey: #1a1a1a;
   --xblack: #111;
+  --xgreen: #defe47;
 }
 
 
@@ -26,7 +27,6 @@ body {
   background-color: var(--xblack) !important;
   margin: 0;
 }
-
 
 h1, h2, h3 {
   cursor: default;
@@ -138,7 +138,14 @@ section {
   margin: 0 auto;
   padding: 0px 40px;
 }
-
+.section-break {
+  max-width: 1200px;
+  width: 0px;
+  margin: 20px auto;
+  height: 1px;
+  background-color: var(--xgreen);
+  transition: all 1.5s;
+}
 
 
 .fade-in {
@@ -322,13 +329,14 @@ header {
 .homepage-heading {
   margin-top: 20%;
   position: relative;
-  min-height: calc(100vh - 210px);
+  min-height: calc(100vh - 180px);
 }
 .header-text {
   cursor: default;
 }
 .header-text h1 {
   margin-bottom: 30px;
+  margin-top: 0px;
 }
 .header-text p {
   font-size: 22px;
@@ -349,7 +357,6 @@ header {
 }
 .homepage-graphic .render {
   height: 100%;
-  margin-top: -120px;
 }
 .homepage-graphic iframe {
   background-color: var(--xblack);
@@ -371,7 +378,7 @@ header {
 @media only screen and (min-width: 900px) {
   .homepage-heading {
     display: flex;
-    min-height: calc(100vh - 150px);
+    min-height: calc(100vh - 100px);
     margin-top: 0px;
     align-items: center;
   }
@@ -380,7 +387,7 @@ header {
   }
   .homepage-graphic {
     flex-grow: 1;
-    margin-top: 50px;
+    margin-top: 0px;
     margin-left: auto;
     position: static;
     transform: translate(0, 0);
@@ -417,7 +424,7 @@ header {
   display: block;
   width: auto;
   max-width: 400px;
-  margin: 30px auto;
+  margin: 40px auto;
 }
 
 
@@ -436,4 +443,31 @@ header {
     margin-top: 40px;
     padding-left: 20px;
   }
+}
+
+
+
+
+
+
+/* --- MINT PAGE --- */
+.mint-text-area {
+  display: block;
+  width: 800px;
+  max-width: 100%;
+  margin: 40px auto 30px;
+  padding: 10px 30px;
+  font-size: 18px;
+  font-family: 'roboto mono';
+  font-weight: 200;
+  text-align: center;
+  background-color: var(--xgrey);
+  outline: none;
+}
+.mint-buttons {
+  margin: 0 auto;
+  width: max-content;
+}
+.mint-buttons button:nth-child(1) {
+  margin-right: 20px !important;
 }

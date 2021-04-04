@@ -39,6 +39,12 @@ var fadeIn = function () {
             }
             
         }
-        
     })
+
+    $('.section-break').each(function() {
+        if ( ($(this).offset().top + $(window).height()/6) < ($(window).height() + $(document).scrollTop()) ) {
+            setTimeout(() => { $(this).css('width', '100%') }, 200);
+        }
+    })
+
 }
