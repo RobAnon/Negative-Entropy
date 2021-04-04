@@ -342,6 +342,7 @@ function reset() {
 	renderer.renderLists.dispose();
 
 	init();
+  onWindowResize();
 }
 
 function getProperty(namee, val, display="string") {

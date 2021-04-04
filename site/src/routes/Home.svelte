@@ -6,12 +6,23 @@
   let totalTokens = 0;
   let contract;
   const app = getContext('app');
-  $: $app.contract && !contract && getUserTokens() && getTokenCount(); //TODO: remove these lines, they just call test methods
+  $: $app.contract && !contract && getUserTokens(); //TODO: remove these lines, they just call test methods
 
 //Function to get a user's tokens. For frontend people
 async function getUserTokens() {
-    var test = await fetch(BACKEND + "token?" + 2);
-    console.log(test.json());
+    var destination = BACKEND + 'token';
+    var payload ={
+      id: 0
+    };
+    let response = await fetch(destination, {
+    	method: 'POST',
+    	headers: {
+    		'Content-Type': 'application/json;charset=utf-8'
+    	},
+    	body: JSON.stringify(payload)
+    });
+    let testjson = await response.json();
+    console.log(testjson);
 
     contract = $app.contract;
     const balance = await contract.methods.balanceOf($app.account).call();

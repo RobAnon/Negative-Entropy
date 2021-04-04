@@ -1,5 +1,5 @@
 <script>
-
+  //TODO: I broke redirects by accident
   import { setContext } from 'svelte';
   import { writable } from 'svelte/store';
 

@@ -24,7 +24,7 @@ app.get('/api', (req, res) => {
 	return res.send('Received a GET HTTP method');
 });
 
-app.get('/api/token', (req, res) => {
+app.post('/api/token', (req, res) => {
 	let provider = new HDWalletProvider({
 		privateKeys:[process.env.PRIVATE_KEY], 
 		providerOrUrl: process.env.NETWORK
@@ -32,13 +32,43 @@ app.get('/api/token', (req, res) => {
 	res.setHeader('Cache-Control', 's-max-age=1, stale-while-revalidate')
 	const web3 = new Web3(provider);
 	const contract = new web3.eth.Contract(abi, process.env.CONTRACT_ADDRESS);
-	var id = req.query.id; //Form of /token?id=STRING
-	getTokenURI(contract, id)
- 	.then(function(URI) {
-		return res.send(URI);
+	var id = req.body.id;
+
+	console.log("Id is " + id);
+	getTokenCount(contract)
+ 	.then(async function(count) {
+		if(id < count) {
+			getTokenURI(contract, id)
+			.then(function(URI) {
+				var payload = {tokenURI:URI}
+				provider.engine.stop();
+				res.send(JSON.stringify(payload));
+			});
+		} else {
+			res.status(404);
+			provider.engine.stop();
+			return res.send("Token ID not found");
+		}
 	 })
 
 	
+	return express.Router();
+});
+
+app.post('/api/allTokens', (req, res) => {
+	let provider = new HDWalletProvider({
+		privateKeys:[process.env.PRIVATE_KEY], 
+		providerOrUrl: process.env.NETWORK
+	});
+	res.setHeader('Cache-Control', 's-max-age=1, stale-while-revalidate')
+	const web3 = new Web3(provider);
+	const contract = new web3.eth.Contract(abi, process.env.CONTRACT_ADDRESS);
+	let tokens = [];
+	buildList(contract)
+	.then(function(build) {
+		return res.send(JSON.stringify(build));
+	 })
+	 
 	return express.Router();
 });
 
@@ -142,6 +172,21 @@ async function getAccounts(web3) {
 	});	
 }
 
+async function getTokenCount(contract) {
+	return new Promise(async (resolve, reject) => {
+		var count = await contract.methods.getTokenCount().call();
+  		resolve(count);
+	});	
+}
+
+async function getOwnerOf(contract, ident) {
+	console.log(ident);
+	return new Promise(async (resolve, reject) => {
+		var owner = await contract.methods.ownerOf(ident).call();
+  		resolve(owner);
+	});	
+}
+
 async function getTokenURI(contract, id) {
 	return new Promise(async (resolve, reject) => {
 		var URI = await contract.methods.tokenURI(id).call();
@@ -149,6 +194,35 @@ async function getTokenURI(contract, id) {
 	});	
 }
 
+async function buildList(contract){
+	const count = await getTokenCount(contract);
+	let tokens = [];
+	for(let i = 0; i < count; i++) {
+		console.log("token " + i + " of " + count);
+		let tokenURI = await getTokenURI(contract, i);
+		let ownerAdd = await getOwnerOf(contract, i);
+		tokens.push({
+			tokenURI,
+			id:i,
+			owner:ownerAdd,
+			contract: process.env.CONTRACT_ADDRESS
+		});
+	}
+	return tokens;
+	 /*
+	 			Promise.all([tokenuri, ownerAdd])
+			.then(function(values) {
+				var tok = values[0];
+				var own = values[1];
+				tokens.push({
+					id:i,
+					URI:tok,
+					owner:own
+				});
+				console.log(tokens);
+			})
+	 */
+}
 
 //NOTE: Having from in here is very important
 async function seedClaimed(contract, seed, address) {

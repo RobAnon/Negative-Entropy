@@ -12,51 +12,29 @@
   // so now when $app change,
   // if contract is now set in it
   // we can request things from Blockchain
-  $: $app.contract && !contract && getTokens();
+  $: getTokens();
 
   async function getTokens() {
-    contract = $app.contract;
 
-    // feels like the best way to do it in the browser when there are only few items
-    const events = await contract.getPastEvents('Transfer', {
-      fromBlock: 0,
-    });
-    const address = contract.options.address;
-
+    //TODO: Should really be done with GET
     let _totalTokens = totalTokens;
-    for (const event of events) {
-      const values = event.returnValues;
-      const _from = values.from;
-      const _to = values.to;
-      const tokenId = values.tokenId;
+    var destination = BACKEND+"allTokens";
+    let response = await fetch(destination, {
+    	method: 'POST',
+    	headers: {
+    		'Content-Type': 'application/json;charset=utf-8'
+    	},
+    	body: ""
+    });
+    let result = await response.json();
 
-      if (_from === '0x0000000000000000000000000000000000000000') {
-        const tokenURI = await contract.methods.tokenURI(tokenId).call();
-        tokens.push({
-          tokenURI,
-          id: tokenId,
-          creator: _to,
-          contract: address,
-        });
-        _totalTokens++;
-      }
-
-      if (_to === '0x0000000000000000000000000000000000000000') {
-        tokens.splice(
-          tokens.findIndex((t) => t.id == tokenId),
-          1
-        );
-        _totalTokens--;
-      } else {
-        const token = tokens.find((t) => t.id == tokenId);
-        token.owner = _to;
-      }
-    }
-
-    totalTokens = _totalTokens;
-    tokens = tokens;
+    totalTokens = result.length;
+    tokens = result;
+    console.log(tokens);
   }
 </script>
+
+
 
 <style>
   div {
