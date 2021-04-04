@@ -24,6 +24,22 @@ app.get('/api', (req, res) => {
 	return res.send('Received a GET HTTP method');
 });
 
+app.get('/api/tokenCount', (req, res) => {
+	let provider = new HDWalletProvider({
+		privateKeys:[process.env.PRIVATE_KEY], 
+		providerOrUrl: process.env.NETWORK
+	});
+	res.setHeader('Cache-Control', 's-max-age=1, stale-while-revalidate')
+	const web3 = new Web3(provider);
+	const contract = new web3.eth.Contract(abi, process.env.CONTRACT_ADDRESS);
+	getTokenCount(contract)
+	.then(function(count) {
+		provider.engine.stop();
+		return res.send(JSON.stringify({count}));
+	})
+	return express.Router();
+});
+
 app.post('/api/token', (req, res) => {
 	let provider = new HDWalletProvider({
 		privateKeys:[process.env.PRIVATE_KEY], 

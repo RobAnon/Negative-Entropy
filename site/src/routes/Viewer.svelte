@@ -2,9 +2,12 @@
   import { onMount } from 'svelte';
   import Sandbox from '@beyondnft/sandbox';
   import App from '../App.svelte';
-
+  import { onDestroy } from 'svelte';
   export let token = {json:{description:""}};
   export let params;
+  import router from "page";
+import page from 'page';
+
 
  
   // load json
@@ -16,6 +19,8 @@
   let attributes = [];
   let url;
   let view;
+  let left = 0;
+  let right = 0;
 
   const opensea_base = "https://opensea.io/";
   let opensea = ""; 
@@ -30,6 +35,7 @@
     });
   }
 
+
   async function getData() {
     url = BACKEND + "token";
     let response = await fetch(url, {
@@ -42,6 +48,41 @@
     let result = await response.json();
     console.log(result.tokenURI);
     data = result;
+  }
+
+  function navigateRight() {
+
+    params.id = right;
+    router.redirect("/viewer/"+right, );
+    console.log(params);
+  }
+
+  async function navRight() {
+   
+    var nextId = Number(token.id) + 1;
+    var count = await getCount();
+    if(nextId >= count) {
+      //We've reached the end, loop the content
+      right = token.id;
+    } else {
+      right = nextId;
+    }
+  }
+  
+  async function navLeft() {
+    var nextId = Number(token.id) - 1;
+    if(nextId < 0) {
+      left = token.id;
+    } else {
+      left = nextId;
+    }
+  }
+
+  async function getCount() {
+    var backend_dest = BACKEND + "tokenCount";
+    var response = await fetch(backend_dest);
+    var result = await response.json();
+    return Number(result.count);
   }
 
   onMount(async () => {
@@ -65,6 +106,8 @@
     });
     opensea = opensea_base + process.env.CONTRACT_ADDRESS + "/" + token.id;
     renderSandbox();
+    await navRight();
+    await navLeft();
   });
 </script>
 
@@ -113,6 +156,15 @@
     color:white;
   }
 
+  #navR {
+    float:right;
+    margin:20 px;
+  }
+
+  #navL {
+    float:left;
+    margin:20px;
+  }
 </style>
 <section class="big">
     <div class="content">
@@ -137,8 +189,18 @@
         </div>
       </div>
       <br>
-      
+      <div id="navR">
+      <button class="btn btn-dark" on:click={navigateRight}><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right-square" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm4.5 5.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z"/>
+      </svg></button>
+    </div>
+    <div id="navL">
+      <a href="/viewer/{left}" class="btn btn-dark" ><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-square" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm11.5 5.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"/>
+      </svg></a>
+    </div>
     </div>
 
     
   </section>
+  

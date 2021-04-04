@@ -48,6 +48,7 @@ import { DataUtils } from 'three';
               var value = params.id;
               if (Number.isInteger(Number(value)) && value < LIMIT ){
                 page= route.component;
+                console.log("shoudl load new");
               } else {
                 if(isEthAddress(params.id)) { 
                   page = route.component;
