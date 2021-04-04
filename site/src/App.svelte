@@ -18,7 +18,7 @@
   let page = null;
   let params = {};
   let user = false;
-  let buttonDisplay = "Connect Web-Wallet";
+  let buttonDisplay = "Connect Wallet";
   let mode = 'Home';
   let LIMIT = 1000;
   web3Loaded.useSessionStorage();
@@ -87,7 +87,7 @@
   async function connectEthProvider() {
     if(!app.contract) {
       await initProvider(app);
-      buttonDisplay = $app.account;
+      buttonDisplay = String($app.account).slice(0,10)+"...";
       console.log($app.account);
     }
     //TODO: Else we will want it to show THEIR NFT's
