@@ -2,28 +2,24 @@
   import { getContext } from 'svelte';
   import Token from '../components/Token.svelte';
   import { onMount } from 'svelte';
+  import Sandbox from '@beyondnft/sandbox';
+  import {quickJSON} from '../conf/quickview';
 
   let tokens = [];
   let totalTokens = 0;
   let contract;
   const app = getContext('app');
   let count = 0;
-  let data;
+  let data ={};
   let token = {json:{description:""},id:"0"};
   let view;
   let result;
 
 onMount(async () => {
-
-  await getData();
-  console.log(result.tokenURI);
-
-  const res = await fetch(result.tokenURI);
-  const json = await res.json();
     
-  token.json = json;
-  token.id = data.id;
-  data = json;
+  token.json = quickJSON;
+
+  data = quickJSON;
   renderSandbox();
 })
 
@@ -66,8 +62,8 @@ function renderSandbox() {
 
 <style>
 .render {
-    width: 50px;
-    height:50px;
+    width: 300px;
+    height:300px;
 }
 </style>
 
