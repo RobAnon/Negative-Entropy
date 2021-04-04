@@ -5,7 +5,8 @@
   let tokens = [];
   let totalTokens = 0;
   let contract;
-
+  export let params;
+  console.log("Loaded");
   // app is a store, reading its value using $app will
   // create a subscriber to the store changes
   const app = getContext('app');
@@ -16,6 +17,7 @@
 
 //Function to get a user's tokens. For frontend people
 async function getUserTokens() {
+    console.log("init");
     contract = $app.contract;
     const balance = await contract.methods.balanceOf($app.account).call();
     let _totalTokens = totalTokens;

@@ -107,6 +107,7 @@ import App from '../App.svelte';
 
   h2 {
     margin: 20px 0;
+    color: black;
   }
 
   .close {
@@ -131,6 +132,7 @@ import App from '../App.svelte';
     padding: 0 20px;
     text-align: left;
     flex: 1;
+    color:black;
   }
   video {
   height: 230px;

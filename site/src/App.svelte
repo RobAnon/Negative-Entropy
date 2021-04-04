@@ -49,7 +49,7 @@ import { DataUtils } from 'three';
               if (Number.isInteger(Number(value)) && value < LIMIT ){
                 page= route.component;
               } else {
-                if(isEthAddress(params.address)) { 
+                if(isEthAddress(params.id)) { 
                   page = route.component;
                 } else {
                   router.redirect("/");

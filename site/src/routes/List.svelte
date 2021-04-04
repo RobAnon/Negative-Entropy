@@ -43,6 +43,7 @@
     grid-gap: 20px;
     padding: 10px 0;
     position: relative;
+    color:white;
   }
   video {
   height: 230px;
