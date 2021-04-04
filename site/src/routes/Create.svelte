@@ -10,8 +10,8 @@ import { HemisphereLight, LinearToneMapping, Box3, SpotLight, Scene, Color, Obje
 import seedrandom from 'seedrandom'
 import CCapture from '../components/ccapture.js/src/CCapture.js'
 import { get, writable } from 'svelte/store';
-import { ViewerScript } from '../components/ViewerScript'
-
+import { ViewerScript } from '../components/ViewerScript';
+import { Moon } from 'svelte-loading-spinners';
 
   
   const app = getContext('app');
@@ -19,6 +19,8 @@ import { ViewerScript } from '../components/ViewerScript'
   const myApp = writable({camera: null, renderer: null})
   export let innerHeight;
   export let innerWidth;
+  let minting = false;
+
   onMount(()=>{
     
     const renderer = document.getElementById('canvas')
@@ -523,7 +525,7 @@ export const setAttributes = () => {
 }
 
 export const start = (e) => {
-
+  minting = true;
   if($app.contract == null) {
   	//We are not set up with Web3, alert user and return
   	alert("Web3 is not Connected!");
@@ -783,7 +785,7 @@ async function mint(file, code) {
     ) {
       return;
     }
-
+    
 
     contract = $app.contract;
     account = $app.account;
@@ -823,7 +825,9 @@ async function mint(file, code) {
 
     mintText = 'Adding NFT to blockchain - See MetaMask (or the like) for transaction';
     const payment = await contract.methods.mint($app.account, result.v, result.r, result.s, result.URI, result.seed).send({from: $app.account, value: cost})
+    minting = false;
     dispatch('minted');
+    //TODO: REROUTE TO PERSONAL GALLERY HERE
   }
 </script>
 
@@ -987,7 +991,20 @@ svg:hover {
   height:200%;
   width:100%;
 }
-
+#load_ind {
+    display: flex;
+    background: none;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: absolute; 
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    z-index: 20;
+    font-size: 60px;
+}
 
 
 </style>
@@ -1125,9 +1142,12 @@ svg:hover {
    <div>
    <button class="btn btn-secondary" id="start" on:click={(e)=>start(e)}>Mint</button> 
   </div>
-   
-
-
+  
+  {#if minting}
+  <div id = load_ind>
+  <Moon id="load_ind" size="180" color="#FFFFFF" unit="px" duration="2s"></Moon>
+  </div>
+  {/if}
  </div>
     <!-- <textarea name="textarea" id="textareaID" placeholder="Enter the text..."></textarea>
     
