@@ -44,19 +44,15 @@ import { DataUtils } from 'three';
           router.redirect("/");
         } else {
           if(route.dynamic ) {
-            if(params.id) {
+            if(params.id != null) {
               var value = params.id;
-              if (value >= LIMIT || !Number.isInteger(value)) {
-                router.redirect("/");
+              if (Number.isInteger(Number(value)) && value < LIMIT ){
+                page= route.component;
               } else {
-                page = route.component;
-              }
-            } else {
-              if(params.address) { 
-                if(!isEthAddress(params.address)) {
-                  router.redirect("/");
-                } else {
+                if(isEthAddress(params.address)) { 
                   page = route.component;
+                } else {
+                  router.redirect("/");
                 }
               }
             }

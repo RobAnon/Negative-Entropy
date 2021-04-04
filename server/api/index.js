@@ -38,9 +38,8 @@ app.post('/api/token', (req, res) => {
 	getTokenCount(contract)
  	.then(async function(count) {
 		if(id < count) {
-			getTokenURI(contract, id)
-			.then(function(URI) {
-				var payload = {tokenURI:URI}
+			getOwnerAndURI(contract, id)
+			.then(function(payload) {
 				provider.engine.stop();
 				res.send(JSON.stringify(payload));
 			});
@@ -68,7 +67,7 @@ app.post('/api/allTokens', (req, res) => {
 	.then(function(build) {
 		return res.send(JSON.stringify(build));
 	 })
-	 
+	provider.engine.stop(); 
 	return express.Router();
 });
 
@@ -160,6 +159,18 @@ function getSignature(web3, address, account, seed, jsonURL){
     payload.hash = signature.messageHash;
     payload.signature = signature;
    	return payload;
+}
+
+async function getOwnerAndURI(contract, ide) {
+	let tokenURI = await getTokenURI(contract, ide);
+	let ownerAdd = await getOwnerOf(contract, ide);
+	var payload = {
+		tokenURI,
+		id:ide,
+		owner:ownerAdd,
+		contract:process.env.CONTRACT_ADDRESS
+	};
+	return payload;
 }
 
 async function getAccounts(web3) {
