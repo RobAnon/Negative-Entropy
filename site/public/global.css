@@ -38,7 +38,7 @@ h1 {
   font-size: 60px;
 }
 h1 b {
-  text-shadow: 0px 0px 5px var(--xwhite);
+  text-shadow: 0px 0px 6px var(--xwhite);
   position: relative;
 }
 h1 b:after {
@@ -451,6 +451,48 @@ header {
 
 
 /* --- MINT PAGE --- */
+.mint-container .canvas-container {
+  position: relative;
+  width: 100%;
+  height: 65%;
+  align-items: center;
+  justify-content: center;
+  align-content: center;
+  margin: auto;
+  padding: 1rem;
+  border: 2px solid #111;
+  border-radius: 5px;
+}
+
+#lock, #headlamp, #stabilize, #hide {
+border: none;
+outline: none;
+background: none;
+position: relative;
+}
+.controls-info {
+position: absolute;
+left: 50%;
+transform: translateX(-50%);
+opacity: 0;
+z-index: 9;
+transition: all 0.2s;
+width: max-content;
+background-color: var(--xgrey);
+border: 1px solid white;
+border-radius: 3px;
+padding: 4px;
+}
+.mint-container button:hover .controls-info {
+opacity: 1;
+}
+
+.mint-container svg {
+width: 100%;
+height: 44px;
+fill: var(--xwhite);
+}
+
 .mint-text-area {
   display: block;
   width: 800px;

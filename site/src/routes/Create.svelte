@@ -237,7 +237,7 @@ export const init = async () => {
   	myApp.set({camera: camera})
 
 	scene = new Scene();
-	scene.background = new Color( 0x111111 );
+	scene.background = new Color( 0x1a1a1a );
 	initLights(scene, camera);
 
 
@@ -830,163 +830,6 @@ async function mint(file, code) {
   
 
 <style>
-  /* section {
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-    padding: 10px 0;
-    position: relative;
-  }
-
-  .render {
-    position: sticky;
-    top: 0;
-
-    width: 50%;
-    flex: 0 0 auto;
-  }
-
-  .form {
-    width: 50%;
-    border-right: 1px solid black;
-    text-align: left;
-  }
-
-  form > div,
-  form > label {
-    margin-top: 20px;
-  }
-
-  h2 {
-    margin: 20px 0;
-    text-align: center;
-    color: #ff3e00;
-  }
-
-  h2:first-child {
-    margin-top: 0;
-  }
-
-  label strong {
-    display: block;
-  }
-
-  ul {
-    margin: 5px 0;
-  }
-
-  .remove {
-    cursor: pointer;
-    text-decoration: underline;
-  }
-
-  .row {
-    display: flex;
-    flex-direction: row;
-  }
-
-  .code {
-    width: 100%;
-    min-height: 250px;
-  }
-
-  .minting {
-    padding: 20px;
-    text-align: center;
-  }
-  canvas { width: 100%; height: 100% }
-#attributes{width: 50%; height:150px} */
-body { margin: 0; }
-#attributes{width: 50%; height:150px}
-
-.canvas-container{
-    position: relative;
-    width: 65%;
-    height: 65%;
-    align-items: center;
-    justify-content: center;
-    align-content: center;
-    margin: auto;
-    padding: 1rem;
-    border: 2px solid #111;
-    border-radius: 5px;
-}
-#canvas {
-  position: absolute;
-  background-color: lightgrey;
-}
-/*
-#start {
-  position: relative;
-  left: 5%;
-  bottom: 10%;
-  border: none;
-  background: none;
-  outline: none;
-}*/
-
-#lock {
-  position: absolute;
-  left: 5%;
-  bottom: 50%;
-  border: none;
-  background: none;
-  outline: none;
-}
-
-#headlamp {
-  position: absolute;
-  left: 5%;
-  bottom: 30%;
-  border: none;
-  background: none;
-  outline: none;
-}
-
-#stabilize {
-  position: absolute;
-  left: 5%;
-  bottom: 70%;
-  border: none;
-  background: none;
-  outline: none;
-  fill: red;
-}
-
-#hide {
-  position: absolute;
-  left: 5%;
-  bottom: 10%;
-  border: none;
-  background: none;
-  outline: none;
-}
-
-svg {
-  width: 100%;
-  height: 48px;
-}
-svg:hover {
-  fill: red;
-  transform: scale(1.1);
-  transition-duration: 0.2s;
-  transition-timing-function: linear;
-}
-.button-container {
-  position:absolute;
-  bottom:15%;
-  left:0%;
-  height:35%;
-  width:25%;
-  margin:0;
-}
-.button-actual {
-  position:absolute;
-  bottom:0px;
-  left:0px;
-  height:200%;
-  width:100%;
-}
 
 
 
@@ -995,16 +838,18 @@ svg:hover {
 <svelte:window on:resize={()=>onWindowResize()}/>
 
 <section>
-  <div class="canvas-container" id="canvas-container">
-    <div class="button-container" >
+  <div class="mint-container">
+    <div class="button-container">
       <div class="button-actual" id="inner_div">
-     
+    
         <button id="lock" on:click={()=>lock()}>
           <svg width="48px" height="36px" enable-background="new 0 0 52 52" id="Layer_1" version="1.1" viewBox="0 0 52 52" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g><g><path d="M21.9989624,14.0064087V4.0002441h27v-2h-29v12.0045166L14,13.9997559v4.6199951L2,14.6397705V39.40979l12-3.9900513    v4.5800171l6.9971313,0.008667c-0.0490112-0.4731445-0.0772705-0.9525146-0.0772705-1.4388428    c0-3.1660156,1.1289063-6.296875,3.1210938-8.7148438v-3.4072266c0-5.7607422,4.4296875-10.4472656,9.875-10.4472656    s9.875,4.6865234,9.875,10.4472656v3.4072266c1.9970703,2.4179688,3.1289063,5.5498047,3.1289063,8.7148438    c0,0.4933472-0.0298462,0.9793091-0.0802612,1.4590454L50,40.0297852v-26L21.9989624,14.0064087z"/></g><g><path d="M41.7909546,26.4475098c0-4.6582031-3.5322266-8.4472656-7.875-8.4472656    s-7.875,3.7890625-7.875,8.4472656v4.1594238c-1.9874268,2.1243286-3.1209717,4.9937134-3.1209717,7.9628296    c0,6.2999878,4.9299927,11.4299927,11,11.4299927c6.0599976,0,11-5.1300049,11-11.4299927    c0-2.9725952-1.1450806-5.8452759-3.1290283-7.961792V26.4475098z M36.1699829,40.0197754v3.4599609h-4.5v-3.4599609    c-0.789978-0.6700439-1.25-1.6900024-1.25-2.7600098c0-1.9899902,1.5700073-3.6099854,3.5-3.6099854s3.5,1.6199951,3.5,3.6099854    C37.4199829,38.3297729,36.9499512,39.3497314,36.1699829,40.0197754z M39.7909546,28.9006348    c-0.0093994-0.0068359-0.0188599-0.0128784-0.0282593-0.0188599c-0.0009766-0.0006104-0.00177-0.0014038-0.0027466-0.0020142    c-2.3612671-1.553833-5.2926636-2.0270386-8.020813-1.472229c-1.2930298,0.2623901-2.545166,0.7348633-3.6630249,1.4696655    c-0.0117188,0.0078125-0.0234375,0.015625-0.0351563,0.0234375v-2.453125c0-3.5546875,2.6357422-6.4472656,5.875-6.4472656    s5.875,2.8925781,5.875,6.4472656V28.9006348z" fill="#3A92CC"/></g></g></svg>
+          <div class="controls-info">Lock the camera.</div>
         </button>
         
         <button id="headlamp" on:click={()=>headlamp()}>
           <svg width="48px" height="36px" id="Layer_1" style="enable-background:new 0 0 100.353 100.352;" version="1.1" viewBox="0 0 100.353 100.352" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M69.294,11.442c-6.788-5.594-15.724-7.82-24.512-6.109C32.951,7.636,23.449,17.623,21.675,29.62  c-1.447,9.79,2.031,19.567,9.304,26.155c3.277,2.968,5.254,7.243,5.568,12.039c0.006,0.087,0.023,0.171,0.042,0.254v15.039  c0,0.828,0.671,1.5,1.5,1.5h1.495c0.609,4.359,3.813,7.697,7.672,7.697h6.81c3.859,0,7.062-3.338,7.671-7.697h1.495  c0.828,0,1.5-0.672,1.5-1.5V67.828c0-0.003,0.001-0.006,0.001-0.01c0-4.462,2.026-8.771,5.706-12.133  c6.062-5.538,9.538-13.415,9.538-21.61C79.978,25.287,76.084,17.037,69.294,11.442z M45.357,39.91h-2.305  c-1.271,0-2.305-1.034-2.305-2.305s1.034-2.305,2.305-2.305s2.305,1.034,2.305,2.305V39.91z M55.966,37.605  c0-1.271,1.034-2.305,2.306-2.305c1.271,0,2.305,1.034,2.305,2.305s-1.034,2.305-2.305,2.305h-2.303L55.966,37.605z M55.063,69.211  h6.67v12.396H60.36c-0.003,0-0.006-0.001-0.01-0.001s-0.006,0.001-0.01,0.001H40.982c-0.003,0-0.006-0.001-0.01-0.001  s-0.006,0.001-0.01,0.001H39.59V69.211h14.366 M48.357,66.211V42.91h4.617l0.034,23.301H48.357z M54.066,89.304h-6.81  c-2.238,0-4.117-2.004-4.637-4.697h16.083C58.183,87.3,56.304,89.304,54.066,89.304z M68.416,53.471  c-3.872,3.537-6.164,8.013-6.593,12.74h-5.816L55.974,42.91h2.298c2.925,0,5.305-2.38,5.305-5.305c0-2.925-2.38-5.305-5.305-5.305  c-2.926,0-5.306,2.38-5.306,5.307l0.003,2.303h-4.612v-2.305c0-2.925-2.38-5.305-5.305-5.305c-2.925,0-5.305,2.38-5.305,5.305  c0,2.925,2.38,5.305,5.305,5.305h2.305v23.301h-5.972c-0.636-5.005-2.864-9.465-6.393-12.66c-6.528-5.914-9.65-14.696-8.35-23.493  c1.591-10.76,10.108-19.716,20.712-21.781c7.908-1.538,15.938,0.458,22.03,5.48c6.096,5.023,9.592,12.429,9.592,20.319  C76.978,41.43,73.857,48.5,68.416,53.471z"/></svg>
+          <div class="controls-info">Turn on the lighs!</div>
         </button>
         
         <button id="stabilize" on:click={()=>stabilize()}>
@@ -1079,31 +924,26 @@ svg:hover {
               646 -9 74 -21 151 -27 170 -12 40 -51 85 -90 106 -35 18 -144 18 -183 -1z"/>
             </g>
           </svg>
+          <div class="controls-info">Stabilize camera.</div>
         </button>
 
-        <button id="hide" on:click={()=>hide()} on:mouseover={hideEnter} on:mouseout={hideExit}>
-          <svg opacity={opct} height=48px width=48px xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" style="-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); transform: rotate(360deg);" preserveAspectRatio="xMidYMid meet" viewBox="0 0 16 16"><g ><path d="M13.359 11.238C15.06 9.72 16 8 16 8s-3-5.5-8-5.5a7.028 7.028 0 0 0-2.79.588l.77.771A5.944 5.944 0 0 1 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.134 13.134 0 0 1 14.828 8c-.058.087-.122.183-.195.288c-.335.48-.83 1.12-1.465 1.755c-.165.165-.337.328-.517.486l.708.709z"/><path d="M11.297 9.176a3.5 3.5 0 0 0-4.474-4.474l.823.823a2.5 2.5 0 0 1 2.829 2.829l.822.822zm-2.943 1.299l.822.822a3.5 3.5 0 0 1-4.474-4.474l.823.823a2.5 2.5 0 0 0 2.829 2.829z"/><path d="M3.35 5.47c-.18.16-.353.322-.518.487A13.134 13.134 0 0 0 1.172 8l.195.288c.335.48.83 1.12 1.465 1.755C4.121 11.332 5.881 12.5 8 12.5c.716 0 1.39-.133 2.02-.36l.77.772A7.029 7.029 0 0 1 8 13.5C3 13.5 0 8 0 8s.939-1.721 2.641-3.238l.708.709zm10.296 8.884l-12-12l.708-.708l12 12l-.708.708z"/></g></svg>
-        </button>
-
+        
       </div>
+      <button id="hide" on:click={()=>hide()} on:mouseover={hideEnter} on:mouseout={hideExit}>
+        <svg opacity={opct} height=48px width=48px xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" style="-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); transform: rotate(360deg);" preserveAspectRatio="xMidYMid meet" viewBox="0 0 16 16"><g ><path d="M13.359 11.238C15.06 9.72 16 8 16 8s-3-5.5-8-5.5a7.028 7.028 0 0 0-2.79.588l.77.771A5.944 5.944 0 0 1 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.134 13.134 0 0 1 14.828 8c-.058.087-.122.183-.195.288c-.335.48-.83 1.12-1.465 1.755c-.165.165-.337.328-.517.486l.708.709z"/><path d="M11.297 9.176a3.5 3.5 0 0 0-4.474-4.474l.823.823a2.5 2.5 0 0 1 2.829 2.829l.822.822zm-2.943 1.299l.822.822a3.5 3.5 0 0 1-4.474-4.474l.823.823a2.5 2.5 0 0 0 2.829 2.829z"/><path d="M3.35 5.47c-.18.16-.353.322-.518.487A13.134 13.134 0 0 0 1.172 8l.195.288c.335.48.83 1.12 1.465 1.755C4.121 11.332 5.881 12.5 8 12.5c.716 0 1.39-.133 2.02-.36l.77.772A7.029 7.029 0 0 1 8 13.5C3 13.5 0 8 0 8s.939-1.721 2.641-3.238l.708.709zm10.296 8.884l-12-12l.708-.708l12 12l-.708.708z"/></g></svg>
+        <div class="controls-info">Hide controls.</div>
+      </button>
     </div>
-  </div>  
+    <div class="canvas-container" id="canvas-container">
 
-  <textarea class="form-control mint-text-area" name="textarea" id="textareaID" placeholder="Choose a unique name for your NFT and hit Load New Seed..."></textarea>
+    </div>  
 
-    
-  <div class="mint-buttons">
-    <button class="button-secondary" id="reset" on:click={()=>_reset()}>Load Seed</button>
-    <button class="button-main" id="start" on:click={(e)=>start(e)}>Mint</button> 
+
+    <textarea class="form-control mint-text-area" name="textarea" id="textareaID" placeholder="Choose a unique name for your NFT and hit Load New Seed..."></textarea>
+
+    <div class="mint-buttons">
+      <button class="button-secondary" id="reset" on:click={()=>_reset()}>Load Seed</button>
+      <button class="button-main" id="start" on:click={(e)=>start(e)}>Mint</button> 
+    </div>
   </div>
-
-
-    <!-- <textarea name="textarea" id="textareaID" placeholder="Enter the text..."></textarea>
-    
-    <textarea readonly id="attributes">
-    Attributes go here
-    </textarea> -->
-<!-- 
-  </div> -->
-  
 </section>
