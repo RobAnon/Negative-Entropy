@@ -31,11 +31,11 @@ var fadeIn = function () {
             } else if ($(this).hasClass('fade-in-2')) {
                 setTimeout( () => { 
                     $(this).css({'top': '0px', 'opacity': '1'});
-                }, 150);
+                }, 200);
             } else if ($(this).hasClass('fade-in-3')) {
                 setTimeout( () => { 
                     $(this).css({'top': '0px', 'opacity': '1'});
-                }, 300);
+                }, 500);
             }
             
         }

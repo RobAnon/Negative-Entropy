@@ -70,7 +70,7 @@ function renderSandbox() {
       <button class="button-main fade-in fade-in-3">Mint</button>	
       <button class="button-secondary fade-in fade-in-3">Learn more</button>	
     </div>	
-    <div class="homepage-graphic">	
+    <div class="homepage-graphic fade-in fade-in-3">	
       <div class="render" bind:this={view}/>
       <div class="graphic-shader">&nbsp;</div>
     </div>	
@@ -81,8 +81,14 @@ function renderSandbox() {
 <section>
   <div class="homepage-info">
     <h2 class="fade-in fade-in-1">What is <b>Negative Entropy</b>?</h2>
-    <p class="fade-in fade-in-2">Negative Entropy is a first-of-its-kind digital collection of kinetic sculptures based on the concept of chaotic attractors, equations that describe the complex and infinite motion of dynamic systems that exhibit ”chaos”. Chaotic attractors are some of the most striking examples of mathematical beauty to be found in Chaos Theory. Negative Entropy allows its holders to project their words into that beauty, forming the synthesis of chaos and thought that we call “art”.</p>
-    <p class="fade-in fade-in-3">Each sculpture is generated based on a seed you choose as you explore the space that our sandbox encompasses – no two are exactly alike! Sculptures can vary in speed, shape, color, rotation, and a variety of other ways we will leave to you to figure out. When you find one that strikes you, mint it, and it will be yours forever, immutably preserved by the power of the blockchain.</p>
+    <div class="homepage-info-img">
+      <img class="fade-in fade-in-2"src='/logo-main.png' alt='entropy-info'>
+    </div>
+    <div class="homepage-info-text fade-in fade-in-3">
+      <p>Negative Entropy is a first-of-its-kind digital collection of kinetic sculptures based on the concept of chaotic attractors, equations that describe the complex and infinite motion of dynamic systems that exhibit ”chaos”. Chaotic attractors are some of the most striking examples of mathematical beauty to be found in Chaos Theory. Negative Entropy allows its holders to project their words into that beauty, forming the synthesis of chaos and thought that we call “art”.</p>
+      <p>Each sculpture is generated based on a seed you choose as you explore the space that our sandbox encompasses – no two are exactly alike! Sculptures can vary in speed, shape, color, rotation, and a variety of other ways we will leave to you to figure out. When you find one that strikes you, mint it, and it will be yours forever, immutably preserved by the power of the blockchain.</p>
+      <button class="button-main">Decrease the total amount of entropy in the universe (Create your own).</button>
+    </div>
   </div>
 </section>
 

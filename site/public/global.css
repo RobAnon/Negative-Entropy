@@ -143,9 +143,9 @@ section {
 
 .fade-in {
   position: relative;
-  top: 100px;
+  top: 80px;
   opacity: 0;
-  transition: all 0.6s;
+  transition: top 0.6s, opacity 1.3s;
   transition-delay: 0.4s;
 }
 
@@ -397,4 +397,41 @@ header {
 
 
 /* - homepage info - */
+.homepage-info {
+  margin-bottom: 1000px;
+}
+.homepage-info h2 {
+  margin-bottom: 30px;
+}
+.homepage-info-img {
+  padding: 0px 80px;
+  max-width: 450px;
+  margin: 0px auto 40px;
+}
+.homepage-info-img img {
+  max-width: 100%;
+}
+.homepage-info button {
+  display: block;
+  width: auto;
+  max-width: 400px;
+  margin: 30px auto;
+}
 
+
+@media only screen and (min-width: 900px) {
+  .homepage-info-img, .homepage-info-text {
+    display: inline-block;
+  }
+  .homepage-info-img {
+    width: 40%;
+  }
+  .homepage-info-text {
+    width: 60%;
+  }
+  .homepage-info-img {
+    float: left;
+    margin-top: 20px;
+    padding-left: 20px;
+  }
+}
