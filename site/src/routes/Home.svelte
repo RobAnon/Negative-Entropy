@@ -1,12 +1,14 @@
 <script>
   import { getContext } from 'svelte';
   import Token from '../components/Token.svelte';
+  import { onMount } from 'svelte';
 
   let tokens = [];
   let totalTokens = 0;
   let contract;
   const app = getContext('app');
   $: $app.contract && !contract && getUserTokens(); //TODO: remove these lines, they just call test methods
+  let count = 0;
 
 //Function to get a user's tokens. For frontend people
 async function getUserTokens() {
@@ -41,12 +43,19 @@ async function getUserTokens() {
 }
 
 //Function to get the total amount of tokens created, including burned tokens – for frontend people
+//DEPRECATED
 async function getTokenCount() {
   var count = await $app.contract.methods.getTokenCount().call();
   console.log(count);
   return count;
 }
 
+async function getCount() {
+    var backend_dest = BACKEND + "tokenCount";
+    var response = await fetch(backend_dest);
+    var result = await response.json();
+    return Number(result.count);
+}
 
 </script>
 
@@ -63,7 +72,12 @@ async function getTokenCount() {
 <section>
     
 <body>
-Text Goes Here
+Text Goes Here: total tokens are 
+{#await getCount()} 
+0
+{:then count}
+{count}
+{/await}
 </body>
 
 
