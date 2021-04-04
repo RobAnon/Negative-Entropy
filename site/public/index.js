@@ -1,6 +1,7 @@
 $(document).ready(function() {
-
     
+    fadeIn();
+
     $('.hamburger').click(function() {
         if ($(this).hasClass('is-active')) {
             $(this).removeClass('is-active');
@@ -11,5 +12,33 @@ $(document).ready(function() {
         }
     })
 
-
 })
+
+
+$(document).on('scroll', function() {
+    fadeIn();
+})
+ 
+
+var fadeIn = function () {
+       
+    $('.fade-in').each(function() {
+
+        if ( ($(this).offset().top - 250 + $(window).height()/6) < ($(window).height() + $(document).scrollTop()) ) {
+
+            if ($(this).hasClass('fade-in-1')) {
+                $(this).css({'top': '0px', 'opacity': '1'});
+            } else if ($(this).hasClass('fade-in-2')) {
+                setTimeout( () => { 
+                    $(this).css({'top': '0px', 'opacity': '1'});
+                }, 150);
+            } else if ($(this).hasClass('fade-in-3')) {
+                setTimeout( () => { 
+                    $(this).css({'top': '0px', 'opacity': '1'});
+                }, 300);
+            }
+            
+        }
+        
+    })
+}
