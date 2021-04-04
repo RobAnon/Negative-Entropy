@@ -2,6 +2,12 @@ import detectProvider from '@metamask/detect-provider';
 import abi from './conf/abi.json';
 import fs from 'fs'
 import Web3 from 'web3';
+import { web3Loaded } from './store.js';
+let isWeb3;
+
+	const subscriber = web3Loaded.subscribe(value => {
+		isWeb3 = value;
+	});
 
 export async function initProvider(app) {
   // detect provider
@@ -37,8 +43,6 @@ export async function initProvider(app) {
     from: account,
   });
 
-
-
   console.log(contract)
 
   app.set({
@@ -48,6 +52,7 @@ export async function initProvider(app) {
     account,
   });
   app = app;
+  web3Loaded.set(1);
 }
 
 export function isEthAddress(addr) {

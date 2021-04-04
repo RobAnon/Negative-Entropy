@@ -2,6 +2,8 @@
   //TODO: I broke redirects by accident
   import { setContext } from 'svelte';
   import { writable } from 'svelte/store';
+  import {web3Loaded} from './store.js';  
+  
 
   import { initProvider } from './utils';
   import {isEthAddress} from './utils';
@@ -11,8 +13,8 @@
   import Create from './routes/Create.svelte';
   import About from './routes/About.svelte';
   import Home from './routes/Home.svelte';
-import PersonalGallery from './routes/PersonalGallery.svelte';
-import { DataUtils } from 'three';
+  import PersonalGallery from './routes/PersonalGallery.svelte';
+  import { DataUtils } from 'three';
   
   let page = null;
   let params = {};
@@ -20,11 +22,26 @@ import { DataUtils } from 'three';
   let buttonDisplay = "Connect Web-Wallet";
   let mode = 'Home';
   let LIMIT = 1000;
+  web3Loaded.useSessionStorage();
+
+    //Allows us to force a reconnection to web3
+  //This is a really clunky solution, but it should work
+  let isWeb3;
+  const subscriber = web3Loaded.subscribe(value => {
+		isWeb3 = value;
+	});
+
 
   const app = writable({});
   export const innerHeight = writable(1000)
   export const innerWidth = writable(1000)
   setContext('app', app);
+
+  if(isWeb3 == 1) {
+    //reinitializes web3 on a reload
+    connectEthProvider();
+    console.log("called");
+  }
 
   routes.forEach(route => {
 	// Loop around all of the routes and create a new instance of
