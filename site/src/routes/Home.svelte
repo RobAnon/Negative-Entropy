@@ -8,6 +8,24 @@
   let contract;
   const app = getContext('app');
   let count = 0;
+  let data;
+  let token = {json:{description:""},id:"0"};
+  let view;
+  let result;
+
+onMount(async () => {
+
+  await getData();
+  console.log(result.tokenURI);
+
+  const res = await fetch(result.tokenURI);
+  const json = await res.json();
+    
+  token.json = json;
+  token.id = data.id;
+  data = json;
+  renderSandbox();
+})
 
 async function getCount() {
     var backend_dest = BACKEND + "tokenCount";
@@ -16,11 +34,41 @@ async function getCount() {
     return Number(result.count);
 }
 
+async function getData() {
+  var count = await getCount();
+  var id = Math.floor(Math.random()*count);//Will give us a random token
+  data.id = id;
+  var url = BACKEND + "token";
+  let response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8'
+    },
+    body: JSON.stringify({id})
+  });
+  result = await response.json();
+  
+}
+
+function renderSandbox() {
+  console.log(data);
+    new Sandbox({
+      target: view,
+      props: {
+        data,
+      },
+    });
+  }
+
+
 </script>
 
 
 <style>
-
+.render {
+    width: 50px;
+    height:50px;
+}
 </style>
 
 
@@ -338,7 +386,7 @@ async function getCount() {
       </div>	
     </div>	
   </div>	
-
+  <div class="render" bind:this={view}/>
   <body>
     This method is how you get total tokens: total tokens are 
     {#await getCount()} 
