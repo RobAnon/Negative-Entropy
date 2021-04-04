@@ -70,8 +70,8 @@ function renderSandbox() {
       <button class="button-main fade-in fade-in-3">Mint</button>	
       <button class="button-secondary fade-in fade-in-3">Learn more</button>	
     </div>	
-    <div class="homepage-graphic fade-in fade-in-3">	
-      <div class="render" bind:this={view}/>
+    <div class="homepage-graphic">	
+      <div class="render fade-in fade-in-3" bind:this={view}/>
       <div class="graphic-shader">&nbsp;</div>
     </div>	
   </div>	

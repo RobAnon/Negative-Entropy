@@ -24,18 +24,18 @@ var fadeIn = function () {
        
     $('.fade-in').each(function() {
 
-        if ( ($(this).offset().top - 250 + $(window).height()/6) < ($(window).height() + $(document).scrollTop()) ) {
+        if ( ($(this).offset().top - 200 + $(window).height()/6) < ($(window).height() + $(document).scrollTop()) ) {
 
             if ($(this).hasClass('fade-in-1')) {
                 $(this).css({'top': '0px', 'opacity': '1'});
             } else if ($(this).hasClass('fade-in-2')) {
                 setTimeout( () => { 
                     $(this).css({'top': '0px', 'opacity': '1'});
-                }, 200);
+                }, 300);
             } else if ($(this).hasClass('fade-in-3')) {
                 setTimeout( () => { 
                     $(this).css({'top': '0px', 'opacity': '1'});
-                }, 500);
+                }, 550);
             }
             
         }

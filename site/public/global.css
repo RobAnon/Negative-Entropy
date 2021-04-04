@@ -145,8 +145,8 @@ section {
   position: relative;
   top: 80px;
   opacity: 0;
-  transition: top 0.6s, opacity 1.3s;
-  transition-delay: 0.4s;
+  transition: top 0.6s, opacity 1.3s, box-shadow 0.4s;
+  transition-delay: all 0.4s, box-shadow 0s;
 }
 
 
@@ -338,7 +338,6 @@ header {
   margin-top: 20px;
 }
 
-
 .homepage-graphic {
   height: 800px;
   width: 100%;
@@ -372,7 +371,9 @@ header {
 @media only screen and (min-width: 900px) {
   .homepage-heading {
     display: flex;
-    margin-top: 9%;
+    min-height: calc(100vh - 150px);
+    margin-top: 0px;
+    align-items: center;
   }
   .header-text {
     max-width: 52%;
@@ -398,10 +399,11 @@ header {
 
 /* - homepage info - */
 .homepage-info {
+  margin-top: 100px;
   margin-bottom: 1000px;
 }
 .homepage-info h2 {
-  margin-bottom: 30px;
+  margin-bottom: 40px;
 }
 .homepage-info-img {
   padding: 0px 80px;
@@ -431,7 +433,7 @@ header {
   }
   .homepage-info-img {
     float: left;
-    margin-top: 20px;
+    margin-top: 40px;
     padding-left: 20px;
   }
 }
