@@ -52,7 +52,8 @@
     const json = await res.json();
     
     token.json = json;
-
+    token.id = data.id;
+    
     image = json.image;
     name = json.name;
 
@@ -62,7 +63,7 @@
     Object.keys(data.attributes).forEach((key) => {
       attributes.push({ key: data.attributes[key].trait_type, value: data.attributes[key].value });
     });
-    opensea = opensea_base + token.contract + "/" + token.id;
+    opensea = opensea_base + process.env.CONTRACT_ADDRESS + "/" + token.id;
     renderSandbox();
   });
 </script>
@@ -77,9 +78,21 @@
 
  
   h2 {
-    margin: 20px 0;
+    margin: 10px 0;
+    color: white;
+  }
+ 
+  #open {
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
   }
 
+  #img {
+    width:160px; 
+    border-radius:5px; 
+    box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.25);
+  }
 
   .output {
     display: flex;
@@ -96,6 +109,8 @@
     padding: 0 20px;
     text-align: left;
     flex: 1;
+    height: 80%;
+    color:white;
   }
 
 </style>
@@ -114,11 +129,15 @@
                 <li><strong>{attribute.key}</strong>: {attribute.value}</li>
               {/each}
             </ul>
-          {/if}
+            <br>
+            <div id="open">
+            <a href={opensea} id="os" title="Buy on OpenSea" target="_blank"><img id="img" src="https://storage.googleapis.com/opensea-static/opensea-brand/listed-button-white.png" alt="Buy on OpenSea badge" /></a>
+            </div>
+            {/if}
         </div>
       </div>
       <br>
-     <a href={opensea} id="os" title="Buy on OpenSea" target="_blank"><img style="width:160px; border-radius:5px; box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.25);" src="https://storage.googleapis.com/opensea-static/opensea-brand/listed-button-white.png" alt="Buy on OpenSea badge" /></a>
+      
     </div>
 
     
