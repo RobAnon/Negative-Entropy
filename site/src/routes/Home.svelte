@@ -7,48 +7,7 @@
   let totalTokens = 0;
   let contract;
   const app = getContext('app');
-  $: $app.contract && !contract && getUserTokens(); //TODO: remove these lines, they just call test methods
   let count = 0;
-
-//Function to get a user's tokens. For frontend people
-async function getUserTokens() {
-    var destination = BACKEND + 'token';
-    var payload ={
-      id: 0
-    };
-    let response = await fetch(destination, {
-    	method: 'POST',
-    	headers: {
-    		'Content-Type': 'application/json;charset=utf-8'
-    	},
-    	body: JSON.stringify(payload)
-    });
-    let testjson = await response.json();
-    console.log(testjson);
-
-    contract = $app.contract;
-    const balance = await contract.methods.balanceOf($app.account).call();
-    for(var i = 0; i < balance; i++) {
-      var tokenId = await contract.methods.tokenOfOwnerByIndex($app.account, i).call();
-      var tokenURI = await contract.methods.tokenURI(tokenId).call();
-      tokens.push({
-          tokenURI,
-          id: tokenId,
-          creator: $app.account,
-          contract: $app.address,
-        });
-    }
-    tokens = tokens; //See List.svelte for further example of this
-    console.log(JSON.stringify(tokens));
-}
-
-//Function to get the total amount of tokens created, including burned tokens – for frontend people
-//DEPRECATED
-async function getTokenCount() {
-  var count = await $app.contract.methods.getTokenCount().call();
-  console.log(count);
-  return count;
-}
 
 async function getCount() {
     var backend_dest = BACKEND + "tokenCount";
@@ -62,24 +21,331 @@ async function getCount() {
 
 <style>
 
-
-
-
 </style>
 
 
 
-<section>
+<section>	
+  <div class="homepage-heading">	
+    <div class="header-text">	
+      <h1>How can the net amount of <b>entropy</b> in the universe be decreased?</h1>	
+      <p>We make NFT's using Chaos Theory and the iNFT standard.</p>	
+      <button class="button-main">Mint</button>	
+      <button class="button-secondary">Learn more</button>	
+    </div>	
+    <div class="orb">	
+      <div class='wrap'>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+        <div class='c'></div>	
+      </div>	
+    </div>	
+  </div>	
+
+  <body>
+    This method is how you get total tokens: total tokens are 
+    {#await getCount()} 
+    Displays this text while loading
+    {:then count}
+    {count}
+    {/await}
+  </body>
     
-<body>
-Text Goes Here: total tokens are 
-{#await getCount()} 
-0
-{:then count}
-{count}
-{/await}
-</body>
-
-
-
 </section>

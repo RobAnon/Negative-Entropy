@@ -1,5 +1,4 @@
 <script>
-  //TODO: I broke redirects by accident
   import { setContext } from 'svelte';
   import { writable } from 'svelte/store';
   import {web3Loaded} from './store.js';  
@@ -93,102 +92,67 @@
     }
     //TODO: Else we will want it to show THEIR NFT's
   }
+
+  function route(dest) {
+    //Route to that page – workaround for broken links 
+    //James pls fix the href tags, not working for whatever reason, this is a cheap way of fixing on my end
+    router(dest);
+  }
 </script>
 
 <style>
-  main {
-    text-align: center;
-    padding: 1em;
-    max-width: 240px;
-    margin: 0 auto;
-  }
-
-  h1 {
-    color: #ff3e00;
-    text-transform: uppercase;
-    font-size: 4em;
-    font-weight: 100;
-    margin: 0 10px;
-  }
-
-  li {
-    display: inline;
-    margin: 0 10px;
-    cursor: pointer;
-  }
+  
 
   .selected {
     text-decoration: underline;
   }
 
-  @media (min-width: 640px) {
-    main {
-      max-width: none;
-    }
-  }
-
-  .bg-light {
-    background-color: #f8f9fa 
-  }
+  
 
 </style>
 
-<header>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="#">Negative Entropy</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNavDropdown">
-        <ul class="navbar-nav">
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="/">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/mint">Mint</a>
-          </li>
-          
-          <li class="nav-item" class:selected={mode === 'About'}>
-            <a class="nav-link" href='/about'>About</a>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Gallery
-            </a>
-            <div class="dropdown-menu bg-dark" aria-labelledby="navbarDropdownMenuLink">
-              <a class="dropdown-item text-white " href="/gallery">Public Gallery</a>
-              <a class="dropdown-item text-white" href="/gallery/{$app.account}">My NFTs</a>
-            </div>
-          </li>
-        </ul>
-      </div>
-      <div style="float: right;">
-        <button class="btn btn-dark" on:click={connectEthProvider}>{buttonDisplay}</button>
-      </div>
-
-    </div>
-  </nav>
+<header>	
+  <span id="logo" href="#">	
+    <img src="/logo-main.png" alt="main logo">	
+  </span>	
+  <div class="navbar-links">	
+    <div>	
+      <div class="navbar-link" class:selected={mode === 'Home'} on:click={() => (mode = 'Home')} href="/">Home</div>    	
+      <div class="navbar-link" class:selected={mode === 'Mint'} on:click={() => (mode = 'Mint')} href='/mint'>Mint</div>  	
+      <div class="navbar-link" id="gallery" class:selected={mode === 'publicgallery' || mode == 'mysculptures'}>	
+        Gallery	
+        <div class="navbar-dropdown" id="navbar-dropdown-1" on:click={() => (mode = 'publicgallery')} href="/gallery">Public Gallery</div>	
+        <div class="navbar-dropdown" id="navbar-dropdown-2" on:click={() => (mode = 'mysculptures')} hfef="/gallery/{$app.account}">My NFTs</div>	
+      </div>	
+      <div class="navbar-link" class:selected={mode === 'About'} on:click={() => (mode = 'About')} href='/about'>About</div>	
+      <div class="navbar-link" on:click={() => (mode = 'publicgallery')} href="/gallery">Public Gallery</div>	
+      <div class="navbar-link" on:click={() => (mode = 'mysculptures')} hfef="/gallery/{$app.account}">My NFTs</div>	
+    </div>	
+  </div>	
+  <div class="navbar-right">	
+    <button class="button-secondary" on:click={connectEthProvider}>{buttonDisplay}</button>	
+    <button class="hamburger hamburger--slider" type="button">	
+      <span class="hamburger-box">	
+        <span class="hamburger-inner"></span>	
+      </span>	
+    </button>	
+  </div>	
 </header>
 <main>
   <svelte:component this={page} {params} />
+
+  {#if mode === 'publicgallery'}
+    {route('gallery')}
+  {:else if mode === 'Mint'}
+    <Create on:minted={() => (mode = 'publicgallery')} innerHeight={$innerHeight/2} innerWidth={$innerWidth/2} />
+<!--- I will be modifying the above function later to route to the personal viewr –shoudnt affect yrou work-->
+  {:else if mode === 'Home'}
+  {route('/')}
+  {:else if mode === 'About'}
+  {route('about')}
+  {:else if mode = 'mysculptures'}
+  {route("/gallery/"+$app.account)}
+  {/if}
+  
 </main>
 <svelte:window bind:innerWidth={$innerWidth} bind:innerHeight={$innerHeight}/>
-<!---
-<main>
-  
-    {#if mode === 'list'}
-      <List />
-    {:else if mode === 'Mint'}
-      <Create on:minted={() => (mode = 'list')} innerHeight={$innerHeight/2} innerWidth={$innerWidth/2} />
-    {:else if mode === 'Home'}
-      <Home />
-    {:else if mode === 'About'}
-      <About />
-    {:else if mode === 'publicgallery'}
-      <List />
-    {:else if mode = 'mysculptures'}
-      <PersonalGallery />
-    {/if}
-    
-</main>-->
