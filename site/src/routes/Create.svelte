@@ -608,6 +608,7 @@ export const _reset = e => {
 
 export const hide = () => {
   const $hide = document.getElementById('hide')
+  console.log("HIDDEN");
   if(params.hide) {
 			//Already hidden, unhide
 			$hide.style.fill = "black";
