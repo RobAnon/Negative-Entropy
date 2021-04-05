@@ -747,11 +747,7 @@ async function onRecordingEnd() {
   //FORM ATTRIBUTES
 
   
-  const canvas = renderer.domElement;
-  var imageBlob = new Blob();
-  await canvas.toBlob(async function(blob) {
-    imageBlob = blob;
-  });
+
 
   
   recording = false;
@@ -762,7 +758,7 @@ async function onRecordingEnd() {
     blob = _blob;
 
     const _code = ViewerScript(); 
-    mint(new File([blob], "blob.webm"), new File([imageBlob], "imageBlob.png"))
+    mint(new File([blob], "blob.webm"))
   })
   
   onWindowResize();
@@ -787,7 +783,7 @@ async function onRecordingEnd() {
 }
 
 
-async function mint(file, file2) {
+async function mint(file) {
     if (
       !confirm(
         `Are you sure you would like to mint this token?`
@@ -813,16 +809,6 @@ async function mint(file, file2) {
     console.log(extURL);
     data.external_url = extURL;
 
-    const formDataImage = new FormData();
-    formDataImage.append('file', file2);
-    var destination = BACKEND+"file";
-    var statImageUp = await fetch(destination, {
-      method: 'POST',
-      body: formDataImage
-     });
-     const statImage = await statImageUp.json();
-     console.log("image url is:"+statImage);
-     data.static_image = statImage;
 
     const formData = new FormData();
     formData.append('file', file);

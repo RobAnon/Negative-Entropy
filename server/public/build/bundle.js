@@ -783,6 +783,7 @@ app.post('/api/token', function (req, res) {
   var contract = new web3.eth.Contract(abi, process.env.CONTRACT_ADDRESS);
   var id = req.body.id;
   console.log("Id is " + id);
+  id = Number(id);
   getTokenCount(contract).then( /*#__PURE__*/function () {
     var _ref = _asyncToGenerator__default['default']( /*#__PURE__*/_regeneratorRuntime__default['default'].mark(function _callee(count) {
       return _regeneratorRuntime__default['default'].wrap(function _callee$(_context) {
@@ -797,16 +798,18 @@ app.post('/api/token', function (req, res) {
               getOwnerAndURI(contract, id).then(function (payload) {
                 provider.engine.stop();
                 res.send(JSON.stringify(payload));
+                console.log(JSON.stringify(payload));
               });
-              _context.next = 7;
+              _context.next = 8;
               break;
 
             case 4:
               res.status(404);
+              console.log("could not find token!");
               provider.engine.stop();
               return _context.abrupt("return", res.send("Token ID not found"));
 
-            case 7:
+            case 8:
             case "end":
               return _context.stop();
           }
@@ -825,24 +828,19 @@ app.post('/api/allTokens', function (req, res) {
     privateKeys: [process.env.PRIVATE_KEY],
     providerOrUrl: process.env.NETWORK
   });
-  var start = 0;
-  var end = 0;
+  var start = -1;
+  var end = -1;
 
   if (req.body.start) {
-    start = req.body.start;
-    end = req.body.end;
+    start = Number(req.body.start);
+    end = Number(req.body.end);
   }
 
   res.setHeader('Cache-Control', 's-max-age=1, stale-while-revalidate');
   var web3 = new Web3(provider);
   var contract = new web3.eth.Contract(abi, process.env.CONTRACT_ADDRESS);
-  buildList(contract).then(function (build) {
-    if (start > 0 || end > 0) {
-      //Slice the array
-      return res.send(JSON.stringify(build.slice(start, end)));
-    } else {
-      return res.send(JSON.stringify(build));
-    }
+  buildList(contract, start, end).then(function (build) {
+    return res.send(JSON.stringify(build));
   });
   provider.engine.stop();
   return express__default['default'].Router();
@@ -1048,7 +1046,7 @@ function _getTokenCount() {
 
                       case 2:
                         count = _context5.sent;
-                        resolve(count);
+                        resolve(Number(count));
 
                       case 4:
                       case "end":

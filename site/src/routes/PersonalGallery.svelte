@@ -57,10 +57,14 @@ async function getUserTokens() {
 </style>
 
 <section>
+  {#if $app.contract}
   <strong>{totalTokens} Token(s)</strong>
   <div class="list">
     {#each tokens as token}
       <Token {token}{origin} />
     {/each}
   </div>
+  {:else}
+  <h1>Please connecte your wallet</h1>
+  {/if}
 </section>

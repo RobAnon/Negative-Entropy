@@ -65,11 +65,7 @@
               if (Number.isInteger(Number(value)) && value < LIMIT ){
                 page= route.component;
               } else {
-                if(isEthAddress(params.id)) { 
-                  page = route.component;
-                } else {
-                  router.redirect("/");
-                }
+                page = route.component;
               }
             }
           } else {
@@ -97,6 +93,14 @@
     //James pls fix the href tags, not working for whatever reason, this is a cheap way of fixing on my end
     router(dest);
   }
+
+  function getGallery() {
+    if($app.account) {
+      return $app.account;
+    } else {
+      return "personal";
+    }
+  }
 </script>
 
 <style>
@@ -121,11 +125,11 @@
       <div class="navbar-link" id="gallery" class:selected={mode === 'publicgallery' || mode == 'mysculptures'}>	
         Gallery	
         <div class="navbar-dropdown" id="navbar-dropdown-1" on:click={() => (mode = 'publicgallery'), window.location="/gallery"} href="/gallery">Public Gallery</div>	
-        <div class="navbar-dropdown" id="navbar-dropdown-2" on:click={() => (mode = 'mysculptures'), window.location="/gallery/"+$app.account} hfef="/gallery/{$app.account}">My NFTs</div>	
+        <div class="navbar-dropdown" id="navbar-dropdown-2" on:click={() => (mode = 'mysculptures'), window.location="/gallery/"+ getGallery() } hfef="/gallery/{getGallery}">My NFTs</div>	
       </div>	
       <div class="navbar-link" class:selected={mode === 'About'} on:click={() => (mode = 'About'), window.location="/about"} href='/about'>About</div>	
       <div class="navbar-link" on:click={() => (mode = 'publicgallery'), window.location="/gallery"} href="/gallery">Public Gallery</div>	
-      <div class="navbar-link" on:click={() => (mode = 'mysculptures'), window.location="/gallery/"+$app.account} hfef="/gallery/{$app.account}">My NFTs</div>	
+      <div class="navbar-link" on:click={() => (mode = 'mysculptures'), window.location="/gallery/"+ getGallery() } hfef="/gallery/{getGallery}">My NFTs</div>	
     </div>	
   </div>	
   <div class="navbar-right">	

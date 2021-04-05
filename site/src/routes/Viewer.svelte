@@ -40,6 +40,7 @@
 
   async function getData() {
     url = BACKEND + "token";
+    console.log("Id is "+ params.id);
     let response = await fetch(url, {
     	method: 'POST',
     	headers: {

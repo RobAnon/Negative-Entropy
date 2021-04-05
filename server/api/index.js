@@ -53,16 +53,20 @@ app.post('/api/token', (req, res) => {
 	var id = req.body.id;
 
 	console.log("Id is " + id);
+	id = Number(id);
 	getTokenCount(contract)
  	.then(async function(count) {
+		 
 		if(id < count) {
 			getOwnerAndURI(contract, id)
 			.then(function(payload) {
 				provider.engine.stop();
 				res.send(JSON.stringify(payload));
+				console.log(JSON.stringify(payload));
 			});
 		} else {
 			res.status(404);
+			console.log("could not find token!")
 			provider.engine.stop();
 			return res.send("Token ID not found");
 		}
@@ -77,24 +81,19 @@ app.post('/api/allTokens', (req, res) => {
 		privateKeys:[process.env.PRIVATE_KEY], 
 		providerOrUrl: process.env.NETWORK
 	});
-	var start = 0;
-	var end = 0;
+	var start = -1;
+	var end = -1;
 	if(req.body.start){
-		start = req.body.start;
-		end = req.body.end;
+		start = Number(req.body.start);
+		end = Number(req.body.end);
 	}
 	res.setHeader('Cache-Control', 's-max-age=1, stale-while-revalidate')
 	const web3 = new Web3(provider);
 	const contract = new web3.eth.Contract(abi, process.env.CONTRACT_ADDRESS);
 	let tokens = [];
-	buildList(contract)
+	buildList(contract, start, end)
 	.then(function(build) {
-		if(start > 0 || end > 0) {
-			//Slice the array
-			return res.send(JSON.stringify(build.slice(start, end)));
-		} else {
-			return res.send(JSON.stringify(build));
-		}
+		return res.send(JSON.stringify(build));
 	 })
 	provider.engine.stop(); 
 	return express.Router();
@@ -226,7 +225,7 @@ async function getAccounts(web3) {
 async function getTokenCount(contract) {
 	return new Promise(async (resolve, reject) => {
 		var count = await contract.methods.getTokenCount().call();
-  		resolve(count);
+  		resolve(Number(count));
 	});	
 }
 
