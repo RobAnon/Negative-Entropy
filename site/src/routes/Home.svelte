@@ -76,7 +76,7 @@ function renderSandbox() {
         {#await getCount()} 
         ?
         {:then count}
-        {count}
+        {1000 - count}
         {/await}
         / 1000 remaining.
       </p>
