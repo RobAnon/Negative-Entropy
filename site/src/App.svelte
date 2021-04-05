@@ -63,8 +63,7 @@
             if(params.id != null) {
               var value = params.id;
               if (Number.isInteger(Number(value)) && value < LIMIT ){
-                page= route.component;
-                console.log("shoudl load new");
+                page = route.component;
               } else {
                 if(isEthAddress(params.id)) { 
                   page = route.component;
