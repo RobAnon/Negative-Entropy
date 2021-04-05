@@ -73,7 +73,7 @@ onMount(function() {
     top: 70px;
     flex-shrink: 0;
   }
-  @media only screen and (min-width: 950px) {
+  @media only screen and (min-width: 1050px) {
     .no-wallet-container svg {
       transform: rotate(-75deg);
       top: 90px;
