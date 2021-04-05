@@ -31,7 +31,6 @@ import "./ERC721Tradeable.sol";
  * and pauser roles to other accounts.
  */
 contract NegativeEntropy is Context, AccessControl, ERC721Tradable {
-    using Counters for Counters.Counter;
     using EnumerableSet for EnumerableSet.Bytes32Set;
     using ModifiedEnumerableMap for ModifiedEnumerableMap.UintToBytes32Map;
 
@@ -40,16 +39,13 @@ contract NegativeEntropy is Context, AccessControl, ERC721Tradable {
     
     //Initial maximum quantity
     uint256 public maxQuantity = 1000;
-
+    uint256 private counter = 0;
     //Price a constant value 
     //TODO: Consider making price variable?
     uint256 public constant PRICE = 15E16;
 
     //Address where transactions will be deposited
     address payable public treasuryAddress;
-
-    //Counter to track amount of tokens currently in existence (including burned tokens)
-    Counters.Counter private tokenCounter;
 
     //Set that contains all seeds, allowing for easy checks of existence of a given seed
     EnumerableSet.Bytes32Set private seedSet;
@@ -113,7 +109,7 @@ contract NegativeEntropy is Context, AccessControl, ERC721Tradable {
             "Negative Entropy: minter must sign URI and ID!"
         );
         //Check if we can mint based on number remaining
-        require(tokenCounter.current() < maxQuantity, "NegativeEntropy: All NFTs have been claimed for this series"); 
+        require(counter < maxQuantity, "NegativeEntropy: All NFTs have been claimed for this series"); 
         require(msg.value >= PRICE, "NegativeEntropy: Insufficient funds to mint a Negative Entropy NFT");
         require(!seedClaimed(seedDesired), "NegativeEntropy: Seed has already been claimed–how did you make it this far?");
 
@@ -121,11 +117,11 @@ contract NegativeEntropy is Context, AccessControl, ERC721Tradable {
         treasuryAddress.transfer(PRICE);
         to.transfer(msg.value.sub(PRICE));
 
-        mint(tokenCounter.current(), to, tokenURI);
+        mint(counter, to, tokenURI);
 
         //Last step
-        if(claimSeed(seedDesired, tokenCounter.current())) { 
-            tokenCounter.increment();
+        if(claimSeed(seedDesired, counter)) { 
+            counter = counter + 1;
         } else {
             revert('NegativeEntropy: Unable to add seed to map or set!');
         }
@@ -213,7 +209,7 @@ contract NegativeEntropy is Context, AccessControl, ERC721Tradable {
      * This behavior differs from totalSupply(), which returns tokens EXCLUDING those burned
      */
     function getTokenCount() public view returns (uint256) {
-        return tokenCounter.current();
+        return counter;
     }
 
     /**
