@@ -556,6 +556,15 @@ header {
 
 
 
+/* --- ABOUT PAGE --- */
+.about-container {
+  padding-bottom: 80px;
+  min-height: (100vh - 505px);
+}
+
+
+
+
 
 /* --- FOOTER --- */
 footer {
