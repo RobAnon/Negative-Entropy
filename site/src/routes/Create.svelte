@@ -801,10 +801,10 @@ async function mint(file, code) {
       return;
     }
 
-    const opensea_base = "https://opensea.io/assets/";
-    var opensea = opensea_base + String(contract.options.address).toLowerCase() + "/" + nextId;
-    console.log(opensea);
-    data.external_url = opensea;
+    const base_url = "https://www.negativeentropy.app/viewer/";
+    var extURL = base_url + nextId;
+    console.log(extURL);
+    data.external_url = extURL;
 
     const formData = new FormData();
     formData.append('file', file);
@@ -813,13 +813,11 @@ async function mint(file, code) {
       method: 'POST',
       body: formData
      });
-    console.log(imageUp);
     const image_uri = await imageUp.json();
-    console.log(image_uri);
     data.image = image_uri;
 
 
-    console.log(data);
+    console.log(JSON.stringify(data));
     // here is where you'd set external_url in the json
     var payload = {}
     payload.customer = $app.account;
@@ -851,6 +849,7 @@ async function mint(file, code) {
     })
     .on('confirmation', function(confirmationNumber, receipt){
       //This is called when the transaction is confirmed
+      console.log("CONFRIMED");
       minting = false;
       dispatch('minted');
       router("/viewer/" + nextId);
