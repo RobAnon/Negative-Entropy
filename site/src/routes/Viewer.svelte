@@ -115,7 +115,10 @@
     renderSandbox();
     await navRight();
     await navLeft();
+
+    window.scrollTo(window.scrollX, window.scrollY + 1);
   });
+
 </script>
 
 <style>

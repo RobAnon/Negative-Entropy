@@ -46,6 +46,13 @@ import App from '../App.svelte';
       attributes.push({ key: data.attributes[key].trait_type, value: data.attributes[key].value });
     });
     opensea = opensea_base + token.contract + "/" + token.id;
+
+
+    var height = document.getElementsByClassName('list')[0].offsetHeight;
+    console.log(height);
+    document.getElementsByClassName('gallery-container')[0].style.maxHeight = height + 50 + "px";
+
+
   });
 </script>
 
@@ -55,6 +62,7 @@ import App from '../App.svelte';
     height: 300px;
     border: 1px solid black;
     border-radius: 4px;
+    transition: all 0.4s;
   }
 
   article:hover {

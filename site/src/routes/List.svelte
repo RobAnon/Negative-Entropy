@@ -1,6 +1,8 @@
 <script>
   import { getContext } from 'svelte';
   import Token from '../components/Token.svelte';
+  import { onMount } from 'svelte';
+import { LogLuvEncoding } from 'three/build/three.module';
 
   let tokens = [];
   let totalTokens = 0;
@@ -30,15 +32,25 @@
 
     totalTokens = result.length;
     tokens = result;
-    console.log(tokens);
   }
+
+	onMount(function() {
+		window.scrollTo(window.scrollX, window.scrollY + 1);
+	});
 </script>
 
 
 
 <style>
-  div {
+  .gallery-container {
+    max-height: 0px;
+    overflow: hidden;
+    transition: all 1s;
+    margin-top: 50px;
+  }
+  .list {
     display: grid;
+    justify-content: center;
     grid-template-columns: repeat(auto-fill, 230px);
     grid-gap: 20px;
     padding: 10px 0;
@@ -53,10 +65,14 @@
 </style>
 
 <section>
-  <strong>{totalTokens} Token(s)</strong>
-  <div class="list">
-    {#each tokens as token}
-      <Token {token} />
-    {/each}
+  <div class="gallery-container">
+    <strong>{totalTokens} Token(s)</strong>
+    <br>
+    <br>
+    <div class="list">
+      {#each tokens as token}
+        <Token {token} />
+      {/each}
+    </div>
   </div>
 </section>

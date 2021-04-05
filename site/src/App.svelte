@@ -101,13 +101,6 @@
 </script>
 
 <style>
-  
-
-  .selected {
-    text-decoration: underline;
-  }
-
-  
 
 </style>
 
@@ -117,18 +110,20 @@
   </a>	
   <div class="navbar-links">	
     <div>	
-      <div class="navbar-link" class:selected={mode === 'Home'} on:click={() => (mode = 'Home'), window.location="/"} href="/">Home</div>    	
-      <div class="navbar-link" class:selected={mode === 'Mint'} on:click={() => (mode = 'Mint'), window.location="/mint"} href='/mint'>Mint</div> 
+      <a class="navbar-link" href="/">Home</a>    	
+      <a class="navbar-link" href='/mint'>Mint</a> 
 
       <div class="navbar-link" id="gallery">	
         Gallery	
-        <div class="navbar-dropdown" id="navbar-dropdown-1" on:click={() => (mode = 'publicgallery'), window.location="/gallery"} href="/gallery">Public Gallery</div>	
-        <div class="navbar-dropdown" id="navbar-dropdown-2" on:click={() => (mode = 'mysculptures'), window.location="/gallery/"+$app.account} href="/gallery/{$app.account}">My NFTs</div>	
+        <div class="navbar-dropdown-container">
+          <a class="navbar-dropdown" id="navbar-dropdown-1" href="/gallery">Public Gallery</a>	
+          <a class="navbar-dropdown" id="navbar-dropdown-2" href="/gallery/{$app.account}">My NFTs</a>	
+        </div>
       </div>	
       
-      <div class="navbar-link" class:selected={mode === 'About'} on:click={() => (mode = 'About'), window.location="/about"} href='/about'>About</div>	
-      <div class="navbar-link" on:click={() => (mode = 'publicgallery'), window.location="/gallery"} href="/gallery">Public Gallery</div>	
-      <div class="navbar-link" on:click={() => (mode = 'mysculptures'), window.location="/gallery/"+$app.account} href="/gallery/{$app.account}">My NFTs</div>	
+      <a class="navbar-link" href='/about'>About</a>	
+      <a class="navbar-link" href="/gallery">Public Gallery</a>	
+      <a class="navbar-link" href="/gallery/{$app.account}">My NFTs</a>	
     </div>	
   </div>	
   <div class="navbar-right">	

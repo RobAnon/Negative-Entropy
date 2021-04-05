@@ -2,6 +2,10 @@
 
 import { exits } from "page";
 
+onMount(function() {
+    window.scrollTo(window.scrollX, window.scrollY + 1);
+});
+
 </script>
 <section>
     <div class="fade-in fade-in-1 error-404-container">

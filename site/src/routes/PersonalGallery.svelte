@@ -37,6 +37,12 @@ async function getUserTokens() {
     console.log(JSON.stringify(tokens));
 }
 
+
+
+onMount(function() {
+  window.scrollTo(window.scrollX, window.scrollY + 1);
+});
+
   
 </script>
 

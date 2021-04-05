@@ -21,6 +21,8 @@ onMount(async () => {
 
   data = quickJSON;
   renderSandbox();
+
+  window.scrollTo(window.scrollX, window.scrollY + 1);
 })
 
 async function getCount() {
@@ -67,8 +69,8 @@ function renderSandbox() {
     <div class="header-text">	
       <h1 class="fade-in fade-in-1">How can the net amount of <b>entropy</b> in the universe be decreased?</h1>	
       <p class="fade-in fade-in-2">We make NFT's using Chaos Theory and the iNFT standard.</p>	
-      <button class="button-main fade-in fade-in-3">Mint</button>	
-      <button class="button-secondary fade-in fade-in-3">Learn more</button>	
+      <button class="button-main fade-in fade-in-3"><a href="/mint">Mint</a></button>	
+      <button class="button-secondary fade-in fade-in-3"><a href="/about">Learn more</a></button>	
     </div>	
     <div class="homepage-graphic">	
       <div class="render fade-in fade-in-3" bind:this={view}/>

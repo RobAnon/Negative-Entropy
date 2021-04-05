@@ -826,6 +826,11 @@ async function mint(file, code) {
     const payment = await contract.methods.mint($app.account, result.v, result.r, result.s, result.URI, result.seed).send({from: $app.account, value: cost})
     dispatch('minted');
   }
+
+
+  onMount(function() {
+	  window.scrollTo(window.scrollX, window.scrollY + 1);
+  })
 </script>
 
   
