@@ -114,9 +114,9 @@ onMount(function() {
     
       {#if totalTokens === 0}
         <div class="no-tokens-container">
-          <h1>You have no <b>tokens</b>!</h1>
-          <p>Click below to mint.</p>
-          <button class="button-main"><a href="/mint">Mint</a></button>
+          <h1 class="fade-in fade-in-1">You have no <b>tokens</b>!</h1>
+          <p class="fade-in fade-in-2">Click below to mint.</p>
+          <button class="button-main fade-in fade-in-3"><a href="/mint">Mint</a></button>
         </div>
         {:else}
         <strong>{totalTokens} Token(s)</strong>
@@ -131,7 +131,7 @@ onMount(function() {
     {:else}
     <div class="no-wallet-container">
       <div class="no-wallet-title">
-        <h1>Please <b>connect</b> your wallet.</h1>
+        <h1 class="fade-in fade-in-1">Please <b>connect</b> your wallet.</h1>
         <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="415.262px" height="415.261px" viewBox="0 0 415.262 415.261" style="enable-background:new 0 0 415.262 415.261;" xml:space="preserve">
           <g>
             <path d="M414.937,374.984c-7.956-24.479-20.196-47.736-30.601-70.992c-1.224-3.06-6.12-3.06-7.956-1.224
