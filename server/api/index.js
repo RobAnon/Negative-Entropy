@@ -3,7 +3,6 @@ dotenv.config("../.env");
 import abi from './conf/abi.json';
 import cors from 'cors';
 import express from 'express';
-import fs from 'fs'
 import fileupload from 'express-fileupload'
 
 
