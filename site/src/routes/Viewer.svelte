@@ -43,6 +43,7 @@
     url = BACKEND + "token";
     console.log("Id is "+ params.id);
     let response = await fetch(url, {
+      mode: 'cors',
     	method: 'POST',
     	headers: {
     		'Content-Type': 'application/json;charset=utf-8'
@@ -89,7 +90,7 @@
 
   async function getCount() {
     var backend_dest = BACKEND + "tokenCount";
-    var response = await fetch(backend_dest);
+    var response = await fetch(backend_dest, {mode: 'cors'});
     var result = await response.json();
     return Number(result.count);
   }
@@ -110,7 +111,7 @@
       params.origin = 'public';
     }
     console.log("LOADED");
-    const res = await fetch(data.tokenURI);
+    const res = await fetch(data.tokenURI, {mode: 'cors'});
     const json = await res.json();
     
     token.json = json;
