@@ -1175,35 +1175,59 @@ function buildList(_x10) {
 
 function _buildList() {
   _buildList = _asyncToGenerator__default['default']( /*#__PURE__*/_regeneratorRuntime__default['default'].mark(function _callee11(contract) {
-    var count, tokens, i, tokenURI, ownerAdd;
+    var start,
+        end,
+        count,
+        tokens,
+        i,
+        tokenURI,
+        ownerAdd,
+        _args11 = arguments;
     return _regeneratorRuntime__default['default'].wrap(function _callee11$(_context11) {
       while (1) {
         switch (_context11.prev = _context11.next) {
           case 0:
-            _context11.next = 2;
+            start = _args11.length > 1 && _args11[1] !== undefined ? _args11[1] : -1;
+            end = _args11.length > 2 && _args11[2] !== undefined ? _args11[2] : -1;
+            _context11.next = 4;
             return getTokenCount(contract);
 
-          case 2:
+          case 4:
             count = _context11.sent;
             tokens = [];
-            i = 0;
 
-          case 5:
-            if (!(i < count)) {
-              _context11.next = 17;
+            if (!(end > count)) {
+              _context11.next = 8;
+              break;
+            }
+
+            return _context11.abrupt("return", []);
+
+          case 8:
+            if (end == -1 && start == -1) {
+              //Default behavior with no slicing
+              start = 0;
+              end = count;
+            }
+
+            i = start;
+
+          case 10:
+            if (!(i < end)) {
+              _context11.next = 22;
               break;
             }
 
             console.log("token " + i + " of " + count);
-            _context11.next = 9;
+            _context11.next = 14;
             return getTokenURI(contract, i);
 
-          case 9:
+          case 14:
             tokenURI = _context11.sent;
-            _context11.next = 12;
+            _context11.next = 17;
             return getOwnerOf(contract, i);
 
-          case 12:
+          case 17:
             ownerAdd = _context11.sent;
             tokens.push({
               tokenURI: tokenURI,
@@ -1212,15 +1236,15 @@ function _buildList() {
               contract: process.env.CONTRACT_ADDRESS
             });
 
-          case 14:
+          case 19:
             i++;
-            _context11.next = 5;
+            _context11.next = 10;
             break;
 
-          case 17:
+          case 22:
             return _context11.abrupt("return", tokens);
 
-          case 18:
+          case 23:
           case "end":
             return _context11.stop();
         }

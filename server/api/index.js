@@ -245,10 +245,21 @@ async function getTokenURI(contract, id) {
 	});	
 }
 
-async function buildList(contract){
+
+
+async function buildList(contract, start=-1, end=-1){
 	const count = await getTokenCount(contract);
 	let tokens = [];
-	for(let i = 0; i < count; i++) {
+	if(end > count) {
+		//Error handling
+		return [];
+	}
+	if(end == -1 && start == -1) {
+		//Default behavior with no slicing
+		start = 0;
+		end = count;
+	}
+	for(let i = start; i < end; i++) {
 		console.log("token " + i + " of " + count);
 		let tokenURI = await getTokenURI(contract, i);
 		let ownerAdd = await getOwnerOf(contract, i);
@@ -260,20 +271,8 @@ async function buildList(contract){
 		});
 	}
 	return tokens;
-	 /*
-	 			Promise.all([tokenuri, ownerAdd])
-			.then(function(values) {
-				var tok = values[0];
-				var own = values[1];
-				tokens.push({
-					id:i,
-					URI:tok,
-					owner:own
-				});
-				console.log(tokens);
-			})
-	 */
 }
+
 
 //NOTE: Having from in here is very important
 async function seedClaimed(contract, seed, address) {

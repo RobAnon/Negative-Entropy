@@ -33,6 +33,7 @@ import router from 'page';
   })
   let contract = $app.contract;
   let account = $app.account;
+  let static_image = "";
 
   let view;
   let data;
@@ -737,7 +738,7 @@ animate();
 
 var webMfile = writable();
 
-let formData;
+
 async function onRecordingEnd() {
   
   //FORM JSON 
@@ -745,8 +746,14 @@ async function onRecordingEnd() {
   //TODO: Add number to description here
   //FORM ATTRIBUTES
 
+  
+  const canvas = renderer.domElement;
+  var imageBlob = new Blob();
+  await canvas.toBlob(async function(blob) {
+    imageBlob = blob;
+  });
 
-
+  
   recording = false;
   recorder.stop();
   var blob = new Blob();
@@ -755,7 +762,7 @@ async function onRecordingEnd() {
     blob = _blob;
 
     const _code = ViewerScript(); 
-    mint(new File([blob], "blob.webm"), _code)
+    mint(new File([blob], "blob.webm"), new File([imageBlob], "imageBlob.png"))
   })
   
   onWindowResize();
@@ -780,7 +787,7 @@ async function onRecordingEnd() {
 }
 
 
-async function mint(file, code) {
+async function mint(file, file2) {
     if (
       !confirm(
         `Are you sure you would like to mint this token?`
@@ -805,6 +812,17 @@ async function mint(file, code) {
     var extURL = base_url + nextId;
     console.log(extURL);
     data.external_url = extURL;
+
+    const formDataImage = new FormData();
+    formDataImage.append('file', file2);
+    var destination = BACKEND+"file";
+    var statImageUp = await fetch(destination, {
+      method: 'POST',
+      body: formDataImage
+     });
+     const statImage = await statImageUp.json();
+     console.log("image url is:"+statImage);
+     data.static_image = statImage;
 
     const formData = new FormData();
     formData.append('file', file);

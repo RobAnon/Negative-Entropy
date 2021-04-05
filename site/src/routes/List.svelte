@@ -19,17 +19,26 @@
   // we can request things from Blockchain
   $: getTokens();
 
+
   async function getTokens() {
 
     //TODO: Should really be done with GET
     let _totalTokens = totalTokens;
     var destination = BACKEND+"allTokens";
+    //Currently gets all tokens
+    let countRes = await fetch(BACKEND+"tokenCount");
+    let count = await countRes.json();
+    count = count.count;
+
     let response = await fetch(destination, {
     	method: 'POST',
     	headers: {
     		'Content-Type': 'application/json;charset=utf-8'
     	},
-    	body: ""
+    	body: JSON.stringify({
+        start:0,
+        end:count
+      })
     });
     let result = await response.json();
     console.log(result);
