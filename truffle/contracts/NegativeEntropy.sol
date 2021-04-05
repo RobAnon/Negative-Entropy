@@ -40,6 +40,7 @@ contract NegativeEntropy is Context, AccessControl, ERC721Tradable {
     //Initial maximum quantity
     uint256 public maxQuantity = 1000;
     uint256 private counter = 0;
+    uint256 private ownerBalance = 0;
     //Price a constant value 
     //TODO: Consider making price variable?
     uint256 public constant PRICE = 15E16;
@@ -114,7 +115,7 @@ contract NegativeEntropy is Context, AccessControl, ERC721Tradable {
         require(!seedClaimed(seedDesired), "NegativeEntropy: Seed has already been claimed–how did you make it this far?");
 
         //Where we get paid
-        treasuryAddress.transfer(PRICE);
+        ownerBalance += (PRICE);
         to.transfer(msg.value.sub(PRICE));
 
         mint(counter, to, tokenURI);
@@ -187,6 +188,12 @@ contract NegativeEntropy is Context, AccessControl, ERC721Tradable {
             revert();
         }
     }
+
+    function ownerWithdraw() public onlyOwner() {
+      uint amount = ownerBalance
+      ownerBalance = 0;
+      msg.sender.transfer(amount);
+    }   
 
     /**
     *
