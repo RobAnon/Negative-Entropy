@@ -112,9 +112,9 @@
 </style>
 
 <header>	
-  <span id="logo" href="#">	
+  <a id="logo" href="/" onclick="window.scrollTo(window.scrollX, window.scrollY + 1)">
     <img src="/logo-main.png" alt="main logo">	
-  </span>	
+  </a>	
   <div class="navbar-links">	
     <div>	
       <div class="navbar-link" class:selected={mode === 'Home'} on:click={() => (mode = 'Home'), window.location="/"} href="/">Home</div>    	
