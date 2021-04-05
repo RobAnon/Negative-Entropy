@@ -46,7 +46,6 @@ contract NegativeEntropy is Context, AccessControl, ERC721Tradable {
     uint256 public constant PRICE = 15E16;
 
     //Address where transactions will be deposited
-    address payable public treasuryAddress;
 
     //Set that contains all seeds, allowing for easy checks of existence of a given seed
     EnumerableSet.Bytes32Set private seedSet;
@@ -59,10 +58,9 @@ contract NegativeEntropy is Context, AccessControl, ERC721Tradable {
     * Grants ADMIN and MINTER_ROLE to whoever creates the contract
     *
     */
-    constructor(address payable _tA, address _proxy) public ERC721Tradable("Negative Entropy", "NGTV", _proxy) {
+    constructor(address _proxy) public ERC721Tradable("Negative Entropy", "NGTV", _proxy) {
         _setupRole(MINTER_ROLE, _msgSender());
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
-        treasuryAddress = _tA;
         proxyRegistryAddress = _proxy;
     }
 
