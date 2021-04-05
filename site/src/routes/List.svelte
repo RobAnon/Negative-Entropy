@@ -3,9 +3,13 @@
   import Token from '../components/Token.svelte';
 
   let tokens = [];
+  let tokenSlice = [];
   let totalTokens = 0;
   let contract;
   let origin = 'public';
+
+  let lower = 0;
+  let maxPerPage = 3;
 
   // app is a store, reading its value using $app will
   // create a subscriber to the store changes
@@ -28,11 +32,35 @@
     	body: ""
     });
     let result = await response.json();
-
+    console.log(result);
     totalTokens = result.length;
     tokens = result;
+    tokenSlice = tokens.slice(lower,lower+maxPerPage);
+    tokenSlice = tokenSlice;
+  }
+
+  function navRight() {
+    console.log("right");
+    lower +=maxPerPage;
+    if(lower+maxPerPage >= totalTokens) {
+      lower -= maxPerPage;
+    }
+    tokenSlice = tokens.slice(lower,lower+maxPerPage);
+    tokenSlice = tokenSlice;
+  }
+
+  function navLeft() {
+    console.log("left")
+    lower -= maxPerPage;
+    if(lower < 0) {
+      lower = 0;
+    }
+    tokenSlice = tokens.slice(lower,lower+maxPerPage);
+    tokenSlice = tokenSlice;
+
   }
 </script>
+
 
 
 
@@ -55,8 +83,10 @@
 <section>
   <strong>{totalTokens} Token(s)</strong>
   <div class="list">
-    {#each tokens as token}
+    {#each tokenSlice as token}
       <Token {token}{origin}/>
     {/each}
   </div>
+  <button id="right" on:click={navRight}>RIGHT</button>
+  <button id="left" on:click={navLeft}>LEFT</button>
 </section>

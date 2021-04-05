@@ -1,9 +1,9 @@
 <script>
   import { onMount } from 'svelte';
   import Sandbox from '@beyondnft/sandbox';
-import App from '../App.svelte';
-import routes from '../routes';
-import router from "page";
+  import App from '../App.svelte';
+  import routes from '../routes';
+  import router from "page";
 
   export let token;
   export let origin;
