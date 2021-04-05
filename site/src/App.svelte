@@ -59,7 +59,7 @@
         if (route.auth && !user) {
           router.redirect("/");
         } else {
-          if(route.dynamic ) {
+          if(!route.dynamic) {
             if(params.id != null) {
               var value = params.id;
               if (Number.isInteger(Number(value)) && value < LIMIT ){
@@ -69,10 +69,10 @@
               }
             } else {
             page = route.component;
+            }
           }
         }
-      }
-    });
+      });
   });
 
 	router.start();
