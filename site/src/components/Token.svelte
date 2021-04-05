@@ -2,6 +2,8 @@
   import { onMount } from 'svelte';
   import Sandbox from '@beyondnft/sandbox';
 import App from '../App.svelte';
+import routes from '../routes';
+import router from "page";
 
   export let token;
 
@@ -141,7 +143,7 @@ import App from '../App.svelte';
 </style>
 <article class:big>
   {#if !big}
-    <div class="preview" on:click={() => (big = true)}>
+    <div class="preview" on:click={() => router("/viewer/" + token.id)}>
       <div><video autoplay loop src={image} alt={name} type='video/webm'></video></div>
       <strong>{name}</strong>
     </div>
