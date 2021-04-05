@@ -24,7 +24,7 @@ import router from 'page';
   let TOTAL_SUPPLY = 1000;
 
   onMount(()=>{
-    
+    window.scrollTo(window.scrollX,1);
     const renderer = document.getElementById('canvas')
     document.getElementById('canvas-container').appendChild(renderer);
 	
@@ -48,7 +48,7 @@ import router from 'page';
   let code = 'defaultCode';
   let valid = false;
   //TODO: Standardize to IPFS://, maybe store this in .env
-  let code_uri = "https://gateway.ipfs.io/ipfs/Qma3kCuqMiTrgUCKvLSArrMwbHyyDcjZjYpwobHsjDHUR5";
+  let code_uri = "https://gateway.ipfs.io/ipfs/QmTBNeRQTjrNEJdcManUaDPEXQgH1h1N47gfzpqtbQXkBL";
 
   // temp values
   let attrKey = '';
@@ -879,6 +879,20 @@ async function mint(file) {
 
 <style>
 
+#load_ind {
+    display: flex;
+    background: none;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: absolute; 
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    z-index: 20;
+    font-size: 60px;
+}
 
 
 </style>
@@ -891,7 +905,7 @@ async function mint(file) {
 
 
     <div class="canvas-container" id="canvas-container">
-
+	  
       <div class="button-container">
         <div class="button-actual" id="inner_div">
       
@@ -997,14 +1011,14 @@ async function mint(file) {
       <button class="button-main" id="start" on:click={(e)=>start(e)}>Mint</button> 
     </div>
   </div>
+  {#if minting}
+  <div id = load_ind>
+  <Moon size="180" color="#FFFFFF" unit="px" duration="2s"></Moon>
+  </div>
+  {/if}
 
 <div class="section-break section-break-final"></div>
 
   
-{#if minting}
-<div id = load_ind>
-<Moon size="180" color="#FFFFFF" unit="px" duration="2s"></Moon>
-</div>
-{/if}
     
 </section>
