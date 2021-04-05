@@ -834,93 +834,8 @@ async function mint(file, code) {
   
 
 <style>
-  body { margin: 0; }
-  #attributes{width: 50%; height:150px}
-
-  #lock {
-    position: absolute;
-    left: 5%;
-    bottom: 50%;
-    border: none;
-    background: none;
-    outline: none;
-  }
-
-  .canvas-container {
-    position: relative;
-    width: 100%;
-    height: 65%;
-    align-items: center;
-    justify-content: center;
-    align-content: center;
-    padding: 1rem;
-    border: 2px solid #111;
-    border-radius: 5px;
-    margin-bottom: 32px;
-  }
-
-  #canvas {
-    position: absolute;
-    background-color: lightgrey;
-  }
-
-  #headlamp {
-    position: absolute;
-    left: 5%;
-    bottom: 30%;
-    border: none;
-    background: none;
-    outline: none;
-  }
-
-  #stabilize {
-    position: absolute;
-    left: 5%;
-    bottom: 70%;
-    border: none;
-    background: none;
-    outline: none;
-    fill: red;
-  }
-
-  #hide {
-    position: absolute;
-    left: 5%;
-    bottom: 10%;
-    border: none;
-    background: none;
-    outline: none;
-  }
-
-  svg {
-    width: 100%;
-    height: 48px;
-  }
-  svg:hover {
-    fill: red;
-    transform: scale(1.1);
-    transition-duration: 0.2s;
-    transition-timing-function: linear;
-  }
-  .button-container {
-    position:absolute;
-    bottom:15%;
-    left:0%;
-    height:35%;
-    width:25%;
-    margin:0;
-  }
-  .button-actual {
-    position:absolute;
-    bottom:0px;
-    left:0px;
-    height:200%;
-    width:100%;
-  }
-  canvas { width: 100%; height: 100% }
-#attributes{width: 50%; height:150px} */
 body { margin: 0; }
-#attributes{width: 50%; height:150px}
+#attributes {width: 50%; height:150px}
 
 .canvas-container{
     position: relative;
@@ -1138,17 +1053,13 @@ svg:hover {
           <svg opacity={opct} height=48px width=48px xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" style="-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); transform: rotate(360deg);" preserveAspectRatio="xMidYMid meet" viewBox="0 0 16 16"><g ><path d="M13.359 11.238C15.06 9.72 16 8 16 8s-3-5.5-8-5.5a7.028 7.028 0 0 0-2.79.588l.77.771A5.944 5.944 0 0 1 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.134 13.134 0 0 1 14.828 8c-.058.087-.122.183-.195.288c-.335.48-.83 1.12-1.465 1.755c-.165.165-.337.328-.517.486l.708.709z"/><path d="M11.297 9.176a3.5 3.5 0 0 0-4.474-4.474l.823.823a2.5 2.5 0 0 1 2.829 2.829l.822.822zm-2.943 1.299l.822.822a3.5 3.5 0 0 1-4.474-4.474l.823.823a2.5 2.5 0 0 0 2.829 2.829z"/><path d="M3.35 5.47c-.18.16-.353.322-.518.487A13.134 13.134 0 0 0 1.172 8l.195.288c.335.48.83 1.12 1.465 1.755C4.121 11.332 5.881 12.5 8 12.5c.716 0 1.39-.133 2.02-.36l.77.772A7.029 7.029 0 0 1 8 13.5C3 13.5 0 8 0 8s.939-1.721 2.641-3.238l.708.709zm10.296 8.884l-12-12l.708-.708l12 12l-.708.708z"/></g></svg>
         </button>
     </div>
-   </div>  
+   
 
-    <div class="" id="create-controls-container">
-        <div class="textarea-container">
-          <textarea class="form-control" name="textarea" id="textareaID" placeholder="custom seed..."></textarea>
-        </div>
-        <div class="buttons-container">
-          <button class="btn btn-primary" id="reset" on:click={()=>_reset()}>Preview with seed</button>
-          <button class="btn btn-secondary" id="start" on:click={(e)=>start(e)}>Mint</button> 
-        </div>
-     </div>
+
+   </div>  
+   <div class="container">
+
+    <div class="row">
 
       <div class="col">
        <textarea class="form-control" name="textarea" id="textareaID" placeholder="Choose a unique name for your NFT and hit Load New Seed..."></textarea>

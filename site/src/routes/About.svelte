@@ -1,5 +1,4 @@
 <script>
-
 	import { web3Loaded } from '../store.js';
 
 	//console.log(web3Loaded);
@@ -10,8 +9,6 @@
 	const subscriber = web3Loaded.subscribe(value => {
 		isWeb3 = value;
 	});
-
-
 </script>
 
 <style>
