@@ -13,7 +13,7 @@ import { get, writable } from 'svelte/store';
 import { ViewerScript } from '../components/ViewerScript';
 import { Moon } from 'svelte-loading-spinners';
 import router from 'page';
-import {createClient} from 'ipfs-http-client';
+
   
   const app = getContext('app');
   const dispatch = createEventDispatcher();
@@ -806,13 +806,16 @@ async function mint(file, code) {
     console.log(opensea);
     data.external_url = opensea;
 
-
-    mintText = 'Uploading image to ipfs...';
-    const ipfs = createClient('https://ipfs.infura.io:5001')
-    
-    let file_ = await ipfs.add(file);
-
-    const image_uri = `https://gateway.ipfs.io/ipfs/${file_.path}`;
+    const formData = new FormData();
+    formData.append('file', file);
+    var destination = BACKEND+"file";
+    var imageUp = await fetch(destination, {
+      method: 'POST',
+      body: formData
+     });
+    console.log(imageUp);
+    const image_uri = await imageUp.json();
+    console.log(image_uri);
     data.image = image_uri;
 
 

@@ -58,3 +58,4 @@ export async function initProvider(app) {
 export function isEthAddress(addr) {
   return Web3.utils.isAddress(addr);
 }
+

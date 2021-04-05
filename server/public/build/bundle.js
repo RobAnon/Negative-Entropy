@@ -6,6 +6,7 @@ var dotenv = require('dotenv');
 var cors = require('cors');
 var express = require('express');
 require('fs');
+var fileupload = require('express-fileupload');
 
 function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
 
@@ -14,6 +15,7 @@ var _regeneratorRuntime__default = /*#__PURE__*/_interopDefaultLegacy(_regenerat
 var dotenv__default = /*#__PURE__*/_interopDefaultLegacy(dotenv);
 var cors__default = /*#__PURE__*/_interopDefaultLegacy(cors);
 var express__default = /*#__PURE__*/_interopDefaultLegacy(express);
+var fileupload__default = /*#__PURE__*/_interopDefaultLegacy(fileupload);
 
 dotenv__default['default'].config("../.env");
 var abi = [{
@@ -741,6 +743,17 @@ var ipfs = createClient('https://ipfs.infura.io:5001'); //Parse JSON
 app.use(express__default['default'].json());
 app.use(cors__default['default']());
 app.use(helmet());
+app.use(fileupload__default['default']({
+  limits: {
+    fileSize: 50 * 1024 * 1024
+  }
+}));
+app.use(express__default['default'].json({
+  limit: '50mb'
+}));
+app.use(express__default['default'].urlencoded({
+  limit: '50mb'
+}));
 app.get('/api', function (req, res) {
   return res.send('Received a GET HTTP method');
 });
@@ -863,6 +876,15 @@ app.post('/api/signature', function (req, res) {
   });
   return express__default['default'].Router();
 });
+app.post('/api/file', function (req, res) {
+  //TODO: Add authorization to prevent this from being abused
+  var file = req.files.file.data;
+  getImageURL(file).then(function (url) {
+    console.log(url);
+    return res.send(JSON.stringify(url));
+  });
+  return express__default['default'].Router();
+});
 app.listen(process.env.PORT, function () {
   return console.log("App listening on port ".concat(process.env.PORT, "!"));
 }); //TODO: Consider also signing with image we want
@@ -976,7 +998,7 @@ function _getAccounts() {
                 }, _callee3);
               }));
 
-              return function (_x15, _x16) {
+              return function (_x16, _x17) {
                 return _ref2.apply(this, arguments);
               };
             }()));
@@ -1023,7 +1045,7 @@ function _getTokenCount() {
                 }, _callee5);
               }));
 
-              return function (_x17, _x18) {
+              return function (_x18, _x19) {
                 return _ref3.apply(this, arguments);
               };
             }()));
@@ -1071,7 +1093,7 @@ function _getOwnerOf() {
                 }, _callee7);
               }));
 
-              return function (_x19, _x20) {
+              return function (_x20, _x21) {
                 return _ref4.apply(this, arguments);
               };
             }()));
@@ -1118,7 +1140,7 @@ function _getTokenURI() {
                 }, _callee9);
               }));
 
-              return function (_x21, _x22) {
+              return function (_x22, _x23) {
                 return _ref5.apply(this, arguments);
               };
             }()));
@@ -1229,7 +1251,7 @@ function _seedClaimed() {
                 }, _callee12);
               }));
 
-              return function (_x23, _x24) {
+              return function (_x24, _x25) {
                 return _ref6.apply(this, arguments);
               };
             }()));
@@ -1273,7 +1295,7 @@ function _getURI() {
                 }, _callee14);
               }));
 
-              return function (_x25, _x26) {
+              return function (_x26, _x27) {
                 return _ref7.apply(this, arguments);
               };
             }()));
@@ -1286,4 +1308,48 @@ function _getURI() {
     }, _callee15);
   }));
   return _getURI.apply(this, arguments);
+}
+
+function getImageURL(_x15) {
+  return _getImageURL.apply(this, arguments);
+}
+
+function _getImageURL() {
+  _getImageURL = _asyncToGenerator__default['default']( /*#__PURE__*/_regeneratorRuntime__default['default'].mark(function _callee17(image) {
+    return _regeneratorRuntime__default['default'].wrap(function _callee17$(_context17) {
+      while (1) {
+        switch (_context17.prev = _context17.next) {
+          case 0:
+            return _context17.abrupt("return", new Promise( /*#__PURE__*/function () {
+              var _ref8 = _asyncToGenerator__default['default']( /*#__PURE__*/_regeneratorRuntime__default['default'].mark(function _callee16(resolve, reject) {
+                return _regeneratorRuntime__default['default'].wrap(function _callee16$(_context16) {
+                  while (1) {
+                    switch (_context16.prev = _context16.next) {
+                      case 0:
+                        _context16.next = 2;
+                        return ipfs.add(image).then(function (result) {
+                          resolve("https://gateway.ipfs.io/ipfs/".concat(result.path));
+                        });
+
+                      case 2:
+                      case "end":
+                        return _context16.stop();
+                    }
+                  }
+                }, _callee16);
+              }));
+
+              return function (_x28, _x29) {
+                return _ref8.apply(this, arguments);
+              };
+            }()));
+
+          case 1:
+          case "end":
+            return _context17.stop();
+        }
+      }
+    }, _callee17);
+  }));
+  return _getImageURL.apply(this, arguments);
 }
