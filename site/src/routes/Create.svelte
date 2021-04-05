@@ -516,7 +516,7 @@ function onWindowResize() {
 	camera.updateProjectionMatrix();
 
 	renderer.setSize( window.innerWidth/2, window.innerHeight/2);
-	document.getElementById('canvas').setAttribute('style', 'width: 100%; height: 100%;' )
+	document.getElementById('canvas').setAttribute('style', 'width: 100%;' )
 
 }
 
@@ -863,9 +863,7 @@ async function mint(file) {
       console.log(error);
       minting = false;
       alert("Transaction failed! Check your web3 Provider for more info");
-    });
-    console.log();
-    
+    });    
 
   }
 
@@ -901,8 +899,6 @@ async function mint(file) {
 
 <section>
   <div class="mint-container">
-
-
 
     <div class="canvas-container" id="canvas-container">
 	  
