@@ -35,6 +35,7 @@ import { LogLuvEncoding } from 'three/build/three.module';
   }
 
 	onMount(function() {
+    fadeIn();
 		window.scrollTo(window.scrollX, window.scrollY + 1);
 	});
 </script>
@@ -82,3 +83,6 @@ import { LogLuvEncoding } from 'three/build/three.module';
     </div>
   </div>
 </section>
+
+
+<div class="section-break section-break-final"></div>

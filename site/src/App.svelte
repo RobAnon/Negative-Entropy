@@ -143,9 +143,7 @@
 
 <svelte:window bind:innerWidth={$innerWidth} bind:innerHeight={$innerHeight}/>
 
-
 <footer>
-  <div class="section-break"></div>
 
   <div class="footer-icons-container">
 

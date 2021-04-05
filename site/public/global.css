@@ -151,6 +151,9 @@ section {
   background-color: var(--xgreen);
   transition: all 2s;
 }
+.section-break-final {
+  margin-top: 80px;
+}
 
 
 .fade-in {
