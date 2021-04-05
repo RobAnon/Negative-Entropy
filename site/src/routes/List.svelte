@@ -68,10 +68,11 @@ import { LogLuvEncoding } from 'three/build/three.module';
 </style>
 
 <section>
+  <br>
+  <br>
+  <br>
+  <strong>{totalTokens} Token(s)</strong>
   <div class="gallery-container">
-    <strong>{totalTokens} Token(s)</strong>
-    <br>
-    <br>
     <div class="list-container">
       <div class="list">
         {#each tokens as token}
