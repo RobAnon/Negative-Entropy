@@ -144,7 +144,7 @@ section {
   margin: 20px auto;
   height: 1px;
   background-color: var(--xgreen);
-  transition: all 1.5s;
+  transition: all 2s;
 }
 
 
@@ -200,6 +200,7 @@ header {
   max-height: 800px;
 }
 .navbar-link {
+  font-family: 'roboto mono';
   display: block;
   position: relative;
   font-size: 22px;
@@ -230,7 +231,6 @@ header {
 .navbar-link:hover:after {
   width: 100%;
 }
-
 #gallery {
   display: none;
 }
@@ -293,10 +293,11 @@ header {
     left: 50%;
     transform: translateX(-50%);
     opacity: 0;
-    width: 140px;
+    width: 200px;
     text-shadow: 0px 0px 64px white;
     transition: all 0.6s;
     text-align: center;
+    font-family: 'roboto mono';
   }
   #gallery:hover .navbar-dropdown {
     position: absolute;
