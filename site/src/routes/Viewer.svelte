@@ -46,7 +46,7 @@
     	headers: {
     		'Content-Type': 'application/json;charset=utf-8'
     	},
-    	body: JSON.stringify({id:params.id})
+    	body: JSON.stringify({id:Number(params.id)})
     });
     let result = await response.json();
     data = result;
@@ -102,6 +102,7 @@
   }
 
   onMount(async () => {
+
     await getData();
     console.log(data);
     if (params.origin == null) {

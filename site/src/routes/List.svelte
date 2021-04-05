@@ -30,7 +30,7 @@ import { LogLuvEncoding } from 'three/build/three.module';
     //Currently gets all tokens
     let countRes = await fetch(BACKEND+"tokenCount");
     let count = await countRes.json();
-    count = count.count;
+    count = Number(count.count);
 
     let response = await fetch(destination, {
     	method: 'POST',
@@ -46,8 +46,9 @@ import { LogLuvEncoding } from 'three/build/three.module';
     console.log(result);
     totalTokens = result.length;
     tokens = result;
+    //Temporarily disabled
     tokenSlice = tokens.slice(lower,lower+maxPerPage);
-    tokenSlice = tokenSlice;
+    tokenSlice = tokens;
   }
 
   function navRight() {
@@ -125,8 +126,9 @@ import { LogLuvEncoding } from 'three/build/three.module';
       </div>
     </div>
   </div>
+  <!--- REENABLE LATER WITH BETTER SOLUTION
   <button id="right" on:click={navRight}>RIGHT</button>
-  <button id="left" on:click={navLeft}>LEFT</button>
+  <button id="left" on:click={navLeft}>LEFT</button>-->
 </section>
 
 

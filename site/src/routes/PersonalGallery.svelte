@@ -148,7 +148,7 @@ onMount(function() {
           </g>  
         </svg>
       </div>
-      <p>Connect your wallet to view your tokens.</p> 
+      
 
     </div>
     {/if}
