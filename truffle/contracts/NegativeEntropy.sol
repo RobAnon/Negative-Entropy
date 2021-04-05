@@ -190,7 +190,7 @@ contract NegativeEntropy is Context, AccessControl, ERC721Tradable {
     }
 
     function ownerWithdraw() public onlyOwner() {
-      uint amount = ownerBalance
+      uint amount = ownerBalance;
       ownerBalance = 0;
       msg.sender.transfer(amount);
     }   
