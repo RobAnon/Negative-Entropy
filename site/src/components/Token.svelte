@@ -1,9 +1,12 @@
 <script>
   import { onMount } from 'svelte';
   import Sandbox from '@beyondnft/sandbox';
-import App from '../App.svelte';
+  import App from '../App.svelte';
+  import routes from '../routes';
+  import router from "page";
 
   export let token;
+  export let origin;
 
   let big = false;
 
@@ -16,7 +19,7 @@ import App from '../App.svelte';
   let attributes;
 
   let view;
-  const opensea_base = "https://opensea.io/";
+  const opensea_base = "https://opensea.io/assets/";
   let opensea = ""; 
 
   $: view && renderSandbox();
@@ -31,6 +34,7 @@ import App from '../App.svelte';
   }
 
   onMount(async () => {
+
     const res = await fetch(token.tokenURI);
     const json = await res.json();
 
@@ -40,19 +44,16 @@ import App from '../App.svelte';
     name = json.name;
 
     data = json;
-    console.log(json);
     attributes = [];
     Object.keys(data.attributes).forEach((key) => {
       attributes.push({ key: data.attributes[key].trait_type, value: data.attributes[key].value });
     });
-    opensea = opensea_base + token.contract + "/" + token.id;
-
 
     var height = document.getElementsByClassName('list')[0].offsetHeight;
     document.getElementsByClassName('gallery-container')[0].style.maxHeight = height + 50 + "px";
     document.getElementsByClassName('list-container')[0].style.maxHeight = height + 50 + "px";
 
-
+    opensea = opensea_base + String(token.contract).toLowerCase() + "/" + token.id;
   });
 </script>
 
@@ -149,7 +150,7 @@ import App from '../App.svelte';
 </style>
 <article class:big>
   {#if !big}
-    <div class="preview" on:click={() => (big = true)}>
+    <div class="preview" on:click={() => router("/viewer/" + token.id + "+" + origin)}>
       <div><video autoplay loop src={image} alt={name} type='video/webm'></video></div>
       <strong>{name}</strong>
     </div>

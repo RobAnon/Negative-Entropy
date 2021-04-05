@@ -63,10 +63,9 @@
             if(params.id != null) {
               var value = params.id;
               if (Number.isInteger(Number(value)) && value < LIMIT ){
-                page = route.component;
+                page= route.component;
               } else {
-                  page = route.component;
-                }
+                page = route.component;
               }
             } else {
             page = route.component;
@@ -82,7 +81,7 @@
   async function connectEthProvider() {
     if(!app.contract) {
       await initProvider(app);
-      buttonDisplay = $app.account;
+      buttonDisplay = String($app.account).slice(0,10)+"...";
       console.log($app.account);
     }
     //TODO: Else we will want it to show THEIR NFT's
@@ -92,6 +91,14 @@
     //Route to that page – workaround for broken links 
     //James pls fix the href tags, not working for whatever reason, this is a cheap way of fixing on my end
     router(dest);
+  }
+
+  function getGallery() {
+    if($app.account) {
+      return $app.account;
+    } else {
+      return "personal";
+    }
   }
 </script>
 

@@ -16,6 +16,11 @@ export default [
 		component: Create
 	},
 	{
+		path: '/viewer/:id:origin',
+		component: Viewer,
+		dynamic: true
+	},
+	{
 		path: '/viewer/:id',
 		component: Viewer,
 		dynamic: true

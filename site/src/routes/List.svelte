@@ -5,8 +5,13 @@
 import { LogLuvEncoding } from 'three/build/three.module';
 
   let tokens = [];
+  export let tokenSlice = [];
   let totalTokens = 0;
   let contract;
+  let origin = 'public';
+
+  let lower = 0;
+  let maxPerPage = 3;
 
   // app is a store, reading its value using $app will
   // create a subscriber to the store changes
@@ -16,22 +21,58 @@ import { LogLuvEncoding } from 'three/build/three.module';
   // we can request things from Blockchain
   $: getTokens();
 
+
   async function getTokens() {
 
     //TODO: Should really be done with GET
     let _totalTokens = totalTokens;
     var destination = BACKEND+"allTokens";
+    //Currently gets all tokens
+    let countRes = await fetch(BACKEND+"tokenCount");
+    let count = await countRes.json();
+    count = count.count;
+
     let response = await fetch(destination, {
     	method: 'POST',
     	headers: {
     		'Content-Type': 'application/json;charset=utf-8'
     	},
-    	body: ""
+    	body: JSON.stringify({
+        start:0,
+        end:count
+      })
     });
     let result = await response.json();
-
+    console.log(result);
     totalTokens = result.length;
     tokens = result;
+    tokenSlice = tokens.slice(lower,lower+maxPerPage);
+    tokenSlice = tokenSlice;
+  }
+
+  function navRight() {
+    console.log("right");
+    lower +=maxPerPage;
+    if(lower+maxPerPage >= totalTokens) {
+      lower -= maxPerPage;
+    }
+    tokenSlice = tokens.slice(lower,lower+maxPerPage);
+    tokenSlice = tokenSlice;
+    console.log(lower);
+    console.log(tokenSlice);
+  }
+
+  function navLeft() {
+    console.log("left")
+    lower -= maxPerPage;
+    if(lower < 0) {
+      lower = 0;
+    }
+    tokenSlice = tokens.slice(lower,lower+maxPerPage);
+    tokenSlice = tokenSlice;
+    console.log(lower);
+    console.log(tokenSlice);
+
   }
 
 	onMount(function() {
@@ -39,6 +80,7 @@ import { LogLuvEncoding } from 'three/build/three.module';
 		window.scrollTo(window.scrollX, window.scrollY + 1);
 	});
 </script>
+
 
 
 
@@ -73,15 +115,18 @@ import { LogLuvEncoding } from 'three/build/three.module';
   <br>
   <br>
   <strong>{totalTokens} Token(s)</strong>
+
   <div class="gallery-container">
     <div class="list-container">
       <div class="list">
-        {#each tokens as token}
-          <Token {token} />
+        {#each tokenSlice as token}
+          <Token {token}{origin} />
         {/each}
       </div>
     </div>
   </div>
+  <button id="right" on:click={navRight}>RIGHT</button>
+  <button id="left" on:click={navLeft}>LEFT</button>
 </section>
 
 

@@ -6,6 +6,7 @@ var dotenv = require('dotenv');
 var cors = require('cors');
 var express = require('express');
 require('fs');
+var fileupload = require('express-fileupload');
 
 function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
 
@@ -14,6 +15,7 @@ var _regeneratorRuntime__default = /*#__PURE__*/_interopDefaultLegacy(_regenerat
 var dotenv__default = /*#__PURE__*/_interopDefaultLegacy(dotenv);
 var cors__default = /*#__PURE__*/_interopDefaultLegacy(cors);
 var express__default = /*#__PURE__*/_interopDefaultLegacy(express);
+var fileupload__default = /*#__PURE__*/_interopDefaultLegacy(fileupload);
 
 dotenv__default['default'].config("../.env");
 var abi = [{
@@ -741,6 +743,17 @@ var ipfs = createClient('https://ipfs.infura.io:5001'); //Parse JSON
 app.use(express__default['default'].json());
 app.use(cors__default['default']());
 app.use(helmet());
+app.use(fileupload__default['default']({
+  limits: {
+    fileSize: 50 * 1024 * 1024
+  }
+}));
+app.use(express__default['default'].json({
+  limit: '50mb'
+}));
+app.use(express__default['default'].urlencoded({
+  limit: '50mb'
+}));
 app.get('/api', function (req, res) {
   return res.send('Received a GET HTTP method');
 });
@@ -770,6 +783,7 @@ app.post('/api/token', function (req, res) {
   var contract = new web3.eth.Contract(abi, process.env.CONTRACT_ADDRESS);
   var id = req.body.id;
   console.log("Id is " + id);
+  id = Number(id);
   getTokenCount(contract).then( /*#__PURE__*/function () {
     var _ref = _asyncToGenerator__default['default']( /*#__PURE__*/_regeneratorRuntime__default['default'].mark(function _callee(count) {
       return _regeneratorRuntime__default['default'].wrap(function _callee$(_context) {
@@ -784,16 +798,18 @@ app.post('/api/token', function (req, res) {
               getOwnerAndURI(contract, id).then(function (payload) {
                 provider.engine.stop();
                 res.send(JSON.stringify(payload));
+                console.log(JSON.stringify(payload));
               });
-              _context.next = 7;
+              _context.next = 8;
               break;
 
             case 4:
               res.status(404);
+              console.log("could not find token!");
               provider.engine.stop();
               return _context.abrupt("return", res.send("Token ID not found"));
 
-            case 7:
+            case 8:
             case "end":
               return _context.stop();
           }
@@ -812,10 +828,18 @@ app.post('/api/allTokens', function (req, res) {
     privateKeys: [process.env.PRIVATE_KEY],
     providerOrUrl: process.env.NETWORK
   });
+  var start = -1;
+  var end = -1;
+
+  if (req.body.start) {
+    start = Number(req.body.start);
+    end = Number(req.body.end);
+  }
+
   res.setHeader('Cache-Control', 's-max-age=1, stale-while-revalidate');
   var web3 = new Web3(provider);
   var contract = new web3.eth.Contract(abi, process.env.CONTRACT_ADDRESS);
-  buildList(contract).then(function (build) {
+  buildList(contract, start, end).then(function (build) {
     return res.send(JSON.stringify(build));
   });
   provider.engine.stop();
@@ -860,6 +884,15 @@ app.post('/api/signature', function (req, res) {
       });
       provider.engine.stop();
     }
+  });
+  return express__default['default'].Router();
+});
+app.post('/api/file', function (req, res) {
+  //TODO: Add authorization to prevent this from being abused
+  var file = req.files.file.data;
+  getImageURL(file).then(function (url) {
+    console.log(url);
+    return res.send(JSON.stringify(url));
   });
   return express__default['default'].Router();
 });
@@ -976,7 +1009,7 @@ function _getAccounts() {
                 }, _callee3);
               }));
 
-              return function (_x15, _x16) {
+              return function (_x16, _x17) {
                 return _ref2.apply(this, arguments);
               };
             }()));
@@ -1013,7 +1046,7 @@ function _getTokenCount() {
 
                       case 2:
                         count = _context5.sent;
-                        resolve(count);
+                        resolve(Number(count));
 
                       case 4:
                       case "end":
@@ -1023,7 +1056,7 @@ function _getTokenCount() {
                 }, _callee5);
               }));
 
-              return function (_x17, _x18) {
+              return function (_x18, _x19) {
                 return _ref3.apply(this, arguments);
               };
             }()));
@@ -1071,7 +1104,7 @@ function _getOwnerOf() {
                 }, _callee7);
               }));
 
-              return function (_x19, _x20) {
+              return function (_x20, _x21) {
                 return _ref4.apply(this, arguments);
               };
             }()));
@@ -1118,7 +1151,7 @@ function _getTokenURI() {
                 }, _callee9);
               }));
 
-              return function (_x21, _x22) {
+              return function (_x22, _x23) {
                 return _ref5.apply(this, arguments);
               };
             }()));
@@ -1140,35 +1173,59 @@ function buildList(_x10) {
 
 function _buildList() {
   _buildList = _asyncToGenerator__default['default']( /*#__PURE__*/_regeneratorRuntime__default['default'].mark(function _callee11(contract) {
-    var count, tokens, i, tokenURI, ownerAdd;
+    var start,
+        end,
+        count,
+        tokens,
+        i,
+        tokenURI,
+        ownerAdd,
+        _args11 = arguments;
     return _regeneratorRuntime__default['default'].wrap(function _callee11$(_context11) {
       while (1) {
         switch (_context11.prev = _context11.next) {
           case 0:
-            _context11.next = 2;
+            start = _args11.length > 1 && _args11[1] !== undefined ? _args11[1] : -1;
+            end = _args11.length > 2 && _args11[2] !== undefined ? _args11[2] : -1;
+            _context11.next = 4;
             return getTokenCount(contract);
 
-          case 2:
+          case 4:
             count = _context11.sent;
             tokens = [];
-            i = 0;
 
-          case 5:
-            if (!(i < count)) {
-              _context11.next = 17;
+            if (!(end > count)) {
+              _context11.next = 8;
+              break;
+            }
+
+            return _context11.abrupt("return", []);
+
+          case 8:
+            if (end == -1 && start == -1) {
+              //Default behavior with no slicing
+              start = 0;
+              end = count;
+            }
+
+            i = start;
+
+          case 10:
+            if (!(i < end)) {
+              _context11.next = 22;
               break;
             }
 
             console.log("token " + i + " of " + count);
-            _context11.next = 9;
+            _context11.next = 14;
             return getTokenURI(contract, i);
 
-          case 9:
+          case 14:
             tokenURI = _context11.sent;
-            _context11.next = 12;
+            _context11.next = 17;
             return getOwnerOf(contract, i);
 
-          case 12:
+          case 17:
             ownerAdd = _context11.sent;
             tokens.push({
               tokenURI: tokenURI,
@@ -1177,15 +1234,15 @@ function _buildList() {
               contract: process.env.CONTRACT_ADDRESS
             });
 
-          case 14:
+          case 19:
             i++;
-            _context11.next = 5;
+            _context11.next = 10;
             break;
 
-          case 17:
+          case 22:
             return _context11.abrupt("return", tokens);
 
-          case 18:
+          case 23:
           case "end":
             return _context11.stop();
         }
@@ -1229,7 +1286,7 @@ function _seedClaimed() {
                 }, _callee12);
               }));
 
-              return function (_x23, _x24) {
+              return function (_x24, _x25) {
                 return _ref6.apply(this, arguments);
               };
             }()));
@@ -1273,7 +1330,7 @@ function _getURI() {
                 }, _callee14);
               }));
 
-              return function (_x25, _x26) {
+              return function (_x26, _x27) {
                 return _ref7.apply(this, arguments);
               };
             }()));
@@ -1286,4 +1343,48 @@ function _getURI() {
     }, _callee15);
   }));
   return _getURI.apply(this, arguments);
+}
+
+function getImageURL(_x15) {
+  return _getImageURL.apply(this, arguments);
+}
+
+function _getImageURL() {
+  _getImageURL = _asyncToGenerator__default['default']( /*#__PURE__*/_regeneratorRuntime__default['default'].mark(function _callee17(image) {
+    return _regeneratorRuntime__default['default'].wrap(function _callee17$(_context17) {
+      while (1) {
+        switch (_context17.prev = _context17.next) {
+          case 0:
+            return _context17.abrupt("return", new Promise( /*#__PURE__*/function () {
+              var _ref8 = _asyncToGenerator__default['default']( /*#__PURE__*/_regeneratorRuntime__default['default'].mark(function _callee16(resolve, reject) {
+                return _regeneratorRuntime__default['default'].wrap(function _callee16$(_context16) {
+                  while (1) {
+                    switch (_context16.prev = _context16.next) {
+                      case 0:
+                        _context16.next = 2;
+                        return ipfs.add(image).then(function (result) {
+                          resolve("https://gateway.ipfs.io/ipfs/".concat(result.path));
+                        });
+
+                      case 2:
+                      case "end":
+                        return _context16.stop();
+                    }
+                  }
+                }, _callee16);
+              }));
+
+              return function (_x28, _x29) {
+                return _ref8.apply(this, arguments);
+              };
+            }()));
+
+          case 1:
+          case "end":
+            return _context17.stop();
+        }
+      }
+    }, _callee17);
+  }));
+  return _getImageURL.apply(this, arguments);
 }

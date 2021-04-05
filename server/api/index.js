@@ -4,13 +4,13 @@ import abi from './conf/abi.json';
 import cors from 'cors';
 import express from 'express';
 import fs from 'fs'
+import fileupload from 'express-fileupload'
 
 
 const Web3 = require("web3");
 const helmet = require("helmet");
 const HDWalletProvider = require("@truffle/hdwallet-provider");
-const createClient = require('ipfs-http-client')
-
+const createClient = require('ipfs-http-client');
 const app = express();
 const ipfs = createClient('https://ipfs.infura.io:5001');
 
@@ -19,7 +19,9 @@ const ipfs = createClient('https://ipfs.infura.io:5001');
 app.use(express.json());
 app.use(cors());
 app.use(helmet());
-
+app.use(fileupload({limits: { fileSize: 50 * 1024 * 1024 },}));
+app.use(express.json({limit: '50mb'}));
+app.use(express.urlencoded({limit: '50mb'}));
 app.get('/api', (req, res) => {
 	return res.send('Received a GET HTTP method');
 });
@@ -51,16 +53,20 @@ app.post('/api/token', (req, res) => {
 	var id = req.body.id;
 
 	console.log("Id is " + id);
+	id = Number(id);
 	getTokenCount(contract)
  	.then(async function(count) {
+		 
 		if(id < count) {
 			getOwnerAndURI(contract, id)
 			.then(function(payload) {
 				provider.engine.stop();
 				res.send(JSON.stringify(payload));
+				console.log(JSON.stringify(payload));
 			});
 		} else {
 			res.status(404);
+			console.log("could not find token!")
 			provider.engine.stop();
 			return res.send("Token ID not found");
 		}
@@ -75,11 +81,17 @@ app.post('/api/allTokens', (req, res) => {
 		privateKeys:[process.env.PRIVATE_KEY], 
 		providerOrUrl: process.env.NETWORK
 	});
+	var start = -1;
+	var end = -1;
+	if(req.body.start){
+		start = Number(req.body.start);
+		end = Number(req.body.end);
+	}
 	res.setHeader('Cache-Control', 's-max-age=1, stale-while-revalidate')
 	const web3 = new Web3(provider);
 	const contract = new web3.eth.Contract(abi, process.env.CONTRACT_ADDRESS);
 	let tokens = [];
-	buildList(contract)
+	buildList(contract, start, end)
 	.then(function(build) {
 		return res.send(JSON.stringify(build));
 	 })
@@ -148,6 +160,17 @@ app.post('/api/signature', (req, res) => {
   	return express.Router();
 });
 
+app.post('/api/file', (req, res) => {
+	//TODO: Add authorization to prevent this from being abused
+	var file = req.files.file.data;
+	getImageURL(file)
+	.then(function(url) {
+		console.log(url);
+		return res.send(JSON.stringify(url));
+	});
+	return express.Router();
+});
+
 app.listen(process.env.PORT, () =>
   console.log(`App listening on port ${process.env.PORT}!`),
 );
@@ -202,7 +225,7 @@ async function getAccounts(web3) {
 async function getTokenCount(contract) {
 	return new Promise(async (resolve, reject) => {
 		var count = await contract.methods.getTokenCount().call();
-  		resolve(count);
+  		resolve(Number(count));
 	});	
 }
 
@@ -221,10 +244,21 @@ async function getTokenURI(contract, id) {
 	});	
 }
 
-async function buildList(contract){
+
+
+async function buildList(contract, start=-1, end=-1){
 	const count = await getTokenCount(contract);
 	let tokens = [];
-	for(let i = 0; i < count; i++) {
+	if(end > count) {
+		//Error handling
+		return [];
+	}
+	if(end == -1 && start == -1) {
+		//Default behavior with no slicing
+		start = 0;
+		end = count;
+	}
+	for(let i = start; i < end; i++) {
 		console.log("token " + i + " of " + count);
 		let tokenURI = await getTokenURI(contract, i);
 		let ownerAdd = await getOwnerOf(contract, i);
@@ -236,20 +270,8 @@ async function buildList(contract){
 		});
 	}
 	return tokens;
-	 /*
-	 			Promise.all([tokenuri, ownerAdd])
-			.then(function(values) {
-				var tok = values[0];
-				var own = values[1];
-				tokens.push({
-					id:i,
-					URI:tok,
-					owner:own
-				});
-				console.log(tokens);
-			})
-	 */
 }
+
 
 //NOTE: Having from in here is very important
 async function seedClaimed(contract, seed, address) {
@@ -269,5 +291,14 @@ async function getURI(data) {
  			resolve(`https://gateway.ipfs.io/ipfs/${result.path}`)
  		}))
 	});
+}
+
+async function getImageURL(image) {
+	return new Promise(async (resolve, reject) => {
+		await ipfs.add(image)
+		.then((result => {
+			resolve(`https://gateway.ipfs.io/ipfs/${result.path}`)
+		}))
+   }); 
 }
 

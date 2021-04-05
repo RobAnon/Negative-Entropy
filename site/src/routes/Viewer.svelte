@@ -1,5 +1,6 @@
 <script>
   import { onMount } from 'svelte';
+  import { getContext } from 'svelte';
   import Sandbox from '@beyondnft/sandbox';
   import App from '../App.svelte';
   import { onDestroy } from 'svelte';
@@ -22,8 +23,8 @@
   let left = 0;
   let right = 0;
 
-
-  const opensea_base = "https://opensea.io/";
+  const app = getContext('app');
+  const opensea_base = "https://opensea.io/assets/";
   let opensea = ""; 
 
 
@@ -39,6 +40,7 @@
 
   async function getData() {
     url = BACKEND + "token";
+    console.log("Id is "+ params.id);
     let response = await fetch(url, {
     	method: 'POST',
     	headers: {
@@ -47,20 +49,19 @@
     	body: JSON.stringify({id:params.id})
     });
     let result = await response.json();
-    console.log(result.tokenURI);
     data = result;
   }
   
   //Clunky and inefficient, but they solve the problem
   function navigateRight() {
     params.id = right;
-    router("/viewer/"+right);
+    router("/viewer/"+right+"+"+params.origin.trim());
     location.reload();
   }
 
   function navigateLeft() {
     params.id = left;
-    router("/viewer/"+left);
+    router("/viewer/"+left+"+"+params.origin.trim());
     location.reload();
   }
 
@@ -92,9 +93,20 @@
     return Number(result.count);
   }
 
+  function navigateUp() {
+    if(params.origin.trim() == 'private') {
+      router("/gallery/" + $app.account);
+    } else {
+      router("/gallery");
+    } 
+  }
+
   onMount(async () => {
     await getData();
     console.log(data);
+    if (params.origin == null) {
+      params.origin = 'public';
+    }
     console.log("LOADED");
     const res = await fetch(data.tokenURI);
     const json = await res.json();
@@ -111,7 +123,7 @@
     Object.keys(data.attributes).forEach((key) => {
       attributes.push({ key: data.attributes[key].trait_type, value: data.attributes[key].value });
     });
-    opensea = opensea_base + process.env.CONTRACT_ADDRESS + "/" + token.id;
+    opensea = opensea_base + String(token.contract).toLowerCase() + "/" + token.id;
     renderSandbox();
     await navRight();
     await navLeft();
@@ -209,6 +221,12 @@
         <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm11.5 5.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"/>
       </svg></button>
     </div>
+    <div id="navU">
+      <button class="btn btn-dark" on:click={navigateUp}><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-circle" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-7.5 3.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707V11.5z"/>
+      </svg></button>
+    </div>
+    
     </div>
 
     

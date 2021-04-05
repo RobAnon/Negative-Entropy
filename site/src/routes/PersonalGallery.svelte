@@ -6,6 +6,7 @@
   let tokens = [];
   let totalTokens = 0;
   let contract;
+  let origin = 'private';
   export let params;
   console.log("Loaded");
   // app is a store, reading its value using $app will
@@ -123,7 +124,7 @@ onMount(function() {
       <div class="list-container">
         <div class="list">
           {#each tokens as token}
-            <Token {token} />
+            <Token {token}{origin} />
           {/each}
         </div>
       </div>
@@ -152,7 +153,7 @@ onMount(function() {
     </div>
     {/if}
 
-  </div>
+
 </section>
 
 

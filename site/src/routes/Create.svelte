@@ -3,15 +3,16 @@
   import { createEventDispatcher, getContext, onMount } from 'svelte';
   import defaultCode from '../conf/code.js';
   import Sandbox from '@beyondnft/sandbox';
-  import { ipfs } from '../utils.js';
+  //import { ipfs } from '../utils.js';
   // import { init } from "../components/captureWebM"
   import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { HemisphereLight, LinearToneMapping, Box3, SpotLight, Scene, Color, Object3D, Vector3, PerspectiveCamera, PointLight, SphereGeometry, MeshStandardMaterial, InstancedMesh, Matrix4, AxesHelper, WebGLRenderer } from 'three'
 import seedrandom from 'seedrandom'
 import CCapture from '../components/ccapture.js/src/CCapture.js'
 import { get, writable } from 'svelte/store';
-import { ViewerScript } from '../components/ViewerScript'
-
+import { ViewerScript } from '../components/ViewerScript';
+import { Moon } from 'svelte-loading-spinners';
+import router from 'page';
 
   
   const app = getContext('app');
@@ -19,6 +20,9 @@ import { ViewerScript } from '../components/ViewerScript'
   const myApp = writable({camera: null, renderer: null})
   export let innerHeight;
   export let innerWidth;
+  let minting = false;
+  let TOTAL_SUPPLY = 1000;
+
   onMount(()=>{
     
     const renderer = document.getElementById('canvas')
@@ -29,6 +33,7 @@ import { ViewerScript } from '../components/ViewerScript'
   })
   let contract = $app.contract;
   let account = $app.account;
+  let static_image = "";
 
   let view;
   let data;
@@ -523,9 +528,10 @@ export const setAttributes = () => {
 }
 
 export const start = (e) => {
-
+  minting = true;
   if($app.contract == null) {
   	//We are not set up with Web3, alert user and return
+    minting = false;
   	alert("Web3 is not Connected!");
   	return;
   }
@@ -733,7 +739,7 @@ animate();
 
 var webMfile = writable();
 
-let formData;
+
 async function onRecordingEnd() {
   
   //FORM JSON 
@@ -741,8 +747,10 @@ async function onRecordingEnd() {
   //TODO: Add number to description here
   //FORM ATTRIBUTES
 
+  
 
 
+  
   recording = false;
   recorder.stop();
   var blob = new Blob();
@@ -750,8 +758,8 @@ async function onRecordingEnd() {
 
     blob = _blob;
 
-    const _code = ViewerScript(); //TODO: Replace this with window.properties.seed or something along those lines
-    mint(new File([blob], "blob.webm"), _code)
+    const _code = ViewerScript(); 
+    mint(new File([blob], "blob.webm"))
   })
   
   onWindowResize();
@@ -776,28 +784,45 @@ async function onRecordingEnd() {
 }
 
 
-async function mint(file, code) {
+async function mint(file) {
     if (
       !confirm(
         `Are you sure you would like to mint this token?`
       )
     ) {
+      minting = false;
       return;
     }
-
+    
 
     contract = $app.contract;
     account = $app.account;
 
-    mintText = 'Uploading image to ipfs...';
-    await ipfs.connect('https://ipfs.infura.io:5001');
-    let file_ = await ipfs.add(file);
+    let nextId = await contract.methods.totalSupply().call();
+    if(nextId >= TOTAL_SUPPLY) {
+      alert("All NFT's have been claimed!")
+      minting = false;
+      return;
+    }
 
-    const image_uri = `https://gateway.ipfs.io/ipfs/${file_.path}`;
+    const base_url = "https://www.negativeentropy.app/viewer/";
+    var extURL = base_url + nextId;
+    console.log(extURL);
+    data.external_url = extURL;
+
+
+    const formData = new FormData();
+    formData.append('file', file);
+    var destination = BACKEND+"file";
+    var imageUp = await fetch(destination, {
+      method: 'POST',
+      body: formData
+     });
+    const image_uri = await imageUp.json();
     data.image = image_uri;
 
 
-    let nextId = await contract.methods.totalSupply().call();
+    console.log(JSON.stringify(data));
     // here is where you'd set external_url in the json
     var payload = {}
     payload.customer = $app.account;
@@ -824,7 +849,24 @@ async function mint(file, code) {
 
     mintText = 'Adding NFT to blockchain - See MetaMask (or the like) for transaction';
     const payment = await contract.methods.mint($app.account, result.v, result.r, result.s, result.URI, result.seed).send({from: $app.account, value: cost})
-    dispatch('minted');
+    .on('transactionHash', function(hash){
+    //We can do things here to indicate a transcation has been successfully submitted
+    })
+    .on('confirmation', function(confirmationNumber, receipt){
+      //This is called when the transaction is confirmed
+      console.log("CONFRIMED");
+      minting = false;
+      dispatch('minted');
+      router("/viewer/" + nextId);
+    })
+    .on('error', function(error) {
+      console.log(error);
+      minting = false;
+      alert("Transaction failed! Check your web3 Provider for more info");
+    });
+    console.log();
+    
+
   }
 
 
@@ -955,7 +997,15 @@ async function mint(file, code) {
       <button class="button-main" id="start" on:click={(e)=>start(e)}>Mint</button> 
     </div>
   </div>
-</section>
-
 
 <div class="section-break section-break-final"></div>
+
+  
+{#if minting}
+<div id = load_ind>
+<Moon size="180" color="#FFFFFF" unit="px" duration="2s"></Moon>
+</div>
+{/if}
+</div>
+    
+</section>
