@@ -65,14 +65,10 @@
               if (Number.isInteger(Number(value)) && value < LIMIT ){
                 page = route.component;
               } else {
-                if(isEthAddress(params.id)) { 
                   page = route.component;
-                } else {
-                  router.redirect("/");
                 }
               }
-            }
-          } else {
+            } else {
             page = route.component;
           }
         }
