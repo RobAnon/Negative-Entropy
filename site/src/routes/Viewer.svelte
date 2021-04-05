@@ -135,16 +135,18 @@
 </script>
 
 <style>
-  section {
+  .big {
     width: 100%;
-    height: 100%;
+    height: min-content;
     border: none;
     border-radius: 0px;
   }
-
+  .big .output {
+    min-height: 600px;
+  }
  
   h2 {
-    margin: 10px 0;
+    margin: 0px;
     color: white;
   }
  
@@ -162,75 +164,144 @@
 
   .output {
     display: flex;
+    flex-wrap: wrap;
     flex-direction: row;
+    justify-content: center;
     flex: 1 1 0;
   }
 
-  .render {
-    width: 75%;
+  .render-container {
+    min-width: 75%;
     flex: 0 0 auto;
   }
-
+  .render {
+    min-height: 600px;
+  }
   .data {
     padding: 0 20px;
     text-align: left;
     flex: 1;
     height: 80%;
     color:white;
+    min-width: 270px;
   }
 
-  #navR {
-    float:right;
-    margin:20 px;
+  .viewer-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 40px;
   }
 
-  #navL {
-    float:left;
-    margin:20px;
+  li {
+    font-family: 'roboto mono';
+    font-weight: 200;
   }
+
+  #navU {
+    cursor: pointer;
+    margin-bottom: 15px;
+    width: 250px;
+  }
+  #navU svg {
+    fill: var(--xwhite);
+    width: 25px;
+    display: inline-block;
+    position: relative;
+    top: 6px;
+    margin-right: 10px;
+  }
+
+  #navU p, #navU svg {
+    display: inline-block;
+  }
+
+  #navU p {
+    font-size: 16px;
+    margin: 0;
+    margin-bottom: 10px;
+  }
+
+@media only screen and (max-width: 1200px) {
+  .output {
+    display: block;
+  }
+}
+
 </style>
 <section class="big">
-    <div class="content">
-      <h2>{name}</h2>
-      <div class="output">
-        <div class="render" bind:this={view} />
-        <div class="data">
-          <h3>Description</h3>
-          <p>{token.json.description}</p>
-          {#if attributes.length}
-            <h3>Attributes</h3>
-            <ul>
-              {#each attributes as attribute}
-                <li><strong>{attribute.key}</strong>: {attribute.value}</li>
-              {/each}
-            </ul>
-            <br>
-            <div id="open">
-            <a href={opensea} id="os" title="Buy on OpenSea" target="_blank"><img id="img" src="https://storage.googleapis.com/opensea-static/opensea-brand/listed-button-white.png" alt="Buy on OpenSea badge" /></a>
-            </div>
-            {/if}
+  <br>
+  <br>
+  <div class="content">
+    <h2>{name}</h2>
+    
+    <div id="navU">
+      <div class="navigate-up" on:click={navigateUp}>
+        <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 512.001 512.001" style="enable-background:new 0 0 512.001 512.001;" xml:space="preserve">
+          <g>
+            <g>
+              <path d="M384.834,180.699c-0.698,0-348.733,0-348.733,0l73.326-82.187c4.755-5.33,4.289-13.505-1.041-18.26
+              c-5.328-4.754-13.505-4.29-18.26,1.041l-82.582,92.56c-10.059,11.278-10.058,28.282,0.001,39.557l82.582,92.561
+              c2.556,2.865,6.097,4.323,9.654,4.323c3.064,0,6.139-1.083,8.606-3.282c5.33-4.755,5.795-12.93,1.041-18.26l-73.326-82.188
+              c0,0,348.034,0,348.733,0c55.858,0,101.3,45.444,101.3,101.3s-45.443,101.3-101.3,101.3h-61.58
+              c-7.143,0-12.933,5.791-12.933,12.933c0,7.142,5.79,12.933,12.933,12.933h61.58c70.12,0,127.166-57.046,127.166-127.166
+              C512,237.745,454.954,180.699,384.834,180.699z"/>
+            </g>
+          </g>
+          
+        </svg>
+        <p>Back to Gallery.</p>
+      </div>
+    </div>
+
+    <div class="output">
+
+      <div class="render-container">
+        <div class="render" bind:this={view}></div>
+
+        <div class="viewer-buttons">
+
+          <div id="navL">
+            <button class="button-main" on:click={navigateLeft}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-square" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm11.5 5.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"/>
+              </svg>
+            </button>
+          </div>
+
+          <div id="navR">
+            <button class="button-main" on:click={navigateRight}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right-square" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm4.5 5.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z"/>
+              </svg>
+            </button>
+          </div>
+    
         </div>
       </div>
-      <br>
-      <div id="navR">
-      <button class="btn btn-dark" on:click={navigateRight}><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right-square" viewBox="0 0 16 16">
-        <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm4.5 5.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z"/>
-      </svg></button>
+
+      <div class="data">
+        <h3>Description</h3>
+        <p>{token.json.description}</p>
+        {#if attributes.length}
+          <h3>Attributes</h3>
+          <ul>
+            {#each attributes as attribute}
+              <li><strong>{attribute.key}</strong>: {attribute.value}</li>
+            {/each}
+          </ul>
+          <br>
+          <div id="open">
+          <a href={opensea} id="os" title="Buy on OpenSea" target="_blank"><img id="img" src="https://storage.googleapis.com/opensea-static/opensea-brand/listed-button-white.png" alt="Buy on OpenSea badge" /></a>
+          </div>
+          {/if}
+      </div>
+
     </div>
-    <div id="navL">
-      <button class="btn btn-dark" on:click={navigateLeft}><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-square" viewBox="0 0 16 16">
-        <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm11.5 5.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"/>
-      </svg></button>
-    </div>
-    <div id="navU">
-      <button class="btn btn-dark" on:click={navigateUp}><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-circle" viewBox="0 0 16 16">
-        <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-7.5 3.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707V11.5z"/>
-      </svg></button>
-    </div>
+
     
-    </div>
+  
+  </div>
 
     
   </section>
-  
   <div class="section-break section-break-final"></div>
