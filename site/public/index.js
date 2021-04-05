@@ -37,7 +37,7 @@ var fadeIn = function () {
        
     $('.fade-in').each(function() {
 
-        if ( ($(this).offset().top - 200 + $(window).height()/6) < ($(window).height() + $(document).scrollTop()) ) {
+        if ( ($(this).offset().top - 200 + window.innerHeight/6) < (window.innerHeight + $(document).scrollTop()) ) {
 
             if ($(this).hasClass('fade-in-1')) {
                 $(this).css({'top': '0px', 'opacity': '1'});
@@ -55,7 +55,7 @@ var fadeIn = function () {
     })
 
     $('.section-break').each(function() {
-        if ( ($(this).offset().top) < ($(window).height() + $(document).scrollTop()) ) {
+        if ( ($(this).offset().top) < (window.innerHeight + $(document).scrollTop()) ) {
             $(this).css('width', '100%')
         }
     })
