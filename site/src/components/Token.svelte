@@ -18,7 +18,7 @@ import router from "page";
   let attributes;
 
   let view;
-  const opensea_base = "https://opensea.io/";
+  const opensea_base = "https://opensea.io/assets/";
   let opensea = ""; 
 
   $: view && renderSandbox();
@@ -47,7 +47,7 @@ import router from "page";
     Object.keys(data.attributes).forEach((key) => {
       attributes.push({ key: data.attributes[key].trait_type, value: data.attributes[key].value });
     });
-    opensea = opensea_base + token.contract + "/" + token.id;
+    opensea = opensea_base + String(token.contract).toLowerCase() + "/" + token.id;
   });
 </script>
 

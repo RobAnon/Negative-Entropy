@@ -3,7 +3,7 @@
   import { createEventDispatcher, getContext, onMount } from 'svelte';
   import defaultCode from '../conf/code.js';
   import Sandbox from '@beyondnft/sandbox';
-  import { ipfs } from '../utils.js';
+  //import { ipfs } from '../utils.js';
   // import { init } from "../components/captureWebM"
   import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { HemisphereLight, LinearToneMapping, Box3, SpotLight, Scene, Color, Object3D, Vector3, PerspectiveCamera, PointLight, SphereGeometry, MeshStandardMaterial, InstancedMesh, Matrix4, AxesHelper, WebGLRenderer } from 'three'
@@ -12,7 +12,8 @@ import CCapture from '../components/ccapture.js/src/CCapture.js'
 import { get, writable } from 'svelte/store';
 import { ViewerScript } from '../components/ViewerScript';
 import { Moon } from 'svelte-loading-spinners';
-
+import router from 'page';
+import {createClient} from 'ipfs-http-client';
   
   const app = getContext('app');
   const dispatch = createEventDispatcher();
@@ -20,6 +21,7 @@ import { Moon } from 'svelte-loading-spinners';
   export let innerHeight;
   export let innerWidth;
   let minting = false;
+  let TOTAL_SUPPLY = 1000;
 
   onMount(()=>{
     
@@ -528,6 +530,7 @@ export const start = (e) => {
   minting = true;
   if($app.contract == null) {
   	//We are not set up with Web3, alert user and return
+    minting = false;
   	alert("Web3 is not Connected!");
   	return;
   }
@@ -751,7 +754,7 @@ async function onRecordingEnd() {
 
     blob = _blob;
 
-    const _code = ViewerScript(); //TODO: Replace this with window.properties.seed or something along those lines
+    const _code = ViewerScript(); 
     mint(new File([blob], "blob.webm"), _code)
   })
   
@@ -783,6 +786,7 @@ async function mint(file, code) {
         `Are you sure you would like to mint this token?`
       )
     ) {
+      minting = false;
       return;
     }
     
@@ -790,15 +794,29 @@ async function mint(file, code) {
     contract = $app.contract;
     account = $app.account;
 
+    let nextId = await contract.methods.totalSupply().call();
+    if(nextId >= TOTAL_SUPPLY) {
+      alert("All NFT's have been claimed!")
+      minting = false;
+      return;
+    }
+
+    const opensea_base = "https://opensea.io/assets/";
+    var opensea = opensea_base + String(contract.options.address).toLowerCase() + "/" + nextId;
+    console.log(opensea);
+    data.external_url = opensea;
+
+
     mintText = 'Uploading image to ipfs...';
-    await ipfs.connect('https://ipfs.infura.io:5001');
+    const ipfs = createClient('https://ipfs.infura.io:5001')
+    
     let file_ = await ipfs.add(file);
 
     const image_uri = `https://gateway.ipfs.io/ipfs/${file_.path}`;
     data.image = image_uri;
 
 
-    let nextId = await contract.methods.totalSupply().call();
+    console.log(data);
     // here is where you'd set external_url in the json
     var payload = {}
     payload.customer = $app.account;
@@ -825,9 +843,23 @@ async function mint(file, code) {
 
     mintText = 'Adding NFT to blockchain - See MetaMask (or the like) for transaction';
     const payment = await contract.methods.mint($app.account, result.v, result.r, result.s, result.URI, result.seed).send({from: $app.account, value: cost})
-    minting = false;
-    dispatch('minted');
-    //TODO: REROUTE TO PERSONAL GALLERY HERE
+    .on('transactionHash', function(hash){
+    //We can do things here to indicate a transcation has been successfully submitted
+    })
+    .on('confirmation', function(confirmationNumber, receipt){
+      //This is called when the transaction is confirmed
+      minting = false;
+      dispatch('minted');
+      router("/viewer/" + nextId);
+    })
+    .on('error', function(error) {
+      console.log(error);
+      minting = false;
+      alert("Transaction failed! Check your web3 Provider for more info");
+    });
+    console.log();
+    
+
   }
 </script>
 
@@ -1145,7 +1177,7 @@ svg:hover {
   
   {#if minting}
   <div id = load_ind>
-  <Moon id="load_ind" size="180" color="#FFFFFF" unit="px" duration="2s"></Moon>
+  <Moon size="180" color="#FFFFFF" unit="px" duration="2s"></Moon>
   </div>
   {/if}
  </div>

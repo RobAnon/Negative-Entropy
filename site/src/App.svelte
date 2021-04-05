@@ -113,7 +113,7 @@
 
 <header>	
   <span id="logo" href="#">	
-    <img src="./logo-main.png" alt="main logo">	
+    <img src="logo-main.png" alt="main logo">	
   </span>	
   <div class="navbar-links">	
     <div>	

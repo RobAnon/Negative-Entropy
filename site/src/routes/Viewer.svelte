@@ -23,7 +23,7 @@
   let right = 0;
 
 
-  const opensea_base = "https://opensea.io/";
+  const opensea_base = "https://opensea.io/assets/";
   let opensea = ""; 
 
 
@@ -111,7 +111,7 @@
     Object.keys(data.attributes).forEach((key) => {
       attributes.push({ key: data.attributes[key].trait_type, value: data.attributes[key].value });
     });
-    opensea = opensea_base + process.env.CONTRACT_ADDRESS + "/" + token.id;
+    opensea = opensea_base + String(token.contract).toLowerCase() + "/" + token.id;
     renderSandbox();
     await navRight();
     await navLeft();

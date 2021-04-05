@@ -58,27 +58,3 @@ export async function initProvider(app) {
 export function isEthAddress(addr) {
   return Web3.utils.isAddress(addr);
 }
-
-export const ipfs = {
-  ipfsclient: null,
-  async connect(config) {
-    this.ipfsClient = window.IpfsHttpClient(config);
-  },
-  async add(content) {
-    if (!this.ipfsClient) {
-      console.warn('IPFS not connected');
-      return;
-    }
-
-    try {
-      const file = await this.ipfsClient.add(content);
-      return file;
-    } catch (e) {
-      throw e;
-    }
-  },
-  client() {
-    return this.ipfsClient;
-  },
-};
-
