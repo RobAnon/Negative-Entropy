@@ -53,6 +53,9 @@
     document.getElementsByClassName('gallery-container')[0].style.maxHeight = height + 50 + "px";
     document.getElementsByClassName('list-container')[0].style.maxHeight = height + 50 + "px";
 
+    document.getElementById('gallery-loading').style.height = "0px";
+
+
     opensea = opensea_base + String(token.contract).toLowerCase() + "/" + token.id;
   });
 </script>
