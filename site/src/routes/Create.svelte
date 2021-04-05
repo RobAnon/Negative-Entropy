@@ -900,7 +900,7 @@ async function mint(file) {
 <section>
   <div class="mint-container">
 
-    <div class="canvas-container" id="canvas-container">
+    <div class="canvas-container fade-in fade-in-1" id="canvas-container">
 	  
       <div class="button-container">
         <div class="button-actual" id="inner_div">
@@ -1000,9 +1000,9 @@ async function mint(file) {
     </div>  
 
 
-    <textarea class="form-control mint-text-area" name="textarea" id="textareaID" placeholder="Choose a unique name for your NFT and hit Load New Seed..."></textarea>
+    <textarea class="form-control mint-text-area fade-in fade-in-2" name="textarea" id="textareaID" placeholder="Choose a unique name for your NFT and hit Load New Seed..."></textarea>
 
-    <div class="mint-buttons">
+    <div class="mint-buttons fade-in fade-in-3">
       <button class="button-secondary" id="reset" on:click={()=>_reset()}>Load Seed</button>
       <button class="button-main" id="start" on:click={(e)=>start(e)}>Mint</button> 
     </div>

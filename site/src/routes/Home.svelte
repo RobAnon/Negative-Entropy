@@ -67,10 +67,19 @@ function renderSandbox() {
 <section>	
   <div class="homepage-heading">	
     <div class="header-text">	
+
       <h1 class="fade-in fade-in-1">How can the net amount of <b>entropy</b> in the universe be decreased?</h1>	
       <p class="fade-in fade-in-2">We make NFT's using Chaos Theory and the iNFT standard.</p>	
-      <button class="button-main fade-in fade-in-3"><a href="/mint">Mint</a></button>	
-      <button class="button-secondary fade-in fade-in-3"><a href="/about">Learn more</a></button>	
+      <button class="button-main fade-in fade-in-2"><a href="/mint">Mint</a></button>	
+      <button class="button-secondary fade-in fade-in-2"><a href="/about">Learn more</a></button>	
+      <p class="tokens-remaining fade-in fade-in-3">
+        {#await getCount()} 
+        ?
+        {:then count}
+        {count}
+        {/await}
+        / 1000 remaining.
+      </p>
     </div>	
     <div class="homepage-graphic">	
       <div class="render fade-in fade-in-3" bind:this={view}/>
@@ -95,15 +104,7 @@ function renderSandbox() {
   </div>
 </section>
 
-<!--<section>
-  This method is how you get total tokens: total tokens are 
-  {#await getCount()} 
-  Displays this text while loading
-  {:then count}
-  {count}
-  {/await}
-</section>
--->
+
 
 
 <div class="section-break section-break-final"></div>

@@ -356,6 +356,10 @@ header {
 .header-text {
   cursor: default;
 }
+.tokens-remaining {
+  font-size: 16px !important;
+  margin-top: 40px;
+}
 .header-text h1 {
   margin-bottom: 30px;
   margin-top: 0px;
