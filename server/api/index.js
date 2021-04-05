@@ -175,6 +175,7 @@ app.listen(process.env.PORT, () =>
   console.log(`App listening on port ${process.env.PORT}!`),
 );
 
+
 //TODO: Consider also signing with image we want
 function getSignature(web3, address, account, seed, jsonURL){
 	//Address = contact address
