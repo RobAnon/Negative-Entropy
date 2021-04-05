@@ -48,6 +48,11 @@
     Object.keys(data.attributes).forEach((key) => {
       attributes.push({ key: data.attributes[key].trait_type, value: data.attributes[key].value });
     });
+
+    var height = document.getElementsByClassName('list')[0].offsetHeight;
+    document.getElementsByClassName('gallery-container')[0].style.maxHeight = height + 50 + "px";
+    document.getElementsByClassName('list-container')[0].style.maxHeight = height + 50 + "px";
+
     opensea = opensea_base + String(token.contract).toLowerCase() + "/" + token.id;
   });
 </script>
@@ -58,6 +63,7 @@
     height: 300px;
     border: 1px solid black;
     border-radius: 4px;
+    transition: all 0.4s;
   }
 
   article:hover {

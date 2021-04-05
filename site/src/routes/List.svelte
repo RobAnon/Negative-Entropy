@@ -1,6 +1,8 @@
 <script>
   import { getContext } from 'svelte';
   import Token from '../components/Token.svelte';
+  import { onMount } from 'svelte';
+import { LogLuvEncoding } from 'three/build/three.module';
 
   let tokens = [];
   export let tokenSlice = [];
@@ -70,15 +72,31 @@
     tokenSlice = tokenSlice;
     console.log(lower);
     console.log(tokenSlice);
+
   }
+
+	onMount(function() {
+    fadeIn();
+		window.scrollTo(window.scrollX, window.scrollY + 1);
+	});
 </script>
 
 
 
 
 <style>
-  div {
+  .gallery-container {
+    max-height: 0px;
+    overflow: hidden;
+    transition: all 1s;
+    margin-top: 50px;
+  }
+  .list-container {
+    max-height: 0px;
+  }
+  .list {
     display: grid;
+    justify-content: center;
     grid-template-columns: repeat(auto-fill, 230px);
     grid-gap: 20px;
     padding: 10px 0;
@@ -93,12 +111,23 @@
 </style>
 
 <section>
+  <br>
+  <br>
+  <br>
   <strong>{totalTokens} Token(s)</strong>
-  <div class="list">
-    {#each tokenSlice as token}
-      <Token {token}{origin}/>
-    {/each}
+
+  <div class="gallery-container">
+    <div class="list-container">
+      <div class="list">
+        {#each tokenSlice as token}
+          <Token {token}{origin} />
+        {/each}
+      </div>
+    </div>
   </div>
   <button id="right" on:click={navRight}>RIGHT</button>
   <button id="left" on:click={navLeft}>LEFT</button>
 </section>
+
+
+<div class="section-break section-break-final"></div>

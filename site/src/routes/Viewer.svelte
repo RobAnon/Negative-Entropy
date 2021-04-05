@@ -127,7 +127,10 @@
     renderSandbox();
     await navRight();
     await navLeft();
+
+    window.scrollTo(window.scrollX, window.scrollY + 1);
   });
+
 </script>
 
 <style>
@@ -229,3 +232,4 @@
     
   </section>
   
+  <div class="section-break section-break-final"></div>
