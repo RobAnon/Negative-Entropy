@@ -825,11 +825,24 @@ app.post('/api/allTokens', function (req, res) {
     privateKeys: [process.env.PRIVATE_KEY],
     providerOrUrl: process.env.NETWORK
   });
+  var start = 0;
+  var end = 0;
+
+  if (req.body.start) {
+    start = req.body.start;
+    end = req.body.end;
+  }
+
   res.setHeader('Cache-Control', 's-max-age=1, stale-while-revalidate');
   var web3 = new Web3(provider);
   var contract = new web3.eth.Contract(abi, process.env.CONTRACT_ADDRESS);
   buildList(contract).then(function (build) {
-    return res.send(JSON.stringify(build));
+    if (start > 0 || end > 0) {
+      //Slice the array
+      return res.send(JSON.stringify(build.slice(start, end)));
+    } else {
+      return res.send(JSON.stringify(build));
+    }
   });
   provider.engine.stop();
   return express__default['default'].Router();

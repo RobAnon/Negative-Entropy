@@ -3,7 +3,7 @@
   import Token from '../components/Token.svelte';
 
   let tokens = [];
-  let tokenSlice = [];
+  export let tokenSlice = [];
   let totalTokens = 0;
   let contract;
   let origin = 'public';
@@ -47,6 +47,8 @@
     }
     tokenSlice = tokens.slice(lower,lower+maxPerPage);
     tokenSlice = tokenSlice;
+    console.log(lower);
+    console.log(tokenSlice);
   }
 
   function navLeft() {
@@ -57,7 +59,8 @@
     }
     tokenSlice = tokens.slice(lower,lower+maxPerPage);
     tokenSlice = tokenSlice;
-
+    console.log(lower);
+    console.log(tokenSlice);
   }
 </script>
 
