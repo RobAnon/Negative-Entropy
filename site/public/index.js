@@ -42,7 +42,7 @@ var fadeIn = function () {
     })
 
     $('.section-break').each(function() {
-        if ( ($(this).offset().top + $(window).height()/6) < ($(window).height() + $(document).scrollTop()) ) {
+        if ( ($(this).offset().top) < ($(window).height() + $(document).scrollTop()) ) {
             $(this).css('width', '100%')
         }
     })

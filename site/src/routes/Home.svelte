@@ -93,8 +93,7 @@ function renderSandbox() {
   </div>
 </section>
 
-
-<section>
+<!--<section>
   This method is how you get total tokens: total tokens are 
   {#await getCount()} 
   Displays this text while loading
@@ -102,3 +101,4 @@ function renderSandbox() {
   {count}
   {/await}
 </section>
+-->

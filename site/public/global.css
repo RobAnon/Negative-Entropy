@@ -413,7 +413,7 @@ header {
 /* - homepage info - */
 .homepage-info {
   margin-top: 100px;
-  margin-bottom: 1000px;
+  margin-bottom: 80px;
 }
 .homepage-info h2 {
   margin-bottom: 40px;
@@ -550,4 +550,30 @@ header {
 }
 .mint-buttons button:nth-child(1) {
   margin-right: 20px !important;
+}
+
+
+
+/* --- FOOTER --- */
+footer {
+  margin: 100px 0px;
+}
+footer p {
+  font-size: 18px;
+  text-align: center;
+  margin-top: 40px;
+}
+footer .footer-icons-container {
+  width: max-content;
+  margin: 80px auto 0px;
+}
+footer svg {
+  width: 40px;
+  height: 40px;
+}
+footer a {
+  margin-right: 40px;
+}
+footer .footer-icons-container a:last-child {
+  margin-right: 0px !important;
 }
