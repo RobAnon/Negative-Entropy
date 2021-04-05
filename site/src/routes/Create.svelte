@@ -24,7 +24,7 @@ import router from 'page';
   let TOTAL_SUPPLY = 1000;
 
   onMount(()=>{
-    
+    window.scrollTo(window.scrollX,1);
     const renderer = document.getElementById('canvas')
     document.getElementById('canvas-container').appendChild(renderer);
 	
@@ -48,7 +48,7 @@ import router from 'page';
   let code = 'defaultCode';
   let valid = false;
   //TODO: Standardize to IPFS://, maybe store this in .env
-  let code_uri = "https://gateway.ipfs.io/ipfs/Qma3kCuqMiTrgUCKvLSArrMwbHyyDcjZjYpwobHsjDHUR5";
+  let code_uri = "https://gateway.ipfs.io/ipfs/QmbtZq1fvspTE1615oju7edvKBwbfh6Nx6Lzy6rjH4SCj3";
 
   // temp values
   let attrKey = '';

@@ -39,6 +39,7 @@
 
 
   async function getData() {
+    console.log("Contract is" + process.env.CONTRACT_ADDRESS);
     url = BACKEND + "token";
     console.log("Id is "+ params.id);
     let response = await fetch(url, {
@@ -124,7 +125,7 @@
     Object.keys(data.attributes).forEach((key) => {
       attributes.push({ key: data.attributes[key].trait_type, value: data.attributes[key].value });
     });
-    opensea = opensea_base + String(token.contract).toLowerCase() + "/" + token.id;
+    opensea = opensea_base + String(process.env.CONTRACT_ADDRESS).toLowerCase() + "/" + token.id;
     renderSandbox();
     await navRight();
     await navLeft();

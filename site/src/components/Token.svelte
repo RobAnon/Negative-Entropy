@@ -34,7 +34,7 @@
   }
 
   onMount(async () => {
-    console.log(token.tokenURI);
+    console.log(token.contract);
     const res = await fetch(token.tokenURI);
     const json = await res.json();
 
