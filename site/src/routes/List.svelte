@@ -109,15 +109,23 @@ import { LogLuvEncoding } from 'three/build/three.module';
   width: 100%;
   }
 
+  #gallery-loading {
+    text-align: center;
+    overflow: hidden;
+    height: 100px;
+    transition: all 0.4s;
+    font-size: 30px;
+  }
+
 </style>
 
 <section>
-  <br>
-  <br>
-  <br>
-  <strong>{totalTokens} Token(s)</strong>
-
+  <div id="gallery-loading"><h2>Loading...</h2></div>
   <div class="gallery-container">
+    <strong>{totalTokens} Token(s)</strong>
+    <br>
+    <br>
+    <br>
     <div class="list-container">
       <div class="list">
         {#each tokenSlice as token}
