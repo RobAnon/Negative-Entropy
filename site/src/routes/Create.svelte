@@ -1006,6 +1006,5 @@ async function mint(file) {
 <Moon size="180" color="#FFFFFF" unit="px" duration="2s"></Moon>
 </div>
 {/if}
-</div>
     
 </section>
