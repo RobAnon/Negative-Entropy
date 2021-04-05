@@ -6,6 +6,7 @@ import routes from '../routes';
 import router from "page";
 
   export let token;
+  export let origin;
 
   let big = false;
 
@@ -33,6 +34,7 @@ import router from "page";
   }
 
   onMount(async () => {
+
     const res = await fetch(token.tokenURI);
     const json = await res.json();
 
@@ -42,7 +44,6 @@ import router from "page";
     name = json.name;
 
     data = json;
-    console.log(json);
     attributes = [];
     Object.keys(data.attributes).forEach((key) => {
       attributes.push({ key: data.attributes[key].trait_type, value: data.attributes[key].value });
@@ -143,7 +144,7 @@ import router from "page";
 </style>
 <article class:big>
   {#if !big}
-    <div class="preview" on:click={() => router("/viewer/" + token.id)}>
+    <div class="preview" on:click={() => router("/viewer/" + token.id + "+" + origin)}>
       <div><video autoplay loop src={image} alt={name} type='video/webm'></video></div>
       <strong>{name}</strong>
     </div>

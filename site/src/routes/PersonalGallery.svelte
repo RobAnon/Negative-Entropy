@@ -5,6 +5,7 @@
   let tokens = [];
   let totalTokens = 0;
   let contract;
+  let origin = 'private';
   export let params;
   console.log("Loaded");
   // app is a store, reading its value using $app will
@@ -59,7 +60,7 @@ async function getUserTokens() {
   <strong>{totalTokens} Token(s)</strong>
   <div class="list">
     {#each tokens as token}
-      <Token {token} />
+      <Token {token}{origin} />
     {/each}
   </div>
 </section>

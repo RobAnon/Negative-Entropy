@@ -5,6 +5,7 @@
   let tokens = [];
   let totalTokens = 0;
   let contract;
+  let origin = 'public';
 
   // app is a store, reading its value using $app will
   // create a subscriber to the store changes
@@ -30,7 +31,6 @@
 
     totalTokens = result.length;
     tokens = result;
-    console.log(tokens);
   }
 </script>
 
@@ -56,7 +56,7 @@
   <strong>{totalTokens} Token(s)</strong>
   <div class="list">
     {#each tokens as token}
-      <Token {token} />
+      <Token {token}{origin}/>
     {/each}
   </div>
 </section>
