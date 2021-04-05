@@ -1,6 +1,7 @@
 <script>
   import { getContext } from 'svelte';
   import Token from '../components/Token.svelte';
+  import { onMount } from 'svelte';
 
   let tokens = [];
   let totalTokens = 0;
@@ -34,7 +35,6 @@ async function getUserTokens() {
     }
     tokens = tokens; //See List.svelte for further example of this
     totalTokens = _totalTokens;
-    console.log(JSON.stringify(tokens));
 }
 
 
@@ -47,12 +47,31 @@ onMount(function() {
 </script>
 
 <style>
-  div {
+  .no-tokens-container {
+    min-height: calc(100vh - 450px);
+  }
+  .no-tokens-container h1 {
+    margin-bottom: 20px;
+  }
+  .no-tokens-container p {
+    margin-bottom: 50px;
+  }
+  .gallery-container {
+    margin-top: 50px;
+  }
+  .list-container {
+    max-height: 0px;
+    overflow: hidden;
+    transition: all 1s;
+  }
+  .list {
     display: grid;
+    justify-content: center;
     grid-template-columns: repeat(auto-fill, 230px);
     grid-gap: 20px;
     padding: 10px 0;
     position: relative;
+    color:white;
   }
   video {
   height: 230px;
@@ -62,10 +81,23 @@ onMount(function() {
 </style>
 
 <section>
-  <strong>{totalTokens} Token(s)</strong>
-  <div class="list">
-    {#each tokens as token}
-      <Token {token} />
-    {/each}
+  <div class="gallery-container">
+    
+    {#if totalTokens === 0}
+      <div class="no-tokens-container">
+        <h1>You have no <b>tokens</b>!</h1>
+        <p>Click below to mint.</p>
+        <button class="button-main"><a href="/mint">Mint</a></button>
+      </div>
+      {:else}
+      <strong>{totalTokens} Token(s)</strong>
+    {/if}
+    <div class="list-container">
+      <div class="list">
+        {#each tokens as token}
+          <Token {token} />
+        {/each}
+      </div>
+    </div>
   </div>
 </section>

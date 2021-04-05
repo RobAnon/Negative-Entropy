@@ -48,6 +48,9 @@ import { LogLuvEncoding } from 'three/build/three.module';
     transition: all 1s;
     margin-top: 50px;
   }
+  .list-container {
+    max-height: 0px;
+  }
   .list {
     display: grid;
     justify-content: center;
@@ -69,10 +72,12 @@ import { LogLuvEncoding } from 'three/build/three.module';
     <strong>{totalTokens} Token(s)</strong>
     <br>
     <br>
-    <div class="list">
-      {#each tokens as token}
-        <Token {token} />
-      {/each}
+    <div class="list-container">
+      <div class="list">
+        {#each tokens as token}
+          <Token {token} />
+        {/each}
+      </div>
     </div>
   </div>
 </section>

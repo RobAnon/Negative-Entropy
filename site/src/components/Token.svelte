@@ -49,8 +49,8 @@ import App from '../App.svelte';
 
 
     var height = document.getElementsByClassName('list')[0].offsetHeight;
-    console.log(height);
     document.getElementsByClassName('gallery-container')[0].style.maxHeight = height + 50 + "px";
+    document.getElementsByClassName('list-container')[0].style.maxHeight = height + 50 + "px";
 
 
   });
