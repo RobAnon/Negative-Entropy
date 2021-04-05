@@ -413,10 +413,9 @@ header {
 /* - homepage info - */
 .homepage-info {
   margin-top: 100px;
-  margin-bottom: 80px;
 }
 .homepage-info h2 {
-  margin-bottom: 40px;
+  margin-bottom: 60px;
 }
 .homepage-info-img {
   padding: 0px 80px;
@@ -556,7 +555,7 @@ header {
 
 /* --- FOOTER --- */
 footer {
-  margin: 100px 0px;
+  margin: 60px 0px;
 }
 footer p {
   font-size: 18px;
@@ -565,7 +564,7 @@ footer p {
 }
 footer .footer-icons-container {
   width: max-content;
-  margin: 80px auto 0px;
+  margin: 60px auto 0px;
 }
 footer svg {
   width: 40px;
