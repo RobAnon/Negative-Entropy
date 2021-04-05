@@ -816,6 +816,7 @@ async function mint(file) {
     var destination = BACKEND+"file";
     var imageUp = await fetch(destination, {
       method: 'POST',
+	  mode: 'cors',
       body: formData
      });
     const image_uri = await imageUp.json();
@@ -835,6 +836,7 @@ async function mint(file) {
     	headers: {
     		'Content-Type': 'application/json;charset=utf-8'
     	},
+		mode: 'cors',
     	body: JSON.stringify(payload)
     });
 

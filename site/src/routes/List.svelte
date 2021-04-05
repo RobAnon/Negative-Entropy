@@ -28,12 +28,13 @@ import { LogLuvEncoding } from 'three/build/three.module';
     let _totalTokens = totalTokens;
     var destination = BACKEND+"allTokens";
     //Currently gets all tokens
-    let countRes = await fetch(BACKEND+"tokenCount");
+    let countRes = await fetch(BACKEND+"tokenCount", {mode: 'cors'});
     let count = await countRes.json();
     count = Number(count.count);
 
     let response = await fetch(destination, {
     	method: 'POST',
+      mode: 'cors',
     	headers: {
     		'Content-Type': 'application/json;charset=utf-8'
     	},
