@@ -528,8 +528,9 @@ export const setAttributes = () => {
 }
 
 export const start = (e) => {
-  minting = true;
-  if($app.contract == null) {
+	_reset()
+ 	minting = true;
+ 	if($app.contract == null) {
   	//We are not set up with Web3, alert user and return
     minting = false;
   	alert("Web3 is not Connected!");
@@ -746,7 +747,7 @@ async function onRecordingEnd() {
   name = seed; //Name the NFT after it's seed
   //TODO: Add number to description here
   //FORM ATTRIBUTES
-
+	
   
 
 
@@ -851,20 +852,20 @@ async function mint(file) {
 
     mintText = 'Adding NFT to blockchain - See MetaMask (or the like) for transaction';
     const payment = await contract.methods.mint($app.account, result.v, result.r, result.s, result.URI, result.seed).send({from: $app.account, value: cost})
-    .on('transactionHash', function(hash){
-    //We can do things here to indicate a transcation has been successfully submitted
-    })
-    .on('confirmation', function(confirmationNumber, receipt){
+    .once('confirmation', function(confirmationNumber, receipt){
       //This is called when the transaction is confirmed
       console.log("CONFRIMED");
       minting = false;
       dispatch('minted');
       router("/viewer/" + nextId);
+	  payment.removeListener('confirmation');
+
     })
-    .on('error', function(error) {
+    .once('error', function(error) {
       console.log(error);
       minting = false;
       alert("Transaction failed! Check your web3 Provider for more info");
+	  payment.removeListener('error');
     });    
 
   }
