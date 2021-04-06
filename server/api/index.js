@@ -22,6 +22,11 @@ app.use(helmet());
 app.use(fileupload({limits: { fileSize: 50 * 1024 * 1024 },}));
 app.use(express.json({limit: '50mb'}));
 app.use(express.urlencoded({limit: '50mb'}));
+app.use(function(req, res, next) {
+	res.header("Access-Control-Allow-Origin", "negativeentropy.app");
+	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+	next();
+});
 
 app.get('/api', (req, res) => {
 	return res.send('Received a GET HTTP method');
