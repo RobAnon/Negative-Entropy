@@ -14,7 +14,7 @@
   // load json
   // show image and title
   let image;
-  let name;
+  let name = "Loading Data...";
 
   let data;
   let attributes = [];
