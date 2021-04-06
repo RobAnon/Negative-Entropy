@@ -825,7 +825,7 @@ async function onRecordingEnd() {
 	params.stabilize = stableOld;
 	params.lock = lockOld;
 	opct = 1;
-  $start.textContent = "Mint"
+  $start.textContent = "Mint Ξ0.15"
   
  
 }
