@@ -528,7 +528,10 @@ export const setAttributes = () => {
 }
 
 export const start = (e) => {
-	_reset()
+	var txt = document.getElementById("textareaID").value.trim();
+	if(txt != seed) {
+		_reset();
+	}
  	minting = true;
  	if($app.contract == null) {
   	//We are not set up with Web3, alert user and return
