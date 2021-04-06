@@ -536,6 +536,10 @@ export const start = async (e) => {
 		alert("Seed has already been claimed!");
 		return;
 	}
+	if(navigator.userAgent.indexOf("Firefox") > -1) {
+		//User is on Firefox, CCapture will not work for them
+		alert("Our apologies, the plugin used to record the webm of your NFT does not work on Firefox.\n We recommend Chrome for the optimal user-experience");
+	}
 
 	var txt = document.getElementById("textareaID").value.trim();
 	if(txt != seed) {
