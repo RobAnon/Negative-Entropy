@@ -529,7 +529,10 @@ export const setAttributes = () => {
 }
 
 export const start = async (e) => {
-	
+	var txt = document.getElementById("textareaID").value.trim();
+	if(txt != seed) {
+		_reset();
+	}
 	var destination = BACKEND+"seed?seed="+seed;
     var seeds = await fetch(destination, {mode: 'cors'});
     var seedJSON = await seeds.json();
@@ -556,10 +559,6 @@ export const start = async (e) => {
 
 
 
-	var txt = document.getElementById("textareaID").value.trim();
-	if(txt != seed) {
-		_reset();
-	}
    
  	if($app.contract == null) {
   		//We are not set up with Web3, alert user and return
