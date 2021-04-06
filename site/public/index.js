@@ -24,7 +24,17 @@ $(document).ready(function() {
         })
     }
 
+})
 
+/* fade animation on scroll */
+$(document).on('scroll', function() {
+    fadeIn();
+})
+
+
+/* function to open and close FAQs */
+var openCloseFaq = function() {
+    console.log('faq function');
     $('.faq-title').click(function() {
         if($(this).next().css('height') !== "0px") {
             $(this).next().css('height', '0px');
@@ -33,13 +43,7 @@ $(document).ready(function() {
             $(this).next().css('height', elHeight);
         }
     })
-
-})
-
-/* fade animation on scroll */
-$(document).on('scroll', function() {
-    fadeIn();
-})
+}
 
 
 /* function to fade in content on scroll */
