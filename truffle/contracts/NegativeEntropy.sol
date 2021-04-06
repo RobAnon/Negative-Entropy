@@ -45,8 +45,6 @@ contract NegativeEntropy is Context, AccessControl, ERC721Tradable {
     //TODO: Consider making price variable?
     uint256 public constant PRICE = 15E16;
 
-    //Address where transactions will be deposited
-
     //Set that contains all seeds, allowing for easy checks of existence of a given seed
     EnumerableSet.Bytes32Set private seedSet;
 

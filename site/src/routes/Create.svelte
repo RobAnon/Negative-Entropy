@@ -71,6 +71,7 @@ import router from 'page';
       _data.interactive_nft = {
         code_uri,
         dependencies,
+		version:"0.0.8"
       };
 
       data = _data;
