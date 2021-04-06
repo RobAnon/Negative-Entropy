@@ -153,7 +153,7 @@
 </style>
 <article class:big>
   {#if !big}
-    <div class="preview" on:click={() => router("/viewer/" + token.id + "+" + origin)}>
+    <div class="preview" on:click={() => router("/viewer/" + token.id + "/" + origin)}>
       <div><video autoplay muted loop src={image} alt={name} type='video/webm'></video></div>
       <strong>{name}</strong>
     </div>

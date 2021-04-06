@@ -42,6 +42,7 @@
     console.log("Contract is" + process.env.CONTRACT_ADDRESS);
     url = BACKEND + "token";
     console.log("Id is "+ params.id);
+    console.log("origin is: " + params.origin);
     let response = await fetch(url, {
       mode: 'cors',
     	method: 'POST',
@@ -57,13 +58,13 @@
   //Clunky and inefficient, but they solve the problem
   function navigateRight() {
     params.id = right;
-    router("/viewer/"+right+"+"+params.origin.trim());
+    router("/viewer/"+right+"/"+params.origin.trim());
     location.reload();
   }
 
   function navigateLeft() {
     params.id = left;
-    router("/viewer/"+left+"+"+params.origin.trim());
+    router("/viewer/"+left+"/"+params.origin.trim());
     location.reload();
   }
 
@@ -107,7 +108,7 @@
 
     await getData();
     console.log(data);
-    if (params.origin == null) {
+    if (params.origin == null || params.origin == '') {
       params.origin = 'public';
     }
     console.log("LOADED");
