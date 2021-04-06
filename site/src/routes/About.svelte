@@ -38,8 +38,6 @@ import { onMount } from 'svelte';
 			<dd>- Your seed remains unclaimed and unowned until you've sent the MetaMask transaction, at which point you should remain on the minting page until you are automatically redirected</dd>
 			<dt>Why is the recording process choppy? Will my NFT look like this in its preview?</dt>
 			<dd>- The recording process captures a webm of your NFT (for use on OpenSea previews and gallery previews). To get smooth FPS in the produced webm, it slows down the NFT, and captures it frame-by-frame.</dd>
-			<dt>Something appears to have gone wrong with my network during the recording process and my webm preview does not reflect my NFT's look</dt>
-			<dd>- We aren't sure what causes this bug, but you're in luck, it's fixable. We can't change your seed or the base NFT, but we can rebuild the preview for you. Contact us in the #support channel of our Discord and we'll handle it for you. Knowing what you were doing, what browser you were using, etc. can also help us in solving this issue</dd>
 			<dt>What is the actual NFT? Is it the webm?</dt>
 			<dd>- The NFT that you are claiming when you mint is the seed itself – it can be dynamically regenerated as many times as you want through the code that comes packaged with the NFT. Once the iNFT standard gains widespread adoption, your NFT will be viewable on any site that has the viewer enabled. The webm is a preview image used by OpenSea and others to display what the NFT looks like. OpenSea is reportedly in talks to adopt the iNFT standard, so hopefully soon the webm will be entirely vestigal.</dd>
 			<dt>Why the gas cost? ~(0.07-0.1 ETH)</dt>
