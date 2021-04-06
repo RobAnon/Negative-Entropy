@@ -38,6 +38,7 @@ import router from 'page';
   let view;
   let data;
   let mintText;
+  let nextId;
 
   //FORM PRELIMINARY JSON STRUCTURE FOR UPLOAD
   let name = '';
@@ -565,6 +566,22 @@ export const start = async (e) => {
 	  	alert("Web3 is not Connected!");
   		return;
   	}
+
+	  contract = $app.contract;
+    account = $app.account;
+
+	try { 
+    	nextId = await contract.methods.getTokenCount().call();
+		console.log(nextId);
+	} catch(e) {
+		alert("Minting failed! Are you connected to the Ethereum mainnet?\n Error message was: "+ e.message);
+		return;
+	}
+    if(nextId >= TOTAL_SUPPLY) {
+      alert("All NFT's have been claimed!")
+      return;
+    }
+
 	minting = true;
 
   const $start = document.getElementById('start');
@@ -824,16 +841,6 @@ async function mint(file) {
       return;
     }
     
-
-    contract = $app.contract;
-    account = $app.account;
-
-    let nextId = await contract.methods.totalSupply().call();
-    if(nextId >= TOTAL_SUPPLY) {
-      alert("All NFT's have been claimed!")
-      minting = false;
-      return;
-    }
 
     const base_url = "https://www.negativeentropy.app/viewer/";
     var extURL = base_url + nextId;
