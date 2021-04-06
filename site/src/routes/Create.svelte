@@ -840,8 +840,14 @@ async function mint(file) {
 		mode: 'cors',
     	body: JSON.stringify(payload)
     });
+	let result = await response.json();
+	if(!response.ok) {
+		alert("Error communicating with server. The error is: " + result.error);
+		minting = false;
+		return;
+	}
 
-    let result = await response.json();
+    
 
 
 

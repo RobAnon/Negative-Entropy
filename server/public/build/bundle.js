@@ -874,7 +874,9 @@ app.post('/api/signature', function (req, res) {
       //Seed exists, deny request
       provider.engine.stop();
       res.status(401);
-      return res.send("Seed already exists! Choose a seed that doesn't already exist!");
+      return res.send(JSON.stringify({
+        error: "Seed already exists! Choose a seed that doesn't already exist!"
+      }));
     } else {
       //console.log(json_uri);
       getURI(JSON.stringify(req.body.nft)).then(function (json_uri) {
