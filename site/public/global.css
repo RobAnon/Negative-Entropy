@@ -597,12 +597,9 @@ header {
 
 
 /* --- VIEWER PAGE --- */
-@media only screen and (min-width: 900px) {
-  .beyondnft__sandbox {
-    height: 600px !important;
-  }
+.beyondnft__sandbox {
+  height: 600px !important;
 }
-
 
 
 
