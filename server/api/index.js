@@ -43,6 +43,29 @@ app.get('/api/tokenCount', (req, res) => {
 	return express.Router();
 });
 
+app.get('/api/seed', (req, res) => {
+	let provider = new HDWalletProvider({
+		privateKeys:[process.env.PRIVATE_KEY], 
+		providerOrUrl:process.env.NETWORK
+	});
+	let seed = req.query.seed;
+	let address = "";
+	res.setHeader('Cache-Control', 's-max-age=1, stale-while-revalidate')
+	const web3 = new Web3(provider);
+	getAccounts(web3)
+ 	.then(function(accounts) {
+ 		address = accounts[0];
+ 		const contract = new web3.eth.Contract(abi, process.env.CONTRACT_ADDRESS);;
+	 	return seedClaimed(contract, seed, address)
+ 	})
+ 	.then(function(seeded) {
+		var claimed = seeded == true;
+		return res.send(JSON.stringify({claimed}));
+	});
+
+	return express.Router();
+});
+
 app.post('/api/token', (req, res) => {
 	let provider = new HDWalletProvider({
 		privateKeys:[process.env.PRIVATE_KEY], 

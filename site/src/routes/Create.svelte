@@ -527,18 +527,27 @@ export const setAttributes = () => {
   }
 }
 
-export const start = (e) => {
+export const start = async (e) => {
+	
+	var destination = BACKEND+"seed?seed="+seed;
+    var seeds = await fetch(destination, {mode: 'cors'});
+    var seedJSON = await seeds.json();
+	if(seedJSON.claimed){
+		alert("Seed has already been claimed!");
+		return;
+	}
+
 	var txt = document.getElementById("textareaID").value.trim();
 	if(txt != seed) {
 		_reset();
 	}
- 	minting = true;
+   
  	if($app.contract == null) {
-  	//We are not set up with Web3, alert user and return
-    minting = false;
-  	alert("Web3 is not Connected!");
-  	return;
-  }
+  		//We are not set up with Web3, alert user and return
+	  	alert("Web3 is not Connected!");
+  		return;
+  	}
+	minting = true;
 
   const $start = document.getElementById('start');
 

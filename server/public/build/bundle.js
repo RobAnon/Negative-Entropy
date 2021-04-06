@@ -772,6 +772,27 @@ app.get('/api/tokenCount', function (req, res) {
   });
   return express__default['default'].Router();
 });
+app.get('/api/seed', function (req, res) {
+  var provider = new HDWalletProvider({
+    privateKeys: [process.env.PRIVATE_KEY],
+    providerOrUrl: process.env.NETWORK
+  });
+  var seed = req.query.seed;
+  var address = "";
+  res.setHeader('Cache-Control', 's-max-age=1, stale-while-revalidate');
+  var web3 = new Web3(provider);
+  getAccounts(web3).then(function (accounts) {
+    address = accounts[0];
+    var contract = new web3.eth.Contract(abi, process.env.CONTRACT_ADDRESS);
+    return seedClaimed(contract, seed, address);
+  }).then(function (seeded) {
+    var claimed = seeded == true;
+    return res.send(JSON.stringify({
+      claimed: claimed
+    }));
+  });
+  return express__default['default'].Router();
+});
 app.post('/api/token', function (req, res) {
   var provider = new HDWalletProvider({
     privateKeys: [process.env.PRIVATE_KEY],
