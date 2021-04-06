@@ -539,7 +539,21 @@ export const start = async (e) => {
 	if(navigator.userAgent.indexOf("Firefox") > -1) {
 		//User is on Firefox, CCapture will not work for them
 		alert("Our apologies, the plugin used to record the webm of your NFT does not work on Firefox.\n We recommend Chrome for the optimal user-experience");
+		return;
 	}
+	if(navigator.userAgent.indexOf("OPR") > -1) {
+		//User is on Opera, CCapture will not work for them
+		alert("Our apologies, the plugin used to record the webm of your NFT does not work on Opera.\n We recommend Chrome for the optimal user-experience");
+		return;
+	}
+	if(navigator.userAgent.indexOf("MSIE") > -1 || navigator.userAgent.indexOf("rv:") > -1) {
+		//User is on Internet Explorer, CCapture will not work for them
+		alert("Our apologies, the plugin used to record the webm of your NFT does not work on Internet Explorer.\n We recommend Chrome for the optimal user-experience");
+		return;
+	}
+
+
+
 
 	var txt = document.getElementById("textareaID").value.trim();
 	if(txt != seed) {
