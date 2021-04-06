@@ -643,6 +643,9 @@ footer .footer-icons-container a:last-child {
 .gallery-container {
   overflow: hidden;
 }
+.gallery-container .beyondnft__sandbox {
+  height: 100% !important;
+}
 
 
 @media only screen and (max-width: 900px) {

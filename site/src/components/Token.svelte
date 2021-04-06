@@ -4,6 +4,7 @@
   import App from '../App.svelte';
   import routes from '../routes';
   import router from "page";
+  import {quickJSON} from '../conf/quickview';
 
   export let token;
   export let origin;
@@ -38,12 +39,15 @@
     const res = await fetch(token.tokenURI);
     const json = await res.json();
 
+    /*
     token.json = json;
-
-    image = json.image;
+    
+    image = json.image;*/
     name = json.name;
+    token.json = quickJSON;
 
-    data = json;
+    data = quickJSON;
+    //data = json;
     attributes = [];
     Object.keys(data.attributes).forEach((key) => {
       attributes.push({ key: data.attributes[key].trait_type, value: data.attributes[key].value });
@@ -57,6 +61,7 @@
 
 
     opensea = opensea_base + String(token.contract).toLowerCase() + "/" + token.id;
+    view = view;
   });
 </script>
 
@@ -153,10 +158,11 @@
 </style>
 <article class:big>
   {#if !big}
-    <div class="preview" on:click={() => router("/viewer/" + token.id + "/" + origin)}>
-      <div><video autoplay muted loop src={image} alt={name} type='video/webm'></video></div>
-      <strong>{name}</strong>
+  <div class="preview"on:click={() => router("/viewer/" + token.id + "/" + origin)}>	
+    <div>
+      <div class="render" bind:this={view}></div>
     </div>
+  </div>
   {:else}
     <div class="content">
       <button class="close" on:click={() => (big = false)}>close</button>
