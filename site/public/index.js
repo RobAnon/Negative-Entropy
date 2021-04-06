@@ -24,6 +24,16 @@ $(document).ready(function() {
         })
     }
 
+
+    $('.faq-title').click(function() {
+        if($(this).next().css('height') !== "0px") {
+            $(this).next().css('height', '0px');
+        } else {
+            var elHeight = $(this).next().prop('scrollHeight') + 30 + 'px';
+            $(this).next().css('height', elHeight);
+        }
+    })
+
 })
 
 /* fade animation on scroll */

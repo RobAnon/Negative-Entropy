@@ -294,7 +294,6 @@ header {
     position: relative;
   }
   .navbar-dropdown-container {
-    padding-top: 0px;
     position: absolute;
     width: 200px;
     max-height: 0px;
@@ -310,13 +309,18 @@ header {
     margin-top: 10px;
     display: block;
     background-color: var(--xblack);
+    text-shadow: 0px 0px 8px var(--xwhite);
+    transition: all 0.4s;
+  }
+  .navbar-dropdown:hover {
+    text-shadow: 0px 0px 32px white, 0px 0px 16px var(--xwhite);
   }
   #gallery:hover .navbar-dropdown-container {
     opacity: 1;
     top: 100%;
     max-height: 500px;
     transition-delay: 0.2s;
-    padding-top: 10px;
+    padding-top: 15px;
     padding-bottom: 15px;
     overflow: visible;
   }
@@ -418,7 +422,7 @@ header {
     margin-left: auto;
     position: static;
     transform: translate(0, 0);
-    height: 500px;
+    height: 650px;
   }
   .homepage-graphic .render {
     margin-top: 0px;

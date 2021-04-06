@@ -927,6 +927,11 @@ async function mint(file) {
     font-size: 60px;
 }
 
+#please-note {
+	margin-top: 50px;
+	font-size: 14px;
+	text-align: center;
+}
 
 </style>
 
@@ -1039,9 +1044,9 @@ async function mint(file) {
 
     <div class="mint-buttons fade-in fade-in-3">
       <button class="button-secondary" id="reset" on:click={()=>_reset()}>Load Seed</button>
-      <button class="button-main" id="start" on:click={(e)=>start(e)}>Mint Ξ0.15</button> 
+      <button class="button-main" id="start" on:click={(e)=>start(e)}>Mint&nbsp;&nbsp;Ξ0.15</button> 
     </div>
-	<p><small>Please note: Due to the complexity of the design and the minting process injecting data directly onto the blockchain, gas prices exceed the typical range and are expected to lie between 0.05 and 0.1 Ξ</small></p>
+	<p id="please-note">Please note: Due to the complexity of the design and the minting process injecting data directly onto the blockchain, gas prices exceed the typical range and are expected to lie between 0.05 and 0.1 Ξ</p>
   </div>
   {#if minting}
   <div id = load_ind>

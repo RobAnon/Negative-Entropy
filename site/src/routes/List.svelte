@@ -94,7 +94,7 @@ import { LogLuvEncoding } from 'three/build/three.module';
     justify-content: center;
     grid-template-columns: repeat(auto-fill, 230px);
     grid-gap: 20px;
-    padding: 10px 0;
+    padding: 10px 0 30px;
     position: relative;
     color:white;
   }
