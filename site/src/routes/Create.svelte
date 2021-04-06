@@ -545,7 +545,7 @@ export const start = (e) => {
   const $lock = document.getElementById('lock');
   const $reset = document.getElementById('reset');
   const $hide = document.getElementById('reset');
-  resize(350, 350);
+  resize(225, 225);
   $start.textContent = "Recording & Minting..."
   $headlamp.style.display = 'none';
   $stabilize.style.display = 'none';
