@@ -1021,7 +1021,7 @@ async function mint(file) {
     </div>  
 
 
-    <textarea class="form-control mint-text-area fade-in fade-in-2" name="textarea" id="textareaID" placeholder="Choose a unique name for your NFT and hit Load New Seed..."></textarea>
+    <textarea class="form-control mint-text-area fade-in fade-in-2" name="textarea" id="textareaID" placeholder="Choose a unique name for your NFT and hit Load Seed..."></textarea>
 
     <div class="mint-buttons fade-in fade-in-3">
       <button class="button-secondary" id="reset" on:click={()=>_reset()}>Load Seed</button>
