@@ -53,6 +53,7 @@ import { onMount } from 'svelte';
 		<p class="fade-in fade-in-2">Negative Entropy is the first independent, large-scale project to run on the <b><a href="https://github.com/BeyondNFT/sandbox#beyondnft---interactive-nft-sandbox">iNFT</a></b> (interactive NFT) standard designed by <b><a href="https://beyondnft.io/">BeyondNFT</a></b>, allowing any site running the iNFT viewer to render all NFTs conforming to this standard (including Negative Entropy’s). We believe that interactive art created in this manner offers far more value to our customers than animated gifs or webm’s ever could. We believe that this standard is the future of NFT’s and encourage our customers to join us in encouraging OpenSea to adopt this revolutionary standard (our NFTs still work there without it, just not to their full potential).</p>
 		<p class="fade-in fade-in-2">Negative Entropy’s name is in reference to the classical Isaac Asimov story, <a id="lq" href="https://templatetraining.princeton.edu/sites/training/files/the_last_question_-_issac_asimov.pdf"><b>”The Last Question,”</b></a> wherein mankind challenges its greatest computer to answer the eponymous last question – how can the total amount of entropy in the universe be decreased? How can life and existence be stayed from winding down to a cold infinite dark? We won’t spoil the plot, but the answer turns out to be exactly what this project is about – creation.</p>
 		<br>
+<<<<<<< HEAD
 		<br>
 		<h2 class="fade-in fade-in-1"><b>FAQ's</b></h2>
 
@@ -111,6 +112,27 @@ import { onMount } from 'svelte';
 			</div>
 			<li>Unfortunately, storing data on the blockchain doesn't come cheap. We've worked with Solidity experts to optimize our contract to get this as low as we can for our customers. Unlike other generative art, where the NFT references an existing address to serve as the seed (already on the chain), or claims purely generative numbers to act as the seed (also already on chain), we are directly placing data onto the chain itself – for better or worse, this costs gas.</li>
 		</div>
+=======
+		<h2 class="fade-in fade-in-1">FAQ's</h2>
+		<dl>
+			<p class="fade-in fade-in-2">
+			<dt>Is there a way to improve the performance of my computer in rendering the ThreeJS sculptures?</dt>
+			<dd>- We recommend that all of our users <b><a href="https://www.lifewire.com/hardware-acceleration-in-chrome-4125122">enable hardware acceleration</a></b> in Chrome, our recommended browswer</dd>
+			<dt>Is each seed unique? Can someone copy my seed?</dt>
+			<dd>- Each unique seed is stored immutably on the blockchain, and while seeds are case-sensitive, your seed (and therefore, your sculpture) cannot be duplicated by anyone.</dd>
+			<dt>Will reloading the page during the rendering break my NFT? Does that mean my seed is claimed and I can't get it back?</dt>
+			<dd>- Your seed remains unclaimed and unowned until you've sent the MetaMask transaction, at which point you should remain on the minting page until you are automatically redirected</dd>
+			<dt>Why is the recording process choppy? Will my NFT look like this in its preview?</dt>
+			<dd>- The recording process captures a webm of your NFT (for use on OpenSea previews and gallery previews). To get smooth FPS in the produced webm, it slows down the NFT, and captures it frame-by-frame.</dd>
+			<dt>What is the actual NFT? Is it the webm?</dt>
+			<dd>- The NFT that you are claiming when you mint is the seed itself – it can be dynamically regenerated as many times as you want through the code that comes packaged with the NFT. Once the iNFT standard gains widespread adoption, your NFT will be viewable on any site that has the viewer enabled. The webm is a preview image used by OpenSea and others to display what the NFT looks like. OpenSea is reportedly in talks to adopt the iNFT standard, so hopefully soon the webm will be entirely vestigal.</dd>
+			<dt>Why the gas cost? ~(0.07-0.1 ETH)</dt>
+			<dd>– Unfortunately, storing data on the blockchain doesn't come cheap. We've worked with Solidity experts to optimize our contract to get this as low as we can for our customers. Unlike other generative art, where the NFT references an existing address to serve as the seed (already on the chain), or claims purely generative numbers to act as the seed (also already on chain), we are directly placing data onto the chain itself – for better or worse, this costs gas.</dd>
+	
+		</p>
+		</dl>
+		
+>>>>>>> 44e957174c8353cf479686b7577fcf856e3bd10d
 	</div>
 </section>
 
