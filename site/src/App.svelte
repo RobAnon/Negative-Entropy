@@ -89,9 +89,9 @@
 
   function route(dest) {
     //Route to that page – workaround for broken links 
-    //James pls fix the href tags, not working for whatever reason, this is a cheap way of fixing on my end
     router(dest);
   }
+
 
   function getGallery() {
     if($app.account) {
