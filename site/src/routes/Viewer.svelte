@@ -39,10 +39,7 @@
 
 
   async function getData() {
-    console.log("Contract is" + process.env.CONTRACT_ADDRESS);
     url = BACKEND + "token";
-    console.log("Id is "+ params.id);
-    console.log("origin is: " + params.origin);
     let response = await fetch(url, {
       mode: 'cors',
     	method: 'POST',
@@ -107,11 +104,9 @@
   onMount(async () => {
 
     await getData();
-    console.log(data);
     if (params.origin == null || params.origin == '') {
       params.origin = 'public';
     }
-    console.log("LOADED");
     const res = await fetch(data.tokenURI, {mode: 'cors'});
     const json = await res.json();
     
@@ -122,7 +117,6 @@
     name = json.name;
 
     data = json;
-    console.log(json);
     attributes = [];
     Object.keys(data.attributes).forEach((key) => {
       attributes.push({ key: data.attributes[key].trait_type, value: data.attributes[key].value });

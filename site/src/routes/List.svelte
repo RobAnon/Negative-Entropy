@@ -44,7 +44,6 @@ import { LogLuvEncoding } from 'three/build/three.module';
       })
     });
     let result = await response.json();
-    console.log(result);
     totalTokens = result.length;
     tokens = result;
     //Temporarily disabled
@@ -53,27 +52,21 @@ import { LogLuvEncoding } from 'three/build/three.module';
   }
 
   function navRight() {
-    console.log("right");
     lower +=maxPerPage;
     if(lower+maxPerPage >= totalTokens) {
       lower -= maxPerPage;
     }
     tokenSlice = tokens.slice(lower,lower+maxPerPage);
     tokenSlice = tokenSlice;
-    console.log(lower);
-    console.log(tokenSlice);
   }
 
   function navLeft() {
-    console.log("left")
     lower -= maxPerPage;
     if(lower < 0) {
       lower = 0;
     }
     tokenSlice = tokens.slice(lower,lower+maxPerPage);
     tokenSlice = tokenSlice;
-    console.log(lower);
-    console.log(tokenSlice);
 
   }
 

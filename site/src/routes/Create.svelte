@@ -3,7 +3,7 @@
   import { createEventDispatcher, getContext, onMount } from 'svelte';
   import defaultCode from '../conf/code.js';
   import Sandbox from '@beyondnft/sandbox';
-  //import { ipfs } from '../utils.js';
+  import { ipfs } from '../utils.js';
   // import { init } from "../components/captureWebM"
   import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { HemisphereLight, LinearToneMapping, Box3, SpotLight, Scene, Color, Object3D, Vector3, PerspectiveCamera, PointLight, SphereGeometry, MeshStandardMaterial, InstancedMesh, Matrix4, AxesHelper, WebGLRenderer } from 'three'
@@ -71,7 +71,7 @@ import router from 'page';
       _data.interactive_nft = {
         code_uri,
         dependencies,
-		version:"0.0.8"
+		version:"0.0.8"	
       };
 
       data = _data;
@@ -577,7 +577,7 @@ export const start = async (e) => {
   const $lock = document.getElementById('lock');
   const $reset = document.getElementById('reset');
   const $hide = document.getElementById('reset');
-  resize(225, 225);
+  resize(300, 300);
   $start.textContent = "Recording & Minting..."
   $headlamp.style.display = 'none';
   $stabilize.style.display = 'none';
@@ -646,7 +646,6 @@ export const _reset = e => {
 
 export const hide = () => {
   const $hide = document.getElementById('hide')
-  console.log("HIDDEN");
   if(params.hide) {
 			//Already hidden, unhide
 			$hide.style.fill = "black";
@@ -839,24 +838,14 @@ async function mint(file) {
 
     const base_url = "https://www.negativeentropy.app/viewer/";
     var extURL = base_url + nextId;
-    console.log(extURL);
     data.external_url = extURL;
 
-
-    const formData = new FormData();
-    formData.append('file', file);
-    var destination = BACKEND+"file";
-    var imageUp = await fetch(destination, {
-      method: 'POST',
-	  mode: 'cors',
-      body: formData
-     });
-    const image_uri = await imageUp.json();
+	await ipfs.connect('https://ipfs.infura.io:5001');
+    let file_ = await ipfs.add(file);
+    const image_uri = `https://gateway.ipfs.io/ipfs/${file_.path}`;
     data.image = image_uri;
 
 
-    console.log(JSON.stringify(data));
-    // here is where you'd set external_url in the json
     var payload = {}
     payload.customer = $app.account;
     payload.nft = data;
