@@ -1039,8 +1039,9 @@ async function mint(file) {
 
     <div class="mint-buttons fade-in fade-in-3">
       <button class="button-secondary" id="reset" on:click={()=>_reset()}>Load Seed</button>
-      <button class="button-main" id="start" on:click={(e)=>start(e)}>Mint</button> 
+      <button class="button-main" id="start" on:click={(e)=>start(e)}>Mint Ξ0.15</button> 
     </div>
+	<p><small>Please note: Due to the complexity of the design and the minting process injecting data directly onto the blockchain, gas prices exceed the typical range and are expected to lie between 0.05 and 0.1 Ξ</small></p>
   </div>
   {#if minting}
   <div id = load_ind>
