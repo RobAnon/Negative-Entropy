@@ -541,6 +541,7 @@ export const start = async (e) => {
 		alert("Seed has already been claimed!");
 		return;
 	}
+
 	if(navigator.userAgent.indexOf("Firefox") > -1) {
 		//User is on Firefox, CCapture will not work for them
 		alert("Our apologies, the plugin used to record the webm of your NFT does not work on Firefox.\n We recommend Chrome for the optimal user-experience");
@@ -558,8 +559,6 @@ export const start = async (e) => {
 	}
 
 
-
-
    
  	if($app.contract == null) {
   		//We are not set up with Web3, alert user and return
@@ -567,8 +566,10 @@ export const start = async (e) => {
   		return;
   	}
 
-	  contract = $app.contract;
+	contract = $app.contract;
     account = $app.account;
+
+
 
 	try { 
     	nextId = await contract.methods.getTokenCount().call();
@@ -879,7 +880,15 @@ async function mint(file) {
 
     //Take signed message, communicate with contract, and mint
     const cost = await contract.methods.PRICE().call({from: $app.account});
-    const price_act = $app.web3.utils.fromWei(cost);
+	const userBal = await $app.web3.eth.getBalance($app.account);
+    const price_act = Number($app.web3.utils.fromWei(cost));
+	const userETH = Number($app.web3.utils.fromWei(userBal));
+	if(userETH < price_act) {
+		alert("Insufficient ETH to claim this seed!")
+		minting = false;
+		return;
+	}
+
 
 
     mintText = 'Adding NFT to blockchain - See MetaMask (or the like) for transaction';
