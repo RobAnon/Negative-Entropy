@@ -1,0 +1,309 @@
+<script src="https://threejs.org/build/three.js"></script>
+<script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/seedrandom/3.0.5/seedrandom.min.js">
+</script>
+<style>
+body {
+    margin: 0;
+}
+* {
+    background-color: #111 !important;
+}
+.canvas-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+#canvas {
+    position: absolute;
+    background-color: black;
+}
+
+
+</style>
+<div class="canvas-container">
+    <canvas id='canvas'></canvas>
+</div>
+<script type="text/javascript">
+
+//Stabilization likely should *always* be on
+//TODO: Enable tweening of camera viewpoint
+let camera, scene, renderer, mesh, headlight, stableOld, lockOld;
+//Declare constants
+const fr = 30;
+const limit = 20;
+const actual = 5;
+let sizes = 350;
+let STABILIZE = true;
+let CAMERA_LOCK = true;
+let OVER_POWER = 7;
+let HEADLAMP = true;
+var params = {
+    stabilize: STABILIZE,
+    lock: CAMERA_LOCK,
+    hide: false
+}
+const color = new THREE.Color();
+//Declare global vars
+let rand, random, b, dummy, visPos, pos, totalAve, offsets, frame, speedMult, count, amount, palette;
+let size, intensityBoost, metaly, rough, emissivity, random2, random3, random4, rotationRate, rotationRate2, rotationRate3, controls, container;
+init();
+animate();
+
+function init() {
+    palette = [0xEEF50C, 0x3498DB, 0xEAEDED, 0xF2B077, 0xF24405, 0x68F904, 0xBCC112, 0xA93226];
+    rand = new Math.seedrandom(Date());
+    random = rand();
+    b = random * 208186.01 / 1000000.01;
+    dummy = new THREE.Object3D();
+    visPos = [];
+    pos = [];
+    totalAve = new THREE.Vector3();
+    offsets = new THREE.Vector3();
+    frame = 0;
+    speedMult = 1;
+    size = 0.85;
+    intensityBoost = 1;
+    randomize();
+    amount = 15;
+    count = Math.pow(amount, 3);
+    camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.set(77, 77, 77);
+    camera.lookAt(0, 0, 0);
+    scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x111111);
+    initLights(scene, camera);
+    const geometry = new THREE.SphereGeometry(size, 3, 2);
+    const material = new THREE.MeshStandardMaterial({
+        color: 0xffffff,
+        roughness: rough, //Shinyness
+        metalness: metaly,
+        emissiveIntensity: emissivity,
+        emissive: 0x25fae8
+    });
+    material.color = material.color.convertSRGBToLinear();
+    material.emissive = material.emissive.convertSRGBToLinear();
+    mesh = new THREE.InstancedMesh(geometry, material, count);
+    let counter = 0;
+    const offset = (amount - 1) / 2;
+    const matrix = new THREE.Matrix4();
+    for(let x = 0; x < amount; x++) {
+        for(let y = 0; y < amount; y++) {
+            for(let z = 0; z < amount; z++) {
+                matrix.setPosition(offset - x, offset - y, offset - z);
+                var index = getQuadrant(x, y, z, offset);
+                color.setHex(palette[index]).convertSRGBToLinear();
+                mesh.setMatrixAt(counter, matrix);
+                mesh.setColorAt(counter, color);
+                var position = new THREE.Vector3(offset - x, offset - y, offset - z);
+                pos.push(position);
+                visPos.push(position.clone());
+                counter++;
+            }
+        }
+    }
+    scene.add(mesh);
+    geometry.dispose();
+    material.dispose();
+    renderer = new THREE.WebGLRenderer({
+        antialias: true,
+        canvas: canvas
+    });
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.toneMapping = THREE.LinearToneMapping;
+    window.addEventListener('resize', onWindowResize);
+    controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.enabled = false;
+}
+
+function getTier(rarity) {
+    if(rarity < 6) {
+        return "Common";
+    }
+    if(rarity < 324) {
+        return "Uncommon";
+    }
+    if(rarity < 5125) {
+        return "Rare";
+    } else {
+        return "Legendary";
+    }
+}
+
+function randomize() {
+    //Randomize palette
+    for(var iter = 0; iter < palette.length; iter++) {
+        var val = palette[iter];
+        var num = parseInt(Number(val), 10);
+        num += Math.floor(16777215 * rand() % 16777215);
+        var newVal = "0x" + num.toString(16);
+        palette[iter] = newVal;
+    }
+    //Randomize if shiny or not
+    //0.8 to keep it kinda rare
+    if(rand() > 0.8) {
+        metaly = rand();
+        rough = rand();
+        emissivity = 0.1 * rand();
+        intensityBoost = 1;
+    } else {
+        metaly = 0;
+        rough = 1;
+        emissivity = 0;
+    }
+    random2 = rand() * (random > 0.5 ? 1 : -1);
+    random3 = rand() * (random2 > 0.5 ? 1 : -1);
+    random4 = rand() * (random3 > 0.5 ? 1 : -1);
+    rotationRate = (rand() > 0.75 ? 0.005 : 0);
+    rotationRate2 = (rand() > 0.75 & rotationRate > 0 ? 0.005 : 0);
+    rotationRate3 = ((rand() > 0.75 & rotationRate > 0 & rotationRate2 > 0) ? 0.005 : 0);
+}
+
+function fitCameraToSelection(camera, controls, posArray, fitOffset = 1.2) {
+    const box = new THREE.Box3().setFromPoints(posArray);
+    const size = box.getSize(new THREE.Vector3());
+    const center = box.getCenter(new THREE.Vector3());
+    const maxSize = Math.max(size.x, size.y, size.z); //Find the maximum dimension of the box
+    const fitHeightDistance = maxSize / (2 * Math.atan(Math.PI * camera.fov / 360)); //Fancy math
+    const fitWidthDistance = fitHeightDistance / camera.aspect; //More fancy math to find distance camera needs to be to see
+    const distance = fitOffset * Math.max(fitHeightDistance, fitWidthDistance); //Take whichever of these distances is larger and use it with the offset
+    const direction = controls.target.clone().sub(camera.position) //Find camera position relative to target
+        .normalize() //Get unit normal vector for this value
+        .multiplyScalar(distance); //Convert that unit normal to distance camera needs to be from target to fit everything
+    controls.maxDistance = distance * 10; //
+    camera.near = distance / 100; //100 is the max view distance(?)
+    camera.far = distance * 100;
+    camera.updateProjectionMatrix(); //Update the camera
+    camera.position.copy(controls.target).sub(direction); //Set position of camera to our target, then subtract the direction we calculated previously
+    controls.update();
+}
+
+function getQuadrant(x, y, z, offset) {
+    var xPositive = offset - x > 0;
+    var yPositive = offset - y > 0;
+    var zPositive = offset - z > 0;
+    if(xPositive) {
+        if(yPositive) {
+            if(zPositive) {
+                return 0;
+            } else {
+                return 1;
+            }
+        } else {
+            if(zPositive) {
+                return 2;
+            } else {
+                return 3;
+            }
+        }
+    } else {
+        if(yPositive) {
+            if(zPositive) {
+                return 4;
+            } else {
+                return 5;
+            }
+        } else {
+            if(zPositive) {
+                return 6;
+            } else {
+                return 7;
+            }
+        }
+    }
+    return -1;
+}
+
+function initLights(scene, camera) {
+    //ILLUMINGATED CAMERA
+    headlight = new THREE.PointLight(0xFBFAF5, intensityBoost, 300);
+    if(HEADLAMP) {
+        camera.add(headlight);
+    }
+    scene.add(camera);
+    const keyLight = new THREE.SpotLight(0xffffff, intensityBoost);
+    keyLight.position.set(55, 99, 88);
+    scene.add(keyLight);
+    const fillLight = new THREE.SpotLight(0xffa95c, intensityBoost / 2);
+    fillLight.position.set(99, 77, 55);
+    scene.add(fillLight);
+    const rimLight = new THREE.SpotLight(0xffffff, intensityBoost);
+    rimLight.position.set(-99, 88, -99);
+    scene.add(rimLight);
+}
+
+function onWindowResize() {
+    var ctx = document.getElementById("canvas");
+    //var ctx = canny.getContext("2d");
+    ctx.width = window.innerWidth;
+    ctx.height = window.innerHeight;
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+}
+
+
+
+function resize(width, height) {
+    camera.aspect = width / height;
+    camera.updateProjectionMatrix();
+    renderer.setSize(width, height);
+}
+
+function animate() {
+    render();
+    requestAnimationFrame(animate);
+}
+
+function render() {
+    const SCALING_FACTOR = 10;
+    if(mesh) {
+        var reps = 0;
+        while(reps < speedMult) {
+            var len = pos.length;
+            if(params.stabilize) {
+                offsets.copy(totalAve).divideScalar(len).negate();
+                totalAve.set(0, 0, 0);
+            }
+            mesh.rotation.x += rotationRate2 * random3;
+            mesh.rotation.y += rotationRate * random2;
+            mesh.rotation.z += rotationRate3 * random4;
+            let i = 0;
+            while(i < count) {
+                var position = pos[i];
+                var visPosition = visPos[i];
+                var dx = position.x / SCALING_FACTOR;
+                var dy = position.y / SCALING_FACTOR;
+                var dz = position.z / SCALING_FACTOR;
+                var x1 = (-b * dx + Math.sin(dy)) * random;
+                var y1 = (-b * dy + Math.sin(dz)) * random;
+                var z1 = (-b * dz + Math.sin(dx)) * random;
+                var xm = rand();
+                var ym = rand(); 
+                var zm = rand(); 
+                position.x += x1 + xm / 5;
+                position.y += y1 + ym / 5;
+                position.z += z1 + zm / 5;
+                visPosition.copy(position).add(offsets);
+                if(params.stabilize) {
+                    dummy.position.set(visPosition.x, visPosition.y, visPosition.z);
+                    totalAve = totalAve.addVectors(totalAve, position);
+                } else {
+                    dummy.position.set(position.x, position.y, position.z);
+                }
+                dummy.updateMatrix();
+                mesh.setMatrixAt(i++, dummy.matrix);
+            }
+            reps++;
+        }
+        mesh.instanceMatrix.needsUpdate = true;
+        mesh.instanceColor.needsUpdate = true;
+    }
+    if(params.lock) {
+        fitCameraToSelection(camera, controls, visPos, 1.3)
+    }
+    renderer.render(scene, camera);
+}
+</script>

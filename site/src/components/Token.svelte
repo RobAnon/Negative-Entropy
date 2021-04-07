@@ -152,31 +152,8 @@
   }
 </style>
 <article class:big>
-  {#if !big}
     <div class="preview" on:click={() => router("/viewer/" + token.id + "/" + origin)}>
       <div><video autoplay muted loop src={image} alt={name} type='video/webm'></video></div>
       <strong>{name}</strong>
     </div>
-  {:else}
-    <div class="content">
-      <button class="close" on:click={() => (big = false)}>close</button>
-      <h2>{name}</h2>
-      <div class="output">
-        <div class="render" bind:this={view} />
-        <div class="data">
-          <h3>Description</h3>
-          <p>{token.json.description}</p>
-          {#if attributes.length}
-            <h3>Attributes</h3>
-            <ul>
-              {#each attributes as attribute}
-                <li><strong>{attribute.key}</strong>: {attribute.value}</li>
-              {/each}
-            </ul>
-          {/if}
-        </div>
-      </div>
-     <a href={opensea} id="os" title="Buy on OpenSea" target="_blank"><img style="width:160px; border-radius:5px; box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.25);" src="https://storage.googleapis.com/opensea-static/opensea-brand/listed-button-white.png" alt="Buy on OpenSea badge" /></a>
-    </div>
-  {/if}
 </article>
