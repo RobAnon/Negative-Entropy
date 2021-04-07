@@ -118,14 +118,14 @@
       <div class="navbar-link" id="gallery">	
         Gallery	
         <div class="navbar-dropdown-container">
-          <a class="navbar-dropdown" id="navbar-dropdown-1" href="/gallery">Public Gallery</a>	
-          <a class="navbar-dropdown" id="navbar-dropdown-2" href="/gallery/{$app.account}">My NFTs</a>	
+          <a class="navbar-dropdown" id="navbar-dropdown-1" href="/gallery/0">Public Gallery</a>	
+          <a class="navbar-dropdown" id="navbar-dropdown-2" href="/personal-gallery/{$app.account}">My NFTs</a>	
         </div>
       </div>	
       
       <a class="navbar-link" href='/about'>About</a>	
-      <a class="navbar-link" href="/gallery">Public Gallery</a>	
-      <a class="navbar-link" href="/gallery/{$app.account}">My NFTs</a>	
+      <a class="navbar-link" href="/gallery/0">Public Gallery</a>	
+      <a class="navbar-link" href="/personal-gallery/{$app.account}">My NFTs</a>	
     </div>	
   </div>	
   <div class="navbar-right">	

@@ -64,7 +64,7 @@ $: webmURL
             <video id="preview-vid" autoplay muted loop src={webmURL} alt="a vidya" type='video/webm'></video>
             <br> <p id="confirm-text">Please confirm the look of your webm preview. This will appear on OpenSea and in our gallery as the preview image for your NFT – if it is not to your liking, press reject, and you can record again.</p>  
             <br>
-            <div class="mint-buttons" >
+            <div class="mint-buttons">
             <button class="button-secondary" id="accept" on:click={accepted}>Accept</button>
             <button class="button-secondary" id="reject" on:click={rejected}>Reject</button>    
         </div>

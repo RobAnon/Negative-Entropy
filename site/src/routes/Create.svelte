@@ -153,6 +153,8 @@ import Confirmation from '../components/Confirmation.svelte';
 	console.log("Rejected!");
 	prompt = false;
 	minting = false;
+	//Will flush the recording buffer properly, clean up garbage
+	location.reload();
   }
   
 let seed = 'Buck';
