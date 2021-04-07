@@ -53,7 +53,8 @@ animate();
 
 function init() {
     palette = [0xEEF50C, 0x3498DB, 0xEAEDED, 0xF2B077, 0xF24405, 0x68F904, 0xBCC112, 0xA93226];
-    rand = new Math.seedrandom(Date());
+    var seed = window.context.nft_json.seed;
+    rand = new Math.seedrandom(seed);
     random = rand();
     b = random * 208186.01 / 1000000.01;
     dummy = new THREE.Object3D();

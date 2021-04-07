@@ -8,6 +8,7 @@
   export let params;
   import router from "page";
   import page from 'page';
+import SharePrompt from '../components/SharePrompt.svelte';
 
 
  
@@ -15,6 +16,7 @@
   // show image and title
   let image;
   let name = "Loading Data...";
+  let shareURL = "";
 
   let data;
   let attributes = [];
@@ -22,10 +24,12 @@
   let view;
   let left = 0;
   let right = 0;
+  let sharing = false;
 
   const app = getContext('app');
   const opensea_base = "https://opensea.io/assets/";
   let opensea = ""; 
+
 
 
   function renderSandbox() {
@@ -37,6 +41,33 @@
     });
   }
 
+  async function getShareURL() {
+    if(shareURL != "") {
+      //We already have a shareURL
+      return shareURL;
+    }
+    const URL = "https://api.gfycat.com/v1/gfycats";
+    var fetchUrl = image;
+    var title = name;
+    var payload = {
+      fetchUrl,
+      title
+    }
+    var rawResponse = await fetch(URL, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json;charset=utf-8'},
+      mode: 'cors',
+      body: JSON.stringify(payload)
+    });
+    var response = await rawResponse.json();
+    if(response.hasOwnProperty('errorType')){
+      return "Error in uploading to Gfycat!";
+    }
+    if(!response.isOk == "true") {
+      return "Error in uploading to Gfycat!"
+    }
+    return "https://gfycat.com/" + response.gfyname.toLowerCase();
+  }
 
   async function getData() {
     url = BACKEND + "token";
@@ -101,6 +132,15 @@
     } 
   }
 
+  function share() {
+    shareURL = image;
+    sharing = true;
+  }
+
+  function closeShare() {
+    sharing = false;
+  }
+
   onMount(async () => {
 
     await getData();
@@ -128,6 +168,8 @@
 
     window.scrollTo(window.scrollX, window.scrollY + 1);
   });
+
+  
 
 </script>
 
@@ -224,6 +266,22 @@
   }
 }
 
+
+.gfycat-button {
+  display: block;
+  margin: 0 auto;
+  margin-top: 30px;
+  width: max-content;
+}
+
+.gfycat-button svg {
+  fill: white;
+  height: 15px;
+  position: relative;
+  top: 2px;
+  margin-right: 4px;
+}
+
 </style>
 <section class="big">
   <br>
@@ -288,11 +346,35 @@
           </ul>
           <br>
           <div id="open">
-          <a href={opensea} id="os" title="Buy on OpenSea" target="_blank"><img id="img" src="https://storage.googleapis.com/opensea-static/opensea-brand/listed-button-white.png" alt="Buy on OpenSea badge" /></a>
+            <a href={opensea} title="Buy on OpenSea" target="_blank"><img style="width:160px; border-radius:5px; box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.25);" src="https://storage.googleapis.com/opensea-static/opensea-brand/buy-button-white.png" alt="Buy on OpenSea badge" /></a>
+          </div>
+          <div id="share">
+            <button class="button-main gfycat-button" on:click={()=>share()}>
+              <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 88.1 88.1" style="enable-background:new 0 0 88.1 88.1;" xml:space="preserve">
+                <g id="_x37_7_Essential_Icons_58_">
+                  <path id="Share" d="M69.05,58.1c-4.8,0-9.1,2.3-11.8,5.8l-24.3-14.1c1.5-3.7,1.5-7.8,0-11.5l24.3-14.1c2.7,3.5,7,5.8,11.8,5.8
+                    c8.3,0,15-6.7,15-15s-6.7-15-15-15s-15,6.7-15,15c0,2,0.4,4,1.1,5.7l-24.3,14.2c-2.8-3.5-7-5.8-11.8-5.8c-8.3,0-15,6.7-15,15
+                    s6.7,15,15,15c4.8,0,9.1-2.3,11.8-5.8l24.3,14.1c-0.7,1.7-1.1,3.7-1.1,5.7c0,8.3,6.7,15,15,15s15-6.7,15-15S77.35,58.1,69.05,58.1z
+                    M69.05,4.1c6.1,0,11,4.9,11,11s-4.9,11-11,11c-6.1,0-11-4.9-11-11S62.95,4.1,69.05,4.1z M19.05,55.1c-6.1,0-11-4.9-11-11
+                    s4.9-11,11-11s11,4.9,11,11S25.15,55.1,19.05,55.1z M69.05,84.1c-6.1,0-11-4.9-11-11s4.9-11,11-11c6.1,0,11,4.9,11,11
+                    S75.15,84.1,69.05,84.1z"/>
+                </g>
+              </svg>
+              Share to Gfycat
+            </button>
           </div>
           {/if}
       </div>
 
+      <div id="share-prompt">
+        {#if sharing}
+        {#await shareURL}
+          <SharePrompt close={closeShare} shareURL={"Loading..."} />
+        {:then url}
+          <SharePrompt close={closeShare} shareURL={url} />
+        {/await}
+        {/if}
+      </div>
     </div>
 
     
