@@ -8,6 +8,7 @@
   export let params;
   import router from "page";
   import page from 'page';
+import SharePrompt from '../components/SharePrompt.svelte';
 
 
  
@@ -15,6 +16,7 @@
   // show image and title
   let image;
   let name = "Loading Data...";
+  let shareURL = "";
 
   let data;
   let attributes = [];
@@ -22,10 +24,12 @@
   let view;
   let left = 0;
   let right = 0;
+  let sharing = false;
 
   const app = getContext('app');
   const opensea_base = "https://opensea.io/assets/";
   let opensea = ""; 
+
 
 
   function renderSandbox() {
@@ -37,6 +41,33 @@
     });
   }
 
+  async function getShareURL() {
+    if(shareURL != "") {
+      //We already have a shareURL
+      return shareURL;
+    }
+    const URL = "https://api.gfycat.com/v1/gfycats";
+    var fetchUrl = image;
+    var title = name;
+    var payload = {
+      fetchUrl,
+      title
+    }
+    var rawResponse = await fetch(URL, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json;charset=utf-8'},
+      mode: 'cors',
+      body: JSON.stringify(payload)
+    });
+    var response = await rawResponse.json();
+    if(response.hasOwnProperty('errorType')){
+      return "Error in uploading to Gfycat!";
+    }
+    if(!response.isOk == "true") {
+      return "Error in uploading to Gfycat!"
+    }
+    return "https://gfycat.com/" + response.gfyname.toLowerCase();
+  }
 
   async function getData() {
     url = BACKEND + "token";
@@ -101,6 +132,11 @@
     } 
   }
 
+  function share() {
+    shareURL = image;
+    sharing = true;
+  }
+
   onMount(async () => {
 
     await getData();
@@ -128,6 +164,8 @@
 
     window.scrollTo(window.scrollX, window.scrollY + 1);
   });
+
+  
 
 </script>
 
@@ -290,9 +328,21 @@
           <div id="open">
           <a href={opensea} id="os" title="Buy on OpenSea" target="_blank"><img id="img" src="https://storage.googleapis.com/opensea-static/opensea-brand/listed-button-white.png" alt="Buy on OpenSea badge" /></a>
           </div>
+          <div id="share">
+          <button on:click={()=>share()}>Click to open Window</button>
+          </div>
           {/if}
       </div>
 
+      <div id="share-prompt">
+        {#if sharing}
+        {#await shareURL}
+          <SharePrompt shareURL={"Loading..."} />
+        {:then url}
+          <SharePrompt shareURL={url} />
+        {/await}
+        {/if}
+      </div>
     </div>
 
     
