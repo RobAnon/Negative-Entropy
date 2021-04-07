@@ -6,62 +6,25 @@
   import router from "page";
   import {quickJSON} from '../conf/quickview';
 
-  export let token;
   export let origin;
+  export let id;
 
-  let big = false;
+  export let image = "https://gateway.ipfs.io/ipfs/QmULnqLrTuG9fAxCwctH89sjb7YRL4ig77JJ2Fn78X541j";
+  export let name;
 
-  // load json
-  // show image and title
-  let image;
-  let name;
 
-  let data;
-  let attributes;
+  $:image;
+  $:name;
 
-  let view;
-  const opensea_base = "https://opensea.io/assets/";
-  let opensea = ""; 
-
-  $: view && renderSandbox();
-
-  function renderSandbox() {
-    new Sandbox({
-      target: view,
-      props: {
-        data,
-      },
-    });
-  }
-
-  onMount(async () => {
-    console.log(token.contract);
-    const res = await fetch(token.tokenURI);
-    const json = await res.json();
-
-    /*
-    token.json = json;
+  onMount(() => {
+    console.log("mounted a token");
     
-    image = json.image;*/
-    name = json.name;
-    token.json = quickJSON;
-
-    data = quickJSON;
-    //data = json;
-    attributes = [];
-    Object.keys(data.attributes).forEach((key) => {
-      attributes.push({ key: data.attributes[key].trait_type, value: data.attributes[key].value });
-    });
-
     var height = document.getElementsByClassName('list')[0].offsetHeight;
     document.getElementsByClassName('gallery-container')[0].style.maxHeight = height + 50 + "px";
     document.getElementsByClassName('list-container')[0].style.maxHeight = height + 50 + "px";
 
     document.getElementById('gallery-loading').style.height = "0px";
-
-
-    opensea = opensea_base + String(token.contract).toLowerCase() + "/" + token.id;
-    view = view;
+    
   });
 </script>
 
@@ -94,10 +57,7 @@
     overflow: hidden;
   }
 
-  .preview img {
-    width: 100%;
-    height: auto;
-  }
+ 
 
   .preview strong {
     flex: 0 0 auto;
@@ -105,84 +65,16 @@
     display: block;
   }
 
-  article.big:hover {
-    transform: none;
-  }
-
-  article.big .content {
-    position: fixed;
-    top: 50px;
-    left: 50px;
-    bottom: 50px;
-    right: 50px;
-    border: 1px solid black;
-    border-radius: 4px;
-    display: flex;
-    flex-direction: column;
-    background: white;
-  }
-
-  h2 {
-    margin: 20px 0;
-    color: black;
-  }
-
-  .close {
-    position: absolute;
-    top: 30px;
-    right: 30px;
-    cursor: pointer;
-  }
-
-  .output {
-    display: flex;
-    flex-direction: row;
-    flex: 1 1 0;
-  }
-
-  .render {
-    width: 50%;
-    flex: 0 0 auto;
-  }
-
-  .data {
-    padding: 0 20px;
-    text-align: left;
-    flex: 1;
-    color:black;
-  }
+  
   video {
   height: 230px;
   width: 100%;
   }
 </style>
-<article class:big>
-  {#if !big}
-  <div class="preview"on:click={() => router("/viewer/" + token.id + "/" + origin)}>	
-    <div>
-      <div class="render" bind:this={view}></div>
+<article>
+    <div class="preview" on:click={() => router("/viewer/" + id + "/" + origin)}>
+      <div><video autoplay muted loop src={image} alt={name} type='video/webm'></video></div>
+      <strong>{name}</strong>
+      <h1>HELLO</h1>
     </div>
-  </div>
-  {:else}
-    <div class="content">
-      <button class="close" on:click={() => (big = false)}>close</button>
-      <h2>{name}</h2>
-      <div class="output">
-        <div class="render" bind:this={view} />
-        <div class="data">
-          <h3>Description</h3>
-          <p>{token.json.description}</p>
-          {#if attributes.length}
-            <h3>Attributes</h3>
-            <ul>
-              {#each attributes as attribute}
-                <li><strong>{attribute.key}</strong>: {attribute.value}</li>
-              {/each}
-            </ul>
-          {/if}
-        </div>
-      </div>
-     <a href={opensea} id="os" title="Buy on OpenSea" target="_blank"><img style="width:160px; border-radius:5px; box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.25);" src="https://storage.googleapis.com/opensea-static/opensea-brand/listed-button-white.png" alt="Buy on OpenSea badge" /></a>
-    </div>
-  {/if}
 </article>

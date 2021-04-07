@@ -140,6 +140,22 @@ import router from 'page';
     delete attributes[key];
     attributes = attributes;
   }
+
+  const acceptWebM = () => {
+	console.log("Accepted!");
+	prompt = false;
+	completeMint();
+	minting = true;
+  }
+
+  const rejectWebM = () => {
+	console.log("Rejected!");
+	prompt = false;
+	minting = false;
+	//Will flush the recording buffer properly, clean up garbage
+	location.reload();
+  }
+  
 let seed = 'Buck';
 let camera, scene, renderer, mesh, headlight, stableOld, lockOld;
 

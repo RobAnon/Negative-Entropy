@@ -30,11 +30,15 @@ export default [
 		component: About
 	},
 	{
-		path: '/gallery',
+		path: '/gallery/:id',
 		component: List
 	},
 	{
-		path: '/gallery/:id',
+		path: '/gallery/',
+		component: List
+	},
+	{
+		path: '/personal-gallery/:id',
 		component: PersonalGallery,
 		dynamic: true
 	},
