@@ -63,6 +63,10 @@ function renderSandbox() {
     });
   }
 
+  function goToMint() {
+    window.location = "/mint";
+  }
+
 
 </script>
 
@@ -86,7 +90,7 @@ function renderSandbox() {
         / 1000 remaining.
       </p>
     </div>	
-    <div class="homepage-graphic">	
+    <div class="homepage-graphic" on:click={goToMint}>	
       
       <div class="render fade-in fade-in-3" bind:this={view}/>
       <div class="graphic-shader">&nbsp;</div>

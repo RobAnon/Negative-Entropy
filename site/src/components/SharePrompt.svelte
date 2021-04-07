@@ -119,7 +119,7 @@
         <div id="copy-message"><p style="margin: 5px">Copied!</p></div>
         </div>
         <p>Copy and Paste this text to Gfycat, then share whereever!</p>
-        <a href="https://gfycat.com/upload/">
+        <a href="https://gfycat.com/upload/" target="_blank">
             <img id="gclogo" src="/gfycat-logo.svg" alt="Upload to GfyCat" />
         </a>
     </div>
