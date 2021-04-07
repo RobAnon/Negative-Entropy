@@ -859,14 +859,6 @@ async function onRecordingEnd() {
 
 
 async function mint(file) {
-    if (
-      !confirm(
-        `Are you sure you would like to mint this token?`
-      )
-    ) {
-      minting = false;
-      return;
-    }
     
 
     const base_url = "https://www.negativeentropy.app/viewer/";
@@ -885,6 +877,14 @@ async function mint(file) {
 }
 
 async function completeMint() {
+	if (
+      !confirm(
+        `Are you sure you would like to mint this token?`
+      )
+    ) {
+      minting = false;
+      return;
+    }
 	var payload = {}
     payload.customer = $app.account;
     payload.nft = data;
