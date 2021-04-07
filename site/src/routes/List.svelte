@@ -111,6 +111,8 @@
 
     if (params.id == null || params.id == '' || Number(params.id) < 0 ) {
       params.id = 0;
+      router("/gallery/0");
+      location.reload();
     }
   });
 

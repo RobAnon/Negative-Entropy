@@ -95,9 +95,9 @@
 
   function navigateUp() {
     if(params.origin.trim() == 'private') {
-      router("/gallery/" + $app.account);
+      router("/personal-gallery/" + $app.account);
     } else {
-      router("/gallery");
+      router("/gallery/0");//TODO: Make this dynamic
     } 
   }
 
