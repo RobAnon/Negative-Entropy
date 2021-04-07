@@ -1,6 +1,6 @@
 <script>
   import { getContext } from 'svelte';
-  import Token from '../components/Token.svelte';
+  import PrivateToken from '../components/PrivateToken.svelte';
   import { onMount } from 'svelte';
 
   let tokens = [];
@@ -122,7 +122,7 @@ onMount(function() {
       <div class="list-container">
         <div class="list">
           {#each tokens as token}
-            <Token {token}{origin} />
+            <PrivateToken {token}{origin} />
           {/each}
         </div>
       </div>
