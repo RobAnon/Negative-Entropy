@@ -75,6 +75,5 @@
     <div class="preview" on:click={() => router("/viewer/" + id + "/" + origin)}>
       <div><video autoplay muted loop src={image} alt={name} type='video/webm'></video></div>
       <strong>{name}</strong>
-      <h1>HELLO</h1>
     </div>
 </article>
