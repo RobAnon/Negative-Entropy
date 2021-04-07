@@ -16,6 +16,10 @@ export default [
 		component: Create
 	},
 	{
+		path: '/mint/:seed',
+		component: Create,
+	},
+	{
 		path: '/viewer/:id/:origin',
 		component: Viewer,
 		dynamic: true

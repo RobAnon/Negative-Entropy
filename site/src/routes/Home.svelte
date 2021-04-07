@@ -4,6 +4,8 @@
   import { onMount } from 'svelte';
   import Sandbox from '@beyondnft/sandbox';
   import {quickJSON} from '../conf/quickview';
+import routes from '../routes';
+import router from "page";
 
   let tokens = [];
   let totalTokens = 0;
@@ -14,12 +16,15 @@
   let token = {json:{description:""},id:"0"};
   let view;
   let result;
+  let seed = Date();
 
 onMount(async () => {
-    
+   
   token.json = quickJSON;
 
   data = quickJSON;
+  data.seed = seed;
+
   renderSandbox();
 
   window.scrollTo(window.scrollX, window.scrollY + 1);
@@ -82,6 +87,7 @@ function renderSandbox() {
       </p>
     </div>	
     <div class="homepage-graphic">	
+      
       <div class="render fade-in fade-in-3" bind:this={view}/>
       <div class="graphic-shader">&nbsp;</div>
     </div>	

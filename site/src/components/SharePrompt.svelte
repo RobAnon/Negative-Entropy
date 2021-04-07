@@ -107,7 +107,7 @@
     <div class="gfycat-inner">
         <div class="gfycat-popup-header">
             <p>GFYCat URL</p>
-            <button on:click={close}>X</button>
+            <button on:click={close}>x</button>
         </div>
         <div class="url">
             <textarea id="gfycat-url" readonly bind:value={shareURL}></textarea>
