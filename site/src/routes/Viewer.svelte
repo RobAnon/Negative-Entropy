@@ -137,6 +137,10 @@ import SharePrompt from '../components/SharePrompt.svelte';
     sharing = true;
   }
 
+  function closeShare() {
+    sharing = false;
+  }
+
   onMount(async () => {
 
     await getData();
@@ -326,7 +330,7 @@ import SharePrompt from '../components/SharePrompt.svelte';
           </ul>
           <br>
           <div id="open">
-          <a href={opensea} id="os" title="Buy on OpenSea" target="_blank"><img id="img" src="https://storage.googleapis.com/opensea-static/opensea-brand/listed-button-white.png" alt="Buy on OpenSea badge" /></a>
+            <a href="https://opensea.io/" title="Buy on OpenSea" target="_blank"><img style="width:160px; border-radius:5px; box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.25);" src="https://storage.googleapis.com/opensea-static/opensea-brand/buy-button-white.png" alt="Buy on OpenSea badge" /></a>
           </div>
           <div id="share">
           <button on:click={()=>share()}>Click to open Window</button>
@@ -337,9 +341,9 @@ import SharePrompt from '../components/SharePrompt.svelte';
       <div id="share-prompt">
         {#if sharing}
         {#await shareURL}
-          <SharePrompt shareURL={"Loading..."} />
+          <SharePrompt close={closeShare} shareURL={"Loading..."} />
         {:then url}
-          <SharePrompt shareURL={url} />
+          <SharePrompt close={closeShare} shareURL={url} />
         {/await}
         {/if}
       </div>

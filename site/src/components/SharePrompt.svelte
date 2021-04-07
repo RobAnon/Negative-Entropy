@@ -1,24 +1,41 @@
 <script> 
     export let shareURL = "Loading...";
+    export let close = () => {};
 </script>
 
 <style>
-	section {
-		width: 200px;
-		display: grid;
-		grid-template-columns: 1fr 1fr;
-		padding: 16px;
-		box-shadow: 2px 2px 4px #dedede;
-		border: 1px solid #888;
-		margin-bottom: 16px;
+	article {
+		position: fixed;
+        top: 40%;
+        left: 35%;
+        bottom: 40%;
+        right: 35%;
+        border: 1px solid black;
+        border-radius: 4px;
+        display: flex;
+        flex-direction: column;
+        background: #111;
+        z-index:1000;
+        text-align: center;
 	}
+
+    #gclogo {
+        display: block;
+        max-width:230px;
+        max-height:36px;
+        width: auto;
+        height: auto;
+
+    }
 </style>
 
 <article>
     <div>GFYCat URL</div>
     <textarea readonly bind:value={shareURL}></textarea>
     <a href="https://gfycat.com/upload/">
-    <img src="/gfycat-logo.svg" alt="Upload to GfyCat" />
+    <img id="gclogo" src="/gfycat-logo.svg" alt="Upload to GfyCat" />
     </a>
     Copy and Paste this text to Gfycat, then share whereever! 
+
+    <button on:click={close}>Click to open Window</button>
 </article>
