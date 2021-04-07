@@ -13,6 +13,7 @@ import { onMount } from 'svelte';
 
 	onMount(function() {
 		window.scrollTo(window.scrollX, window.scrollY + 1);
+		openCloseFaq();
 	});
 
 </script>
