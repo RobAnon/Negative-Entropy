@@ -34,13 +34,15 @@ $(document).on('scroll', function() {
 
 /* function to open and close FAQs */
 var openCloseFaq = function() {
-    console.log('faq function');
+
     $('.faq-title').click(function() {
         if($(this).next().css('height') !== "0px") {
             $(this).next().css('height', '0px');
+            $(this).find('path').attr('d', 'M 11 2 L 11 11 L 2 11 L 2 13 L 11 13 L 11 22 L 13 22 L 13 13 L 22 13 L 22 11 L 13 11 L 13 2 Z');
         } else {
             var elHeight = $(this).next().prop('scrollHeight') + 30 + 'px';
             $(this).next().css('height', elHeight);
+            $(this).find('path').attr('d', 'M 2 11 L 22 11 L 22 13 L 2 13 Z');
         }
     })
 }

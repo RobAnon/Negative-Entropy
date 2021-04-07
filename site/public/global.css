@@ -494,6 +494,9 @@ header {
   border-radius: 5px;
   text-align: center;
 }
+.mint-container .canvas-container .button-container {
+  width: 100px;
+}
 .canvas-container canvas {
   margin: 0 auto !important;
 }

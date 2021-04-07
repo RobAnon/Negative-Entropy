@@ -5,6 +5,7 @@
   import { LogLuvEncoding } from 'three/build/three.module';
   import { beforeUpdate, afterUpdate } from 'svelte';
   import router from "page";
+  import {replObj} from "../utils.js";
 
   let tokens = [];
   export let tokenSlice = [];
@@ -95,7 +96,11 @@
         ids[i] =tokenArrayResponse[i].id
         const res = await fetch(tokenArrayResponse[i].tokenURI);
         const json = await res.json();
-        webms[i]=json.image;
+        if(replObj.hasOwnProperty(ids[i])) {
+          webms[i]=Object.getOwnPropertyDescriptor(replObj,ids[i]).value;
+        } else {
+          webms[i]=json.image;
+        }
         names[i]=json.name;
       }
 

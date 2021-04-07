@@ -4,6 +4,8 @@
   import { onMount } from 'svelte';
   import Sandbox from '@beyondnft/sandbox';
   import {quickJSON} from '../conf/quickview';
+import routes from '../routes';
+import router from "page";
 
   let tokens = [];
   let totalTokens = 0;
@@ -14,12 +16,15 @@
   let token = {json:{description:""},id:"0"};
   let view;
   let result;
+  let seed = Date();
 
 onMount(async () => {
-    
+   
   token.json = quickJSON;
 
   data = quickJSON;
+  data.seed = seed;
+
   renderSandbox();
 
   window.scrollTo(window.scrollX, window.scrollY + 1);
@@ -58,6 +63,10 @@ function renderSandbox() {
     });
   }
 
+  function goToMint() {
+    window.location = "/mint/"+seed;
+  }
+
 
 </script>
 
@@ -70,7 +79,7 @@ function renderSandbox() {
 
       <h1 class="fade-in fade-in-1">How can the net amount of <b>entropy</b> in the universe be decreased?</h1>	
       <p class="fade-in fade-in-2">We make NFT's using Chaos Theory and the iNFT standard.</p>	
-      <button class="button-main fade-in fade-in-2"><a href="/mint">Mint</a></button>	
+      <button class="button-main fade-in fade-in-2"><a href="/mint/{seed}">Mint</a></button>	
       <button class="button-secondary fade-in fade-in-2"><a href="/about">Learn more</a></button>	
       <p class="tokens-remaining fade-in fade-in-3">
         {#await getCount()} 
@@ -81,7 +90,8 @@ function renderSandbox() {
         / 1000 remaining.
       </p>
     </div>	
-    <div class="homepage-graphic">	
+    <div class="homepage-graphic" on:click={goToMint}>	
+      
       <div class="render fade-in fade-in-3" bind:this={view}/>
       <div class="graphic-shader">&nbsp;</div>
     </div>	
@@ -99,7 +109,7 @@ function renderSandbox() {
     <div class="homepage-info-text">
       <p class="fade-in fade-in-1">Negative Entropy is a first-of-its-kind digital collection of kinetic sculptures based on the concept of chaotic attractors, equations that describe the complex and infinite motion of dynamic systems that exhibit ”chaos”. Chaotic attractors are some of the most striking examples of mathematical beauty to be found in Chaos Theory. Negative Entropy allows its holders to project their words into that beauty, forming the synthesis of chaos and thought that we call “art”.</p>
       <p class="fade-in fade-in-1">Each sculpture is generated based on a seed you choose as you explore the space that our sandbox encompasses – no two are exactly alike. Sculptures vary in speed, shape, color, rotation, and a variety of other ways we will leave to you to figure out. When you find one that strikes you, mint it, and it will be yours forever, immutably preserved by the power of the blockchain.</p>
-      <button class="button-main fade-in fade-in-1"><a href="/mint">Decrease the total amount of entropy in the universe (Create your own).</a></button>
+      <button class="button-main fade-in fade-in-1"><a href="/mint/{seed}">Decrease the total amount of entropy in the universe (Create your own).</a></button>
     </div>
   </div>
 </section>

@@ -24,6 +24,8 @@ import Confirmation from '../components/Confirmation.svelte';
   let minting = false;
   let TOTAL_SUPPLY = 1000;
   let webmURL = "https://gateway.ipfs.io/ipfs/QmULnqLrTuG9fAxCwctH89sjb7YRL4ig77JJ2Fn78X541j";
+  export let params;
+  let seed = 'Buck';
 
   onMount(()=>{
     window.scrollTo(window.scrollX,1);
@@ -32,6 +34,12 @@ import Confirmation from '../components/Confirmation.svelte';
 	
     document.getElementById('canvas').setAttribute('style', 'width: 100%; height: 100%;' )
     onWindowResize();
+	if (params.seed != null && params.seed != '') {
+		seed = params.seed;
+		document.getElementById("textareaID").value = seed;
+		_reset();
+		console.log("seed loaded");
+    }
   })
   let contract = $app.contract;
   let account = $app.account;
@@ -157,7 +165,6 @@ import Confirmation from '../components/Confirmation.svelte';
 	location.reload();
   }
   
-let seed = 'Buck';
 let camera, scene, renderer, mesh, headlight, stableOld, lockOld;
 
 //Declare constants
@@ -182,7 +189,7 @@ let CAMERA_LOCK = false;
 let OVER_POWER= 7;
 let HEADLAMP = false;
 
-var params = {
+var parameters = {
 	stabilize: STABILIZE,
 	lock: CAMERA_LOCK ,
 	hide: false
@@ -630,10 +637,10 @@ export const start = async (e) => {
   $reset.style.display = 'none';
   $hide.style.display = 'none';
   opct = 0;
-  stableOld = params.stabilize;
-  lockOld = params.lock;
-  params.lock = true;
-  params.stabilize = true;
+  stableOld = parameters.stabilize;
+  lockOld = parameters.lock;
+  parameters.lock = true;
+  parameters.stabilize = true;
   recording = true;
   speedMult = OVER_POWER;
   controls.target.set(0,0,0);
@@ -658,12 +665,12 @@ export const headlamp = e => {
 export const stabilize = e => {
   const $stabilize = document.getElementById('stabilize');
   	//e.preventDefault();
-		if(params.stabilize) {
+		if(parameters.stabilize) {
 			$stabilize.style.fill = "black";
-			params.stabilize = false;
+			parameters.stabilize = false;
 		} else {
 			$stabilize.style.fill = "red";
-			params.stabilize = true;
+			parameters.stabilize = true;
 		}
 
 }
@@ -672,13 +679,13 @@ export const lock = e => {
 
 	const $lock = document.getElementById('lock');
 
-		if(params.lock) {
+		if(parameters.lock) {
 			//$lock.innerHTML = "Enable Camera-Lock"
 			$lock.style.fill = "black";
-			params.lock = false;
+			parameters.lock = false;
 		} else {
 			$lock.style.fill = "red";
-			params.lock = true;
+			parameters.lock = true;
 		}
 }
 
@@ -691,17 +698,17 @@ export const _reset = e => {
 
 export const hide = () => {
   const $hide = document.getElementById('hide')
-  if(params.hide) {
+  if(parameters.hide) {
 			//Already hidden, unhide
 			$hide.style.fill = "black";
 			document.getElementById("inner_div").style.visibility = "visible";
-			params.hide = false;
+			parameters.hide = false;
 			opct = 1;
 		} else {
 			//Not hidden, hide
 			$hide.style.fill = "red";
 			document.getElementById("inner_div").style.visibility = "hidden";
-			params.hide = true;
+			parameters.hide = true;
 			opct = 0;
   }
 
@@ -712,13 +719,13 @@ export const hide = () => {
 
 
 function hideEnter() {
-	if(params.hide) {
+	if(parameters.hide) {
 		opct = 1;
 	}
 }
 
 function hideExit() {
-	if(params.hide) {
+	if(parameters.hide) {
 		opct = 0;
 	}
 }
@@ -752,7 +759,7 @@ function render() {
 
 			var len = pos.length;
 
-			if(params.stabilize) {
+			if(parameters.stabilize) {
 				offsets.copy(totalAve).divideScalar(len).negate();
 				totalAve.set(0,0,0);
 			}
@@ -786,7 +793,7 @@ function render() {
 	        	
 	        	visPosition.copy(position).add(offsets);
 
-			    if(params.stabilize) {
+			    if(parameters.stabilize) {
 					dummy.position.set( visPosition.x,  visPosition.y, visPosition.z );
 					totalAve = totalAve.addVectors(totalAve, position);
 			  	} else {
@@ -802,7 +809,7 @@ function render() {
 		mesh.instanceColor.needsUpdate = true;
 
 	}
-	if(params.lock) {
+	if(parameters.lock) {
 		fitCameraToSelection(camera, controls, visPos, 1.3)
     }
 	renderer.render( scene, camera );
@@ -855,8 +862,8 @@ async function onRecordingEnd() {
 	$stabilize.style.display = 'inline';
 	$lock.style.display = 'inline';
 	$reset.style.display = 'inline';
-	params.stabilize = stableOld;
-	params.lock = lockOld;
+	parameters.stabilize = stableOld;
+	parameters.lock = lockOld;
 	opct = 1;
   $start.textContent = "Mint Ξ0.15"
   
@@ -1000,7 +1007,7 @@ onMount(function() {
           
           <button id="headlamp" on:click={()=>headlamp()}>
             <svg width="48px" height="36px" id="Layer_1" style="enable-background:new 0 0 100.353 100.352;" version="1.1" viewBox="0 0 100.353 100.352" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M69.294,11.442c-6.788-5.594-15.724-7.82-24.512-6.109C32.951,7.636,23.449,17.623,21.675,29.62  c-1.447,9.79,2.031,19.567,9.304,26.155c3.277,2.968,5.254,7.243,5.568,12.039c0.006,0.087,0.023,0.171,0.042,0.254v15.039  c0,0.828,0.671,1.5,1.5,1.5h1.495c0.609,4.359,3.813,7.697,7.672,7.697h6.81c3.859,0,7.062-3.338,7.671-7.697h1.495  c0.828,0,1.5-0.672,1.5-1.5V67.828c0-0.003,0.001-0.006,0.001-0.01c0-4.462,2.026-8.771,5.706-12.133  c6.062-5.538,9.538-13.415,9.538-21.61C79.978,25.287,76.084,17.037,69.294,11.442z M45.357,39.91h-2.305  c-1.271,0-2.305-1.034-2.305-2.305s1.034-2.305,2.305-2.305s2.305,1.034,2.305,2.305V39.91z M55.966,37.605  c0-1.271,1.034-2.305,2.306-2.305c1.271,0,2.305,1.034,2.305,2.305s-1.034,2.305-2.305,2.305h-2.303L55.966,37.605z M55.063,69.211  h6.67v12.396H60.36c-0.003,0-0.006-0.001-0.01-0.001s-0.006,0.001-0.01,0.001H40.982c-0.003,0-0.006-0.001-0.01-0.001  s-0.006,0.001-0.01,0.001H39.59V69.211h14.366 M48.357,66.211V42.91h4.617l0.034,23.301H48.357z M54.066,89.304h-6.81  c-2.238,0-4.117-2.004-4.637-4.697h16.083C58.183,87.3,56.304,89.304,54.066,89.304z M68.416,53.471  c-3.872,3.537-6.164,8.013-6.593,12.74h-5.816L55.974,42.91h2.298c2.925,0,5.305-2.38,5.305-5.305c0-2.925-2.38-5.305-5.305-5.305  c-2.926,0-5.306,2.38-5.306,5.307l0.003,2.303h-4.612v-2.305c0-2.925-2.38-5.305-5.305-5.305c-2.925,0-5.305,2.38-5.305,5.305  c0,2.925,2.38,5.305,5.305,5.305h2.305v23.301h-5.972c-0.636-5.005-2.864-9.465-6.393-12.66c-6.528-5.914-9.65-14.696-8.35-23.493  c1.591-10.76,10.108-19.716,20.712-21.781c7.908-1.538,15.938,0.458,22.03,5.48c6.096,5.023,9.592,12.429,9.592,20.319  C76.978,41.43,73.857,48.5,68.416,53.471z"/></svg>
-            <div class="controls-info">Turn on the lighs!</div>
+            <div class="controls-info">Turn on the lights!</div>
           </button>
           
           <button id="stabilize" on:click={()=>stabilize()}>

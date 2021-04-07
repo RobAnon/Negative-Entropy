@@ -20,3 +20,4 @@ const createWritableStore = (key, startValue) => {
 }
 
 export const web3Loaded = createWritableStore('count', 0);
+export const gfyToken = createWritableStore('token', "");
