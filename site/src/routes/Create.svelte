@@ -13,8 +13,9 @@ import { get, writable } from 'svelte/store';
 import { ViewerScript } from '../components/ViewerScript';
 import { Moon } from 'svelte-loading-spinners';
 import router from 'page';
+import Confirmation from '../components/Confirmation.svelte';
 
-  
+  let prompt = false;
   const app = getContext('app');
   const dispatch = createEventDispatcher();
   const myApp = writable({camera: null, renderer: null})
@@ -22,6 +23,7 @@ import router from 'page';
   export let innerWidth;
   let minting = false;
   let TOTAL_SUPPLY = 1000;
+  let webmURL = "https://gateway.ipfs.io/ipfs/QmULnqLrTuG9fAxCwctH89sjb7YRL4ig77JJ2Fn78X541j";
 
   onMount(()=>{
     window.scrollTo(window.scrollX,1);
@@ -33,7 +35,6 @@ import router from 'page';
   })
   let contract = $app.contract;
   let account = $app.account;
-  let static_image = "";
 
   let view;
   let data;
@@ -823,13 +824,17 @@ async function onRecordingEnd() {
   recording = false;
   recorder.stop();
   var blob = new Blob();
-  await recorder.save(async (_blob) => {
+  try {
+  	await recorder.save(async (_blob) => {
 
-    blob = _blob;
+	blob = _blob;
 
-    const _code = ViewerScript(); 
-    mint(new File([blob], "blob.webm"))
-  })
+	const _code = ViewerScript(); 
+	mint(new File([blob], "blob.webm"))
+	})
+	} catch(e) {
+	alert("File upload failed! Please attempt again.")
+  }  
   
   onWindowResize();
 	speedMult = 1;
@@ -872,9 +877,15 @@ async function mint(file) {
     let file_ = await ipfs.add(file);
     const image_uri = `https://gateway.ipfs.io/ipfs/${file_.path}`;
     data.image = image_uri;
+	webmURL = image_uri;
 
+	prompt = true;
+	minting = false;
 
-    var payload = {}
+}
+
+async function completeMint() {
+	var payload = {}
     payload.customer = $app.account;
     payload.nft = data;
     //Backend verifies that seed is unique, uploads JSON to IPFS
@@ -895,10 +906,6 @@ async function mint(file) {
 		return;
 	}
 
-    
-
-
-
     //Take signed message, communicate with contract, and mint
     const cost = await contract.methods.PRICE().call({from: $app.account});
 	const userBal = await $app.web3.eth.getBalance($app.account);
@@ -910,9 +917,6 @@ async function mint(file) {
 		return;
 	}
 
-
-
-    mintText = 'Adding NFT to blockchain - See MetaMask (or the like) for transaction';
     const payment = await contract.methods.mint($app.account, result.v, result.r, result.s, result.URI, result.seed).send({from: $app.account, value: cost})
     .once('confirmation', function(confirmationNumber, receipt){
       //This is called when the transaction is confirmed
@@ -921,21 +925,19 @@ async function mint(file) {
       dispatch('minted');
       router("/viewer/" + nextId);
 	  payment.removeListener('confirmation');
-
+	  payment.removeListener('error');
     })
     .once('error', function(error) {
       console.log(error);
       minting = false;
       alert("Transaction failed! Check your web3 Provider for more info");
 	  payment.removeListener('error');
-    });    
+    });
+}
 
-  }
-
-
-  onMount(function() {
-	  window.scrollTo(window.scrollX, window.scrollY + 1);
-  })
+onMount(function() {
+	window.scrollTo(window.scrollX, window.scrollY + 1);
+})
 </script>
 
   
@@ -971,7 +973,8 @@ async function mint(file) {
   <div class="mint-container">
 
     <div class="canvas-container fade-in fade-in-1" id="canvas-container">
-	  
+	
+
       <div class="button-container">
         <div class="button-actual" id="inner_div">
       
@@ -1083,6 +1086,11 @@ async function mint(file) {
   <Moon size="180" color="#FFFFFF" unit="px" duration="2s"></Moon>
   </div>
   {/if}
+
+	<div>
+	<Confirmation prompt={prompt} accepted={acceptWebM} rejected={rejectWebM} webmURL={webmURL}/>
+	</div>
+
 
 <div class="section-break section-break-final"></div>
 

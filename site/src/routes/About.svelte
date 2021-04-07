@@ -13,6 +13,7 @@ import { onMount } from 'svelte';
 
 	onMount(function() {
 		window.scrollTo(window.scrollX, window.scrollY + 1);
+		openCloseFaq();
 	});
 
 </script>
@@ -94,7 +95,7 @@ import { onMount } from 'svelte';
 					<h3>What is the actual NFT? Is it the webm?</h3>
 					<svg fill="#000000" xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 24 24" width="24px" height="24px"><path fill-rule="evenodd" d="M 11 2 L 11 11 L 2 11 L 2 13 L 11 13 L 11 22 L 13 22 L 13 13 L 22 13 L 22 11 L 13 11 L 13 2 Z"/></svg>
 				</div>
-				<li>The NFT that you are claiming when you mint is the seed itself – it can be dynamically regenerated as many times as you want through the code that comes packaged with the NFT. Once the iNFT standard gains widespread adoption, your NFT will be viewable on any site that has the viewer enabled. The webm is a preview image used by OpenSea and others to display what the NFT looks like. OpenSea is reportedly in talks to adopt the iNFT standard, so hopefully soon the webm will be entirely vestigal.</li>
+				<li>The NFT that you are claiming when you mint is the seed itself – it can be dynamically regenerated as many times as you want through the code that comes packaged with the NFT. Once the iNFT standard gains widespread adoption, your NFT will be viewable on any site that has the viewer enabled. The webm is a preview image used by OpenSea and others to display what the NFT looks like. OpenSea is reportedly in talks to adopt the iNFT standard, so hopefully soon the webm will be entirely vestigal.</li>
 			</div>
 
 			<div class="faq">
@@ -108,5 +109,6 @@ import { onMount } from 'svelte';
 
 	</div>
 </section>
+
 
 <div class="section-break section-break-final"></div>
