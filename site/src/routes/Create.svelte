@@ -552,9 +552,15 @@ export const start = async (e) => {
 		_reset();
 	}
 	var destination = BACKEND+"seed?seed="+seed;
-    var seeds = await fetch(destination, {mode: 'cors'});
-    var seedJSON = await seeds.json();
-	if(seedJSON.claimed){
+	var seeds;
+	var seedJSON;
+	try {
+    	seeds = await fetch(destination, {mode: 'cors'});
+    	seedJSON = await seeds.json();
+	} catch(e) {
+		alert("An error has occurred! Please reload the page. The error was: "+e);
+	}
+ 	if(seedJSON.claimed){
 		alert("Seed has already been claimed!");
 		return;
 	}
@@ -891,19 +897,25 @@ async function completeMint() {
     //Backend verifies that seed is unique, uploads JSON to IPFS
  	//Backend signs message (seed+URI) and returns signed message
     var destination = BACKEND+"signature";
-    let response = await fetch(destination, {
-    	method: 'POST',
-    	headers: {
-    		'Content-Type': 'application/json;charset=utf-8'
-    	},
-		mode: 'cors',
-    	body: JSON.stringify(payload)
-    });
-	let result = await response.json();
-	if(!response.ok) {
-		alert("Error communicating with server. The error is: " + result.error);
-		minting = false;
-		return;
+	let response;
+	let result;
+	try {
+		response = await fetch(destination, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json;charset=utf-8'
+			},
+			mode: 'cors',
+			body: JSON.stringify(payload)
+		});
+		result = await response.json();
+		if(!response.ok) {
+			alert("Error communicating with server. The error is: " + result.error);
+			minting = false;
+			return;
+		}
+	} catch(e) {
+		alert("Error communicating with server! The error was: " + e);
 	}
 
     //Take signed message, communicate with contract, and mint
@@ -918,7 +930,10 @@ async function completeMint() {
 	}
 
     const payment = await contract.methods.mint($app.account, result.v, result.r, result.s, result.URI, result.seed).send({from: $app.account, value: cost})
-    .once('confirmation', function(confirmationNumber, receipt){
+    .on('receipt', function(receipt) {
+		console.log("Receipt received - was this immediate?");
+	})
+	.once('confirmation', function(confirmationNumber, receipt){
       //This is called when the transaction is confirmed
       console.log("CONFRIMED");
       minting = false;
@@ -1080,6 +1095,8 @@ onMount(function() {
       <button class="button-main" id="start" on:click={(e)=>start(e)}>Mint&nbsp;&nbsp;Ξ0.15</button> 
     </div>
 	<p id="please-note">Please note: Due to the complexity of the design and the minting process injecting data directly onto the blockchain, gas prices exceed the typical range and are expected to lie between 0.05 and 0.1 Ξ</p>
+	<p id="please-note">When you press mint, a spinner will appear and your window will become small. When the window returns to normal size, you should see a prompt in the next minute or two to review your preview image. Reload the page and reattempt your mint if that does not occur</p>
+	<p id="please-note">Once you have accepted your preview image, it should only take another minute for a MetaMask popup to appear – once you have sent the transaction, we recommend you stay on the page until the transaction processes, but you are not required to.</p>
   </div>
   {#if minting}
   <div id = load_ind>
