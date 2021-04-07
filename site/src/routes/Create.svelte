@@ -36,7 +36,6 @@ import Confirmation from '../components/Confirmation.svelte';
     onWindowResize();
 	if (params.seed != null && params.seed != '') {
 		seed = params.seed;
-		document.getElementById("textareaID").value = seed;
 		_reset();
 		console.log("seed loaded");
     }
@@ -1094,7 +1093,9 @@ onMount(function() {
 
     </div>  
 
-	
+	{#if params.seed != null && params.seed != ''} 
+		<p id="please-note">The seed that brought you here was: {params.seed}</p>
+	{/if}
     <textarea class="form-control mint-text-area fade-in fade-in-2" name="textarea" id="textareaID" placeholder="Choose a unique name (300 char. limit) for your NFT and hit Load Seed..." maxlength="300"></textarea>
 
     <div class="mint-buttons fade-in fade-in-3">
@@ -1104,6 +1105,7 @@ onMount(function() {
 	<p id="please-note">Please note: Due to the complexity of the design and the minting process injecting data directly onto the blockchain, gas prices exceed the typical range and are expected to lie between 0.05 and 0.1 Ξ</p>
 	<p id="please-note">When you press mint, a spinner will appear and your window will become small. When the window returns to normal size, you should see a prompt in the next minute or two to review your preview image. Reload the page and reattempt your mint if that does not occur</p>
 	<p id="please-note">Once you have accepted your preview image, it should only take another minute for a MetaMask popup to appear – once you have sent the transaction, we recommend you stay on the page until the transaction processes, but you are not required to.</p>
+	</p>
   </div>
   {#if minting}
   <div id = load_ind>
