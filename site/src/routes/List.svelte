@@ -97,7 +97,7 @@
         const res = await fetch(tokenArrayResponse[i].tokenURI);
         const json = await res.json();
         if(replObj.hasOwnProperty(ids[i])) {
-          webms[i]=replObj.ids[i];
+          webms[i]=Object.getOwnPropertyDescriptor(replObj,ids[i]).value;
         } else {
           webms[i]=json.image;
         }

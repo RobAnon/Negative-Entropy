@@ -346,7 +346,7 @@ import SharePrompt from '../components/SharePrompt.svelte';
           </ul>
           <br>
           <div id="open">
-            <a href="https://opensea.io/" title="Buy on OpenSea" target="_blank"><img style="width:160px; border-radius:5px; box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.25);" src="https://storage.googleapis.com/opensea-static/opensea-brand/buy-button-white.png" alt="Buy on OpenSea badge" /></a>
+            <a href={opensea} title="Buy on OpenSea" target="_blank"><img style="width:160px; border-radius:5px; box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.25);" src="https://storage.googleapis.com/opensea-static/opensea-brand/buy-button-white.png" alt="Buy on OpenSea badge" /></a>
           </div>
           <div id="share">
             <button class="button-main gfycat-button" on:click={()=>share()}>
