@@ -24,6 +24,8 @@ import Confirmation from '../components/Confirmation.svelte';
   let minting = false;
   let TOTAL_SUPPLY = 1000;
   let webmURL = "https://gateway.ipfs.io/ipfs/QmULnqLrTuG9fAxCwctH89sjb7YRL4ig77JJ2Fn78X541j";
+  export let params;
+  let seed = 'Buck';
 
   onMount(()=>{
     window.scrollTo(window.scrollX,1);
@@ -32,6 +34,12 @@ import Confirmation from '../components/Confirmation.svelte';
 	
     document.getElementById('canvas').setAttribute('style', 'width: 100%; height: 100%;' )
     onWindowResize();
+	if (params.seed != null && params.seed != '') {
+		seed = params.seed;
+		document.getElementById("textareaID").value = seed;
+		_reset();
+		console.log("seed loaded");
+    }
   })
   let contract = $app.contract;
   let account = $app.account;
@@ -157,7 +165,6 @@ import Confirmation from '../components/Confirmation.svelte';
 	location.reload();
   }
   
-let seed = 'Buck';
 let camera, scene, renderer, mesh, headlight, stableOld, lockOld;
 
 //Declare constants
@@ -182,7 +189,7 @@ let CAMERA_LOCK = false;
 let OVER_POWER= 7;
 let HEADLAMP = false;
 
-var params = {
+var parameters = {
 	stabilize: STABILIZE,
 	lock: CAMERA_LOCK ,
 	hide: false
@@ -624,10 +631,10 @@ export const start = async (e) => {
   $reset.style.display = 'none';
   $hide.style.display = 'none';
   opct = 0;
-  stableOld = params.stabilize;
-  lockOld = params.lock;
-  params.lock = true;
-  params.stabilize = true;
+  stableOld = parameters.stabilize;
+  lockOld = parameters.lock;
+  parameters.lock = true;
+  parameters.stabilize = true;
   recording = true;
   speedMult = OVER_POWER;
   controls.target.set(0,0,0);
@@ -652,12 +659,12 @@ export const headlamp = e => {
 export const stabilize = e => {
   const $stabilize = document.getElementById('stabilize');
   	//e.preventDefault();
-		if(params.stabilize) {
+		if(parameters.stabilize) {
 			$stabilize.style.fill = "black";
-			params.stabilize = false;
+			parameters.stabilize = false;
 		} else {
 			$stabilize.style.fill = "red";
-			params.stabilize = true;
+			parameters.stabilize = true;
 		}
 
 }
@@ -666,13 +673,13 @@ export const lock = e => {
 
 	const $lock = document.getElementById('lock');
 
-		if(params.lock) {
+		if(parameters.lock) {
 			//$lock.innerHTML = "Enable Camera-Lock"
 			$lock.style.fill = "black";
-			params.lock = false;
+			parameters.lock = false;
 		} else {
 			$lock.style.fill = "red";
-			params.lock = true;
+			parameters.lock = true;
 		}
 }
 
@@ -685,17 +692,17 @@ export const _reset = e => {
 
 export const hide = () => {
   const $hide = document.getElementById('hide')
-  if(params.hide) {
+  if(parameters.hide) {
 			//Already hidden, unhide
 			$hide.style.fill = "black";
 			document.getElementById("inner_div").style.visibility = "visible";
-			params.hide = false;
+			parameters.hide = false;
 			opct = 1;
 		} else {
 			//Not hidden, hide
 			$hide.style.fill = "red";
 			document.getElementById("inner_div").style.visibility = "hidden";
-			params.hide = true;
+			parameters.hide = true;
 			opct = 0;
   }
 
@@ -706,13 +713,13 @@ export const hide = () => {
 
 
 function hideEnter() {
-	if(params.hide) {
+	if(parameters.hide) {
 		opct = 1;
 	}
 }
 
 function hideExit() {
-	if(params.hide) {
+	if(parameters.hide) {
 		opct = 0;
 	}
 }
@@ -746,7 +753,7 @@ function render() {
 
 			var len = pos.length;
 
-			if(params.stabilize) {
+			if(parameters.stabilize) {
 				offsets.copy(totalAve).divideScalar(len).negate();
 				totalAve.set(0,0,0);
 			}
@@ -780,7 +787,7 @@ function render() {
 	        	
 	        	visPosition.copy(position).add(offsets);
 
-			    if(params.stabilize) {
+			    if(parameters.stabilize) {
 					dummy.position.set( visPosition.x,  visPosition.y, visPosition.z );
 					totalAve = totalAve.addVectors(totalAve, position);
 			  	} else {
@@ -796,7 +803,7 @@ function render() {
 		mesh.instanceColor.needsUpdate = true;
 
 	}
-	if(params.lock) {
+	if(parameters.lock) {
 		fitCameraToSelection(camera, controls, visPos, 1.3)
     }
 	renderer.render( scene, camera );
@@ -849,8 +856,8 @@ async function onRecordingEnd() {
 	$stabilize.style.display = 'inline';
 	$lock.style.display = 'inline';
 	$reset.style.display = 'inline';
-	params.stabilize = stableOld;
-	params.lock = lockOld;
+	parameters.stabilize = stableOld;
+	parameters.lock = lockOld;
 	opct = 1;
   $start.textContent = "Mint Ξ0.15"
   
