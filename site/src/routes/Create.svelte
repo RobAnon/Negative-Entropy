@@ -31,14 +31,16 @@ import Confirmation from '../components/Confirmation.svelte';
     window.scrollTo(window.scrollX,1);
     const renderer = document.getElementById('canvas')
     document.getElementById('canvas-container').appendChild(renderer);
-	
     document.getElementById('canvas').setAttribute('style', 'width: 100%; height: 100%;' )
     onWindowResize();
 	if (params.seed != null && params.seed != '') {
-		seed = params.seed;
+		seed = (' ' + params.seed).slice(1);;
+		newSeed = (' ' + params.seed).slice(1);
 		reset();
-		console.log("seed loaded");
+		console.log("seed loaded: " + seed);
+		console.log("params seed is: " + params.seed)
     }
+	window.scrollTo(window.scrollX, window.scrollY + 1);
   })
   let contract = $app.contract;
   let account = $app.account;
@@ -956,9 +958,6 @@ async function completeMint() {
     });
 }
 
-onMount(function() {
-	window.scrollTo(window.scrollX, window.scrollY + 1);
-})
 </script>
 
   
