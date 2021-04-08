@@ -574,8 +574,10 @@ header {
 .mint-buttons {
   margin: 0 auto;
   width: max-content;
+  position: relative;
+  left: -28px;
 }
-.mint-buttons button:nth-child(1) {
+.mint-buttons button:nth-child(2) {
   margin-right: 20px !important;
 }
 
