@@ -556,7 +556,7 @@ export const setAttributes = () => {
 
 export const start = async (e) => {
 	var txt = document.getElementById("textareaID").value.trim();
-	if(txt != seed) {
+	if(txt != seed && (seed != params.seed || txt != "")) {
 		_reset();
 	}
 	var destination = BACKEND+"seed?seed="+seed;
@@ -922,8 +922,8 @@ async function completeMint() {
 			minting = false;
 			return;
 		}
-	} catch(e) {
-		alert("Error communicating with server! The error was: " + e);
+		} catch(e) {
+			alert("Error communicating with server! The error was: " + e);
 	}
 
     //Take signed message, communicate with contract, and mint
