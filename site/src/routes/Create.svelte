@@ -36,7 +36,7 @@ import Confirmation from '../components/Confirmation.svelte';
     onWindowResize();
 	if (params.seed != null && params.seed != '') {
 		seed = params.seed;
-		_reset();
+		reset();
 		console.log("seed loaded");
     }
   })
