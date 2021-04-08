@@ -34,6 +34,7 @@ import { onMount } from 'svelte';
 	margin-left: auto;
 	fill: var(--xwhite);
 	cursor: pointer;
+	flex-shrink: 0;
 }
 .faq li {
 	overflow: hidden;
