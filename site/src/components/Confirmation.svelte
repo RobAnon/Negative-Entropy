@@ -47,7 +47,7 @@ $: webmURL
     }
 
     #preview-vid {
-        height:50%;
+        height:300px;
         width:auto;
     }
 
