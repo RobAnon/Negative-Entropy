@@ -46,7 +46,6 @@ import { onMount } from 'svelte';
 
 </style>
 
-https://en.wikipedia.org/wiki/Ren%C3%A9_Thomas_%28biologist%29
 
 <section>
 	<div class="about-container">
