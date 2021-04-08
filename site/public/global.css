@@ -555,7 +555,7 @@ header {
   transition: fill 0.4s;
 }
 .mint-container button svg:hover {
-  fill: var(--xlightblue);
+  fill: var(--xlightblue) !important;
 }
 
 .mint-text-area {

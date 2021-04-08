@@ -633,6 +633,8 @@ export const start = async (e) => {
 
 	minting = true;
 
+	document.getElementById("textareaID").style.opacity = '0.2';
+
   const $start = document.getElementById('start');
 
   const $headlamp = document.getElementById('headlamp');
@@ -662,27 +664,27 @@ export const start = async (e) => {
   recorder.start();
 }
 export const headlamp = e => {
-  const $headlamp = document.getElementById('headlamp');
+  const $headlamp = document.querySelector('#headlamp svg');
 
 	if(HEADLAMP) {
-			$headlamp.style.fill = "black";
+			$headlamp.style.fill = "#ddd";
 			HEADLAMP = false;
 			camera.remove(headlight);
 		} else {
-			$headlamp.style.fill = "red";
+			$headlamp.style.fill = "#00b3fe";
 			HEADLAMP = true;
 			camera.add(headlight);
 		}
 }
 
 export const stabilize = e => {
-  const $stabilize = document.getElementById('stabilize');
+  const $stabilize = document.querySelector('#stabilize svg');
   	//e.preventDefault();
 		if(parameters.stabilize) {
-			$stabilize.style.fill = "black";
+			$stabilize.style.fill = "#ddd";
 			parameters.stabilize = false;
 		} else {
-			$stabilize.style.fill = "red";
+			$stabilize.style.fill = "#00b3fe";
 			parameters.stabilize = true;
 		}
 
@@ -690,14 +692,14 @@ export const stabilize = e => {
 
 export const lock = e => {
 
-	const $lock = document.getElementById('lock');
+	const $lock = document.querySelector('#lock svg');
 
 		if(parameters.lock) {
 			//$lock.innerHTML = "Enable Camera-Lock"
-			$lock.style.fill = "black";
+			$lock.style.fill = "#ddd";
 			parameters.lock = false;
 		} else {
-			$lock.style.fill = "red";
+			$lock.style.fill = "#00b3fe";
 			parameters.lock = true;
 		}
 }
@@ -710,16 +712,16 @@ export const _reset = e => {
 }
 
 export const hide = () => {
-  const $hide = document.getElementById('hide')
+  const $hide = document.querySelector('#hide svg');
   if(parameters.hide) {
 			//Already hidden, unhide
-			$hide.style.fill = "black";
+			$hide.style.fill = "#ddd";
 			document.getElementById("inner_div").style.visibility = "visible";
 			parameters.hide = false;
 			opct = 1;
 		} else {
 			//Not hidden, hide
-			$hide.style.fill = "red";
+			$hide.style.fill = "#00b3fe";
 			document.getElementById("inner_div").style.visibility = "hidden";
 			parameters.hide = true;
 			opct = 0;
@@ -977,18 +979,11 @@ async function completeMint() {
 <style>
 
 #load_ind {
-    display: flex;
     background: none;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    position: absolute; 
-    top: 0;
-    bottom: 0;
-    right: 0;
-    left: 0;
-    z-index: 20;
-    font-size: 60px;
+    position: fixed; 
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
 }
 
 #please-note {
