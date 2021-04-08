@@ -16,16 +16,16 @@ $: webmURL
 
     article.prompt .content {
         position: fixed;
-        top: 7%;
-        left: 20%;
-        bottom: 7%;
-        right: 20%;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
         border: 1px solid black;
         border-radius: 4px;
-        display: flex;
-        flex-direction: column;
         background: #111;
         z-index:1000;
+        padding: 20px;
+        width: 950px;
+        max-width: calc(100% - 40px);
         text-align: center;
     }
 
@@ -50,7 +50,15 @@ $: webmURL
         height:50%;
         width:auto;
     }
+
+    .accept-reject-buttons {
+        width: max-content;
+        margin: 0 auto;
+    }
   
+    .accept-reject-buttons button:nth-of-type(1) {
+        margin-right: 20px;
+    }
 
 </style>
 
@@ -64,10 +72,10 @@ $: webmURL
             <video id="preview-vid" autoplay muted loop src={webmURL} alt="a vidya" type='video/webm'></video>
             <br> <p id="confirm-text">Please confirm the look of your webm preview. This will appear on OpenSea and in our gallery as the preview image for your NFT – if it is not to your liking, press reject, and you can record again.</p>  
             <br>
-            <div class="mint-buttons">
-            <button class="button-secondary" id="accept" on:click={accepted}>Accept</button>
-            <button class="button-secondary" id="reject" on:click={rejected}>Reject</button>    
-        </div>
+            <div class="accept-reject-buttons">
+                <button class="button-secondary" id="reject" on:click={rejected}>Reject</button>    
+                <button class="button-main" id="accept" on:click={accepted}>Accept</button>
+            </div>
         </div>
     </div>
     {/if}

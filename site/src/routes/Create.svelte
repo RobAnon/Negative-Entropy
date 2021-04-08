@@ -41,7 +41,19 @@ import Confirmation from '../components/Confirmation.svelte';
 		console.log("params seed is: " + params.seed)
     }
 	window.scrollTo(window.scrollX, window.scrollY + 1);
+
+	var helpContainer = document.getElementById('help-container');
+	var helpButton = document.getElementById('help-button');
+	var closeHelpButton = document.getElementById('close-help');
+	helpButton.addEventListener('click', function() {
+		helpContainer.style.display = "block";
+	})
+	closeHelpButton.addEventListener('click', function() {
+		helpContainer.style.display = "none";
+	})
+
   })
+
   let contract = $app.contract;
   let account = $app.account;
 
@@ -621,6 +633,8 @@ export const start = async (e) => {
 
 	minting = true;
 
+	document.getElementById("textareaID").style.opacity = '0.2';
+
   const $start = document.getElementById('start');
 
   const $headlamp = document.getElementById('headlamp');
@@ -650,27 +664,27 @@ export const start = async (e) => {
   recorder.start();
 }
 export const headlamp = e => {
-  const $headlamp = document.getElementById('headlamp');
+  const $headlamp = document.querySelector('#headlamp svg');
 
 	if(HEADLAMP) {
-			$headlamp.style.fill = "black";
+			$headlamp.style.fill = "#ddd";
 			HEADLAMP = false;
 			camera.remove(headlight);
 		} else {
-			$headlamp.style.fill = "red";
+			$headlamp.style.fill = "#00b3fe";
 			HEADLAMP = true;
 			camera.add(headlight);
 		}
 }
 
 export const stabilize = e => {
-  const $stabilize = document.getElementById('stabilize');
+  const $stabilize = document.querySelector('#stabilize svg');
   	//e.preventDefault();
 		if(parameters.stabilize) {
-			$stabilize.style.fill = "black";
+			$stabilize.style.fill = "#ddd";
 			parameters.stabilize = false;
 		} else {
-			$stabilize.style.fill = "red";
+			$stabilize.style.fill = "#00b3fe";
 			parameters.stabilize = true;
 		}
 
@@ -678,14 +692,14 @@ export const stabilize = e => {
 
 export const lock = e => {
 
-	const $lock = document.getElementById('lock');
+	const $lock = document.querySelector('#lock svg');
 
 		if(parameters.lock) {
 			//$lock.innerHTML = "Enable Camera-Lock"
-			$lock.style.fill = "black";
+			$lock.style.fill = "#ddd";
 			parameters.lock = false;
 		} else {
-			$lock.style.fill = "red";
+			$lock.style.fill = "#00b3fe";
 			parameters.lock = true;
 		}
 }
@@ -698,16 +712,16 @@ export const _reset = e => {
 }
 
 export const hide = () => {
-  const $hide = document.getElementById('hide')
+  const $hide = document.querySelector('#hide svg');
   if(parameters.hide) {
 			//Already hidden, unhide
-			$hide.style.fill = "black";
+			$hide.style.fill = "#ddd";
 			document.getElementById("inner_div").style.visibility = "visible";
 			parameters.hide = false;
 			opct = 1;
 		} else {
 			//Not hidden, hide
-			$hide.style.fill = "red";
+			$hide.style.fill = "#00b3fe";
 			document.getElementById("inner_div").style.visibility = "hidden";
 			parameters.hide = true;
 			opct = 0;
@@ -965,18 +979,11 @@ async function completeMint() {
 <style>
 
 #load_ind {
-    display: flex;
     background: none;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    position: absolute; 
-    top: 0;
-    bottom: 0;
-    right: 0;
-    left: 0;
-    z-index: 20;
-    font-size: 60px;
+    position: fixed; 
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
 }
 
 #please-note {
@@ -984,6 +991,58 @@ async function completeMint() {
 	font-size: 14px;
 	text-align: center;
 }
+
+
+#help-button {
+	background: none;
+	border: none;
+	outline: none;
+	position: relative;
+	top: 8px;
+	margin-right: 10px;
+}
+#help-button svg {
+	fill: white;
+	width: 30px;
+	height: 30px;
+}
+
+#help-container {
+	box-sizing: border-box;
+	display: none;
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	border-radius: 4px;
+	background-color: var(--xblack);
+	border: 1px solid #767676;
+	width: 950px;
+	max-width: calc(100% - 40px);
+}
+.help-inner-container {
+	position: relative;
+	height: 100%;
+	width: 100%;
+	padding: 10px 20px;
+}
+
+.help-inner-container button {
+	position: absolute;
+	top: 5px;
+	right: 12px;
+	font-size: 24px;
+	background: none;
+	border: none;
+	outline: none;
+}
+.help-inner-container h2 {
+	width: max-content;
+	display: inline-block;
+	width: max-content;
+	margin: 10px 0px;
+}
+
 
 </style>
 
@@ -1098,12 +1157,36 @@ async function completeMint() {
     <textarea class="form-control mint-text-area fade-in fade-in-2" name="textarea" id="textareaID" placeholder="Choose a unique name (300 char. limit) for your NFT and hit Load Seed..." maxlength="300"></textarea>
 
     <div class="mint-buttons fade-in fade-in-3">
+		<button id="help-button">
+			<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
+				<g>
+					<g>
+						<g>
+							<circle cx="256" cy="378.5" r="25"/>
+							<path d="M256,0C114.516,0,0,114.497,0,256c0,141.484,114.497,256,256,256c141.484,0,256-114.497,256-256
+								C512,114.516,397.503,0,256,0z M256,472c-119.377,0-216-96.607-216-216c0-119.377,96.607-216,216-216
+								c119.377,0,216,96.607,216,216C472,375.377,375.393,472,256,472z"/>
+							<path d="M256,128.5c-44.112,0-80,35.888-80,80c0,11.046,8.954,20,20,20s20-8.954,20-20c0-22.056,17.944-40,40-40
+								c22.056,0,40,17.944,40,40c0,22.056-17.944,40-40,40c-11.046,0-20,8.954-20,20v50c0,11.046,8.954,20,20,20
+								c11.046,0,20-8.954,20-20v-32.531c34.466-8.903,60-40.26,60-77.469C336,164.388,300.112,128.5,256,128.5z"/>
+						</g>
+					</g>
+				</g>
+			</svg>
+		</button>
       <button class="button-secondary" id="reset" on:click={()=>_reset()}>Load Seed</button>
       <button class="button-main" id="start" on:click={(e)=>start(e)}>Mint&nbsp;&nbsp;Ξ0.15</button> 
     </div>
 	<p id="please-note">Please note: Due to the complexity of the design and the minting process injecting data directly onto the blockchain, gas prices exceed the typical range and are expected to lie between 0.05 and 0.1 Ξ</p>
-	<p id="please-note">When you press mint, a spinner will appear and your window will become small. When the window returns to normal size, you should see a prompt in the next minute or two to review your preview image. Reload the page and reattempt your mint if that does not occur</p>
-	<p id="please-note">Once you have accepted your preview image, it should only take another minute for a MetaMask popup to appear – once you have sent the transaction, we recommend you stay on the page until the transaction processes, but you are not required to.</p>
+
+	<div id="help-container">
+		<div class="help-inner-container">
+			<h2>Need help?</h2>
+			<p>When you press mint, a spinner will appear and your window will become small. When the window returns to normal size, you should see a prompt in the next minute or two to review your preview image. Reload the page and reattempt your mint if that does not occur</p>
+			<p>Once you have accepted your preview image, it should only take another minute for a MetaMask popup to appear – once you have sent the transaction, we recommend you stay on the page until the transaction processes, but you are not required to.</p>
+			<button id="close-help">x</button>
+		</div>
+	</div>
 
   </div>
   {#if minting}

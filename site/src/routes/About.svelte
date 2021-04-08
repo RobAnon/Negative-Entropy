@@ -34,6 +34,7 @@ import { onMount } from 'svelte';
 	margin-left: auto;
 	fill: var(--xwhite);
 	cursor: pointer;
+	flex-shrink: 0;
 }
 .faq li {
 	overflow: hidden;
@@ -45,7 +46,6 @@ import { onMount } from 'svelte';
 
 </style>
 
-https://en.wikipedia.org/wiki/Ren%C3%A9_Thomas_%28biologist%29
 
 <section>
 	<div class="about-container">

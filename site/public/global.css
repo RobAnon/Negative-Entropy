@@ -386,6 +386,9 @@ header {
   transform: translate(-50%, -50%);
   z-index: -2;
 }
+.homepage-graphic * {
+  overflow: hidden;
+}
 .homepage-graphic .render {
   height: 100%;
 }
@@ -395,6 +398,9 @@ header {
 }
 .homepage-graphic canvas {
   width: 100% !important;
+}
+.graphic-clickbox {
+  display: none;
 }
 .graphic-shader {
   width: 100%;
@@ -429,6 +435,19 @@ header {
   }
   .graphic-shader {
     display: none;
+  }
+  .graphic-clickbox {
+    display: block;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 0;
+    width: 50%;
+    height: 650px; 
+    background: none;
+    background-color: transparent;
+    z-index: 10;
+    cursor: pointer;
   }
 }
 
@@ -555,7 +574,7 @@ header {
   transition: fill 0.4s;
 }
 .mint-container button svg:hover {
-  fill: var(--xlightblue);
+  fill: var(--xlightblue) !important;
 }
 
 .mint-text-area {
@@ -574,8 +593,10 @@ header {
 .mint-buttons {
   margin: 0 auto;
   width: max-content;
+  position: relative;
+  left: -28px;
 }
-.mint-buttons button:nth-child(1) {
+.mint-buttons button:nth-child(2) {
   margin-right: 20px !important;
 }
 
