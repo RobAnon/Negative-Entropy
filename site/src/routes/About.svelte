@@ -45,7 +45,7 @@ import { onMount } from 'svelte';
 
 </style>
 
-
+https://en.wikipedia.org/wiki/Ren%C3%A9_Thomas_%28biologist%29
 
 <section>
 	<div class="about-container">
@@ -100,11 +100,20 @@ import { onMount } from 'svelte';
 
 			<div class="faq">
 				<div class="faq-title">
+					<h3>Where do these equations come from?</h3>
+					<svg fill="#000000" xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 24 24" width="24px" height="24px"><path fill-rule="evenodd" d="M 11 2 L 11 11 L 2 11 L 2 13 L 11 13 L 11 22 L 13 22 L 13 13 L 22 13 L 22 11 L 13 11 L 13 2 Z"/></svg>
+				</div>
+				<li><a href="https://en.wikipedia.org/wiki/Ren%C3%A9_Thomas_%28biologist%29" target="_blank"><b>René Thomas</b></a> originally derived the equations that constitute this NFT in a <a href="https://doi.org/10.1142%2FS0218127499001383" target="_blank" >1999 paper</a> – the system of equations has since been dubbed "Thomas' cyclically symmetric attractor"</li>
+			</div>
+
+			<div class="faq">
+				<div class="faq-title">
 					<h3>Why the gas cost? ~(0.07-0.1 ETH)</h3>
 					<svg fill="#000000" xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 24 24" width="24px" height="24px"><path fill-rule="evenodd" d="M 11 2 L 11 11 L 2 11 L 2 13 L 11 13 L 11 22 L 13 22 L 13 13 L 22 13 L 22 11 L 13 11 L 13 2 Z"/></svg>
 				</div>
 				<li>Unfortunately, storing data on the blockchain doesn't come cheap. We've worked with Solidity experts to optimize our contract to get this as low as we can for our customers. Unlike other generative art, where the NFT references an existing address to serve as the seed (already on the chain), or claims purely generative numbers to act as the seed (also already on chain), we are directly placing data onto the chain itself – for better or worse, this costs gas.</li>
 			</div>
+			
 		</div>
 
 	</div>
