@@ -63,8 +63,15 @@
       var mult = Number(params.id)+1;
       startIndex = Number(params.id)*maxPerPage;
       endIndex = maxPerPage * mult;
-      let countRes = await fetch(BACKEND+"tokenCount", {mode: 'cors'});
-      var count = await countRes.json();
+      let countRes;
+      var count;
+      try{ 
+        countRes = await fetch(BACKEND+"tokenCount", {mode: 'cors'});
+        count = await countRes.json();
+      } catch(e) {
+        console.log(e);
+        alert("Failed to load token list. Please reload your page");
+      }
       tokenCount = Number(count.count);
       
       if(endIndex > tokenCount) {
@@ -78,19 +85,26 @@
       console.log("Count is " + count)
       console.log("Starting at:" + startIndex);
       console.log("Ending at: " + endIndex);
-      let response = await fetch(token_Dest, {
-        method: 'POST',
-        mode: 'cors',
-        headers: {
-          'Content-Type': 'application/json;charset=utf-8'
-        },
-        body: JSON.stringify({
-          start:startIndex,
-          end:endIndex
-        })
+      let response
+      let tokenArrayResponse;
+      try{
+        response = await fetch(token_Dest, {
+          method: 'POST',
+          mode: 'cors',
+          headers: {
+            'Content-Type': 'application/json;charset=utf-8'
+          },
+          body: JSON.stringify({
+            start:startIndex,
+            end:endIndex
+          })
       });
+      tokenArrayResponse = await response.json();
+      } catch (e) {
+        console.log(e);
+        alert("Failed to load token list. Please reload your page");
+      }
 
-      let tokenArrayResponse = await response.json();
 
       for(let i = 0; i < tokenArrayResponse.length; i++) {
         ids[i] =tokenArrayResponse[i].id
@@ -105,7 +119,6 @@
       }
 
       //Dev stuff
-      console.log("Built list!");
       rebuild++;
   }
 
