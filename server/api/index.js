@@ -141,10 +141,10 @@ app.options('/api/allTokens', function (req, res) {
 });
 
 app.post('/api/allTokens', (req, res) => {
-	var provider = new Web3WsProvider(process.env.NETWORK, options);
+	let provider = new Web3WsProvider(process.env.NETWORK, options);
 	var start = -1;
 	var end = -1;
-	if(req.body.start){
+	if(req.body.end){
 		start = Number(req.body.start);
 		end = Number(req.body.end);
 	}
@@ -154,12 +154,11 @@ app.post('/api/allTokens', (req, res) => {
 	let tokens = [];
 	buildList(contract, start, end)
 	.then(function(build) {
-		provider.disconnect();
 		return res.send(JSON.stringify(build));
 	 })
+	provider.disconnect();
 	return express.Router();
 });
-
 app.options('/api/signature', function (req, res) {
 	handleCORS(req, res);
 });
