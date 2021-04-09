@@ -115,7 +115,6 @@ app.post('/api/token', (req, res) => {
 	const contract = new web3.eth.Contract(abi, process.env.CONTRACT_ADDRESS);
 	var id = req.body.id;
 
-	console.log("Id is " + id);
 	id = Number(id);
 	getTokenCount(contract)
  	.then(async function(count) {
@@ -125,11 +124,9 @@ app.post('/api/token', (req, res) => {
 			.then(function(payload) {
 				provider.disconnect();
 				res.send(JSON.stringify(payload));
-				console.log(JSON.stringify(payload));
 			});
 		} else {
 			res.status(404);
-			console.log("could not find token!")
 			provider.disconnect();
 			return res.send("Token ID not found");
 		}
@@ -194,7 +191,6 @@ app.post('/api/signature', (req, res) => {
  			res.status(401);
 			return res.send(JSON.stringify({error:"Seed already exists! Choose a seed that doesn't already exist!"}));
  		} else {
-	    	//console.log(json_uri);
 	    	getURI(JSON.stringify(req.body.nft))
 	    	.then(function(json_uri) {
 
@@ -217,7 +213,6 @@ app.post('/api/file', (req, res) => {
 	var file = req.files.file.data;
 	getImageURL(file)
 	.then(function(url) {
-		console.log(url);
 		return res.send(JSON.stringify(url));
 	});
 	return express.Router();
@@ -283,7 +278,6 @@ async function getTokenCount(contract) {
 }
 
 async function getOwnerOf(contract, ident) {
-	console.log(ident);
 	return new Promise(async (resolve, reject) => {
 		var owner = await contract.methods.ownerOf(ident).call();
   		resolve(owner);
@@ -312,7 +306,6 @@ async function buildList(contract, start=-1, end=-1){
 		end = count;
 	}
 	for(let i = start; i < end; i++) {
-		console.log("token " + i + " of " + count);
 		let tokenURI = await getTokenURI(contract, i);
 		let ownerAdd = await getOwnerOf(contract, i);
 		tokens.push({
