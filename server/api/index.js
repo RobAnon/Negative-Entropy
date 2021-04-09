@@ -82,17 +82,13 @@ app.options('/api/seed', function (req, res) {
 app.get('/api/seed', (req, res) => {
 	var provider = new Web3WsProvider(process.env.NETWORK, options);
 	let seed = req.query.seed;
-	let address = "";
+	let address = web3.eth.accounts.privateKeyToAccount(process.env.PRIVATE_KEY).address;
 	res.setHeader('Cache-Control', 's-max-age=1, stale-while-revalidate')
 	const web3 = new Web3(provider);
-	web3.eth.accounts.privateKeyToAccount(process.env.PRIVATE_KEY);//Load private seed
+	//Load private seed
+	const contract = new web3.eth.Contract(abi, process.env.CONTRACT_ADDRESS);;
 	try{
-	getAccounts(web3)
- 	.then(function(accounts) {
- 		address = accounts[0];
- 		const contract = new web3.eth.Contract(abi, process.env.CONTRACT_ADDRESS);;
-	 	return seedClaimed(contract, seed, address)
- 	})
+	seedClaimed(contract, seed, address)
  	.then(function(seeded) {
 		var claimed = seeded == true;
 		provider.disconnect();
@@ -176,9 +172,8 @@ app.post('/api/signature', (req, res) => {
 	res.setHeader('Cache-Control', 's-max-age=1, stale-while-revalidate')
 
   	const web3 = new Web3(provider);
-	web3.eth.accounts.privateKeyToAccount(process.env.PRIVATE_KEY);
   	var customer = req.body.customer;
-	var address;
+	var address = web3.eth.accounts.privateKeyToAccount(process.env.PRIVATE_KEY).address;
   	//TODO: Need to verify JSON somewhere in here
 
   	var seed = "";
@@ -188,15 +183,9 @@ app.post('/api/signature', (req, res) => {
 				seed = attribute["value"];
 		}
  	}	
-
+	const contract = new web3.eth.Contract(abi, process.env.CONTRACT_ADDRESS);;
  	//Promise chain begins
- 	getAccounts(web3)
- 	.then(function(accounts) {
- 		address = accounts[0];
- 		const contract = new web3.eth.Contract(abi, process.env.CONTRACT_ADDRESS);;
-		console.log("Length of accounts is: "+accounts.length);
-	 	return seedClaimed(contract, seed, address)
- 	})
+ 	seedClaimed(contract, seed, address)
  	.then(function(seeded) {
 
  		if(seeded){
