@@ -82,9 +82,9 @@ app.options('/api/seed', function (req, res) {
 app.get('/api/seed', (req, res) => {
 	var provider = new Web3WsProvider(process.env.NETWORK, options);
 	let seed = req.query.seed;
+	const web3 = new Web3(provider);
 	let address = web3.eth.accounts.privateKeyToAccount(process.env.PRIVATE_KEY).address;
 	res.setHeader('Cache-Control', 's-max-age=1, stale-while-revalidate')
-	const web3 = new Web3(provider);
 	//Load private seed
 	const contract = new web3.eth.Contract(abi, process.env.CONTRACT_ADDRESS);;
 	try{
