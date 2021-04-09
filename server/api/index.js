@@ -34,6 +34,10 @@ app.get('/api', (req, res) => {
 	return res.send('Received a GET HTTP method');
 });
 
+app.options('/api/tokenCount', function (req, res) {
+	handleCORS(req, res);
+});
+
 app.get('/api/tokenCount', (req, res) => {
 	let provider = new HDWalletProvider({
 		privateKeys:[process.env.PRIVATE_KEY], 
@@ -50,6 +54,10 @@ app.get('/api/tokenCount', (req, res) => {
 	return express.Router();
 });
 
+app.options('/api/seed', function (req, res) {
+	handleCORS(req, res);
+});
+
 app.get('/api/seed', (req, res) => {
 	let provider = new HDWalletProvider({
 		privateKeys:[process.env.PRIVATE_KEY], 
@@ -59,6 +67,7 @@ app.get('/api/seed', (req, res) => {
 	let address = "";
 	res.setHeader('Cache-Control', 's-max-age=1, stale-while-revalidate')
 	const web3 = new Web3(provider);
+	try{
 	getAccounts(web3)
  	.then(function(accounts) {
  		address = accounts[0];
@@ -69,8 +78,17 @@ app.get('/api/seed', (req, res) => {
 		var claimed = seeded == true;
 		return res.send(JSON.stringify({claimed}));
 	});
+	} catch(e) {
+		console.log(e);
+		res.status(500);
+		return res.send(JSON.stringify({error:"ERROR"}));
+	}
 
 	return express.Router();
+});
+
+app.options('/api/token', function (req, res) {
+	handleCORS(req, res);
 });
 
 app.post('/api/token', (req, res) => {
@@ -107,6 +125,10 @@ app.post('/api/token', (req, res) => {
 	return express.Router();
 });
 
+app.options('/api/allTokens', function (req, res) {
+	handleCORS(req, res);
+});
+
 app.post('/api/allTokens', (req, res) => {
 	let provider = new HDWalletProvider({
 		privateKeys:[process.env.PRIVATE_KEY], 
@@ -128,6 +150,10 @@ app.post('/api/allTokens', (req, res) => {
 	 })
 	provider.engine.stop(); 
 	return express.Router();
+});
+
+app.options('/api/signature', function (req, res) {
+	handleCORS(req, res);
 });
 
 app.post('/api/signature', (req, res) => {  	
@@ -178,17 +204,11 @@ app.post('/api/signature', (req, res) => {
  		}
  	});
 
-
-
-	
-
-  	
-
-
-
-  	
-
   	return express.Router();
+});
+
+app.options('/api/file', function (req, res) {
+	handleCORS(req, res);
 });
 
 app.post('/api/file', (req, res) => {
@@ -334,3 +354,9 @@ async function getImageURL(image) {
    }); 
 }
 
+function handleCORS(req, res) {
+	res.setHeader("Access-Control-Allow-Origin", "*");
+	res.setHeader('Access-Control-Allow-Methods', '*');
+	res.setHeader("Access-Control-Allow-Headers", "*");
+	res.end();
+}
