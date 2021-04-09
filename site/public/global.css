@@ -193,7 +193,7 @@ header {
   min-height: 100vh;
   position: fixed;
   top: 0;
-  right: -50%;
+  right: -100%;
   z-index: 99;
   text-align: center;
   background-color: var(--xblack);
