@@ -102,7 +102,6 @@
       tokenArrayResponse = await response.json();
       } catch (e) {
         console.log(e);
-        alert("Failed to load token list. Please reload your page");
       }
 
 
