@@ -8,10 +8,33 @@ import fileupload from 'express-fileupload'
 
 const Web3 = require("web3");
 const helmet = require("helmet");
-const HDWalletProvider = require("@truffle/hdwallet-provider");
+//const HDWalletProvider = require("@truffle/hdwallet-provider");
 const createClient = require('ipfs-http-client');
 const app = express();
 const ipfs = createClient('https://ipfs.infura.io:5001');
+var Web3WsProvider = require('web3-providers-ws');
+
+let options = {
+    timeout: 30000, // ms
+
+    clientConfig: {
+      // Useful if requests are large
+      maxReceivedFrameSize: 100000000,   // bytes - default: 1MiB
+      maxReceivedMessageSize: 100000000, // bytes - default: 8MiB
+
+      // Useful to keep a connection alive
+      keepalive: true,
+      keepaliveInterval: 60000 // ms
+    },
+
+    // Enable auto reconnection if connection drops during request
+    reconnect: {
+        auto: true,
+        delay: 5000, // ms
+        maxAttempts: 5,
+        onTimeout: false
+    }
+};
 
  
 //Parse JSON 
@@ -39,16 +62,14 @@ app.options('/api/tokenCount', function (req, res) {
 });
 
 app.get('/api/tokenCount', (req, res) => {
-	let provider = new HDWalletProvider({
-		privateKeys:[process.env.PRIVATE_KEY], 
-		providerOrUrl: process.env.NETWORK
-	});
+	var provider = new Web3WsProvider(process.env.NETWORK, options);
+
 	res.setHeader('Cache-Control', 's-max-age=1, stale-while-revalidate')
 	const web3 = new Web3(provider);
 	const contract = new web3.eth.Contract(abi, process.env.CONTRACT_ADDRESS);
 	getTokenCount(contract)
 	.then(function(count) {
-		provider.engine.stop();
+		provider.disconnect();
 		return res.send(JSON.stringify({count}));
 	})
 	return express.Router();
@@ -59,14 +80,12 @@ app.options('/api/seed', function (req, res) {
 });
 
 app.get('/api/seed', (req, res) => {
-	let provider = new HDWalletProvider({
-		privateKeys:[process.env.PRIVATE_KEY], 
-		providerOrUrl:process.env.NETWORK
-	});
+	var provider = new Web3WsProvider(process.env.NETWORK, options);
 	let seed = req.query.seed;
 	let address = "";
 	res.setHeader('Cache-Control', 's-max-age=1, stale-while-revalidate')
 	const web3 = new Web3(provider);
+	web3.eth.accounts.privateKeyToAccount(process.env.PRIVATE_KEY);//Load private seed
 	try{
 	getAccounts(web3)
  	.then(function(accounts) {
@@ -76,11 +95,13 @@ app.get('/api/seed', (req, res) => {
  	})
  	.then(function(seeded) {
 		var claimed = seeded == true;
+		provider.disconnect();
 		return res.send(JSON.stringify({claimed}));
 	});
 	} catch(e) {
 		console.log(e);
 		res.status(500);
+		provider.disconnect();
 		return res.send(JSON.stringify({error:"ERROR"}));
 	}
 
@@ -92,10 +113,7 @@ app.options('/api/token', function (req, res) {
 });
 
 app.post('/api/token', (req, res) => {
-	let provider = new HDWalletProvider({
-		privateKeys:[process.env.PRIVATE_KEY], 
-		providerOrUrl: process.env.NETWORK
-	});
+	var provider = new Web3WsProvider(process.env.NETWORK, options);
 	res.setHeader('Cache-Control', 's-max-age=1, stale-while-revalidate')
 	const web3 = new Web3(provider);
 	const contract = new web3.eth.Contract(abi, process.env.CONTRACT_ADDRESS);
@@ -109,14 +127,14 @@ app.post('/api/token', (req, res) => {
 		if(id < count) {
 			getOwnerAndURI(contract, id)
 			.then(function(payload) {
-				provider.engine.stop();
+				provider.disconnect();
 				res.send(JSON.stringify(payload));
 				console.log(JSON.stringify(payload));
 			});
 		} else {
 			res.status(404);
 			console.log("could not find token!")
-			provider.engine.stop();
+			provider.disconnect();
 			return res.send("Token ID not found");
 		}
 	 })
@@ -130,10 +148,7 @@ app.options('/api/allTokens', function (req, res) {
 });
 
 app.post('/api/allTokens', (req, res) => {
-	let provider = new HDWalletProvider({
-		privateKeys:[process.env.PRIVATE_KEY], 
-		providerOrUrl: process.env.NETWORK
-	});
+	var provider = new Web3WsProvider(process.env.NETWORK, options);
 	var start = -1;
 	var end = -1;
 	if(req.body.start){
@@ -146,9 +161,9 @@ app.post('/api/allTokens', (req, res) => {
 	let tokens = [];
 	buildList(contract, start, end)
 	.then(function(build) {
+		provider.disconnect();
 		return res.send(JSON.stringify(build));
 	 })
-	provider.engine.stop(); 
 	return express.Router();
 });
 
@@ -157,13 +172,11 @@ app.options('/api/signature', function (req, res) {
 });
 
 app.post('/api/signature', (req, res) => {  	
-	let provider = new HDWalletProvider({
-		privateKeys:[process.env.PRIVATE_KEY], 
-		providerOrUrl: process.env.NETWORK
-	});
+	var provider = new Web3WsProvider(process.env.NETWORK, options);
 	res.setHeader('Cache-Control', 's-max-age=1, stale-while-revalidate')
 
   	const web3 = new Web3(provider);
+	web3.eth.accounts.privateKeyToAccount(process.env.PRIVATE_KEY);
   	var customer = req.body.customer;
 	var address;
   	//TODO: Need to verify JSON somewhere in here
@@ -181,14 +194,14 @@ app.post('/api/signature', (req, res) => {
  	.then(function(accounts) {
  		address = accounts[0];
  		const contract = new web3.eth.Contract(abi, process.env.CONTRACT_ADDRESS);;
-		
+		console.log("Length of accounts is: "+accounts.length);
 	 	return seedClaimed(contract, seed, address)
  	})
  	.then(function(seeded) {
 
  		if(seeded){
  			//Seed exists, deny request
- 			provider.engine.stop();
+ 			provider.disconnect();
  			res.status(401);
 			return res.send(JSON.stringify({error:"Seed already exists! Choose a seed that doesn't already exist!"}));
  		} else {
@@ -197,10 +210,9 @@ app.post('/api/signature', (req, res) => {
 	    	.then(function(json_uri) {
 
 		 		var signature =  getSignature(web3, process.env.CONTRACT_ADDRESS, customer, seed, json_uri)
+				provider.disconnect();
 		 		return res.send(JSON.stringify(signature));
 	    	});
-
-	  		provider.engine.stop();
  		}
  	});
 
@@ -360,3 +372,4 @@ function handleCORS(req, res) {
 	res.setHeader("Access-Control-Allow-Headers", "*");
 	res.end();
 }
+
