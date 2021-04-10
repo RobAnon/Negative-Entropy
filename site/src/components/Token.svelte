@@ -12,7 +12,7 @@
 
   export let image;
   export let name;
-  
+
 
   $:image;
   $:name; 
@@ -105,7 +105,7 @@
 <article>
     <div class="preview" on:click={() => router("/viewer/" + id + "/" + origin)}>
       <div><video autoplay muted loop src={image} alt={name} type='video/webm'></video></div>
-      <div class="moon-container" id={cssId}>
+      <div class="moon-container">
         <div class="moon">
           <Moon size="75" color="#FFFFFF" unit="px" duration="3s"></Moon>
         </div>
