@@ -17,7 +17,7 @@
   let rebuild = 0;
   let startIndex = 0;
   let endIndex = maxPerPage;
-  let baseWebm = 'https://gateway.ipfs.io/ipfs/QmULnqLrTuG9fAxCwctH89sjb7YRL4ig77JJ2Fn78X541j';
+  let baseWebm = '';
 
   export let params;
   $: params; 
@@ -110,7 +110,7 @@
             end:endIndex
           })
       });
-      tokenArrayResponse = await response.json();
+      tokenArrayResponse = await response.json();    
       } catch (e) {
         console.log(e);
       }

@@ -1,23 +1,30 @@
 <script>
-  import { onMount } from 'svelte';
+  import { afterUpdate, onMount } from 'svelte';
   import Sandbox from '@beyondnft/sandbox';
   import App from '../App.svelte';
   import routes from '../routes';
   import router from "page";
   import {quickJSON} from '../conf/quickview';
+  import { Moon } from 'svelte-loading-spinners';
 
   export let origin;
   export let id;
 
-  export let image = "https://gateway.ipfs.io/ipfs/QmULnqLrTuG9fAxCwctH89sjb7YRL4ig77JJ2Fn78X541j";
+  export let image;
   export let name;
-
+  
 
   $:image;
-  $:name;
+  $:name; 
+
+  afterUpdate(() => {
+    console.log(image);
+    if (image !== "") {
+      console.log(document.querySelector( '[src="' + image + '"]' ).parentElement.nextElementSibling.style.display = "none");
+    }
+  })
 
   onMount(() => {
-    console.log("mounted a token");
     
     var height = document.getElementsByClassName('list')[0].offsetHeight;
     document.getElementsByClassName('gallery-container')[0].style.maxHeight = height + 50 + "px";
@@ -49,6 +56,7 @@
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    position: relative;
   }
 
   .preview div {
@@ -63,6 +71,29 @@
     flex: 0 0 auto;
     padding: 15px 10px;
     display: block;
+    position: relative;
+  }
+
+  .preview .moon-container {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background-color: var(--xgrey);
+  }
+  .preview .moon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--xgrey);
+    overflow: hidden;
+    height: 100%;
+    position: relative;
+    top: -20px;
+  }
+
+
+  .preview strong {
+    background-color: var(--xblack);
   }
 
   
@@ -74,6 +105,11 @@
 <article>
     <div class="preview" on:click={() => router("/viewer/" + id + "/" + origin)}>
       <div><video autoplay muted loop src={image} alt={name} type='video/webm'></video></div>
+      <div class="moon-container" id={cssId}>
+        <div class="moon">
+          <Moon size="75" color="#FFFFFF" unit="px" duration="3s"></Moon>
+        </div>
+      </div>
       <strong>{name}</strong>
     </div>
 </article>
