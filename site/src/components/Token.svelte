@@ -18,9 +18,8 @@
   $:name; 
 
   afterUpdate(() => {
-    console.log(image);
     if (image !== "") {
-      console.log(document.querySelector( '[src="' + image + '"]' ).parentElement.nextElementSibling.style.display = "none");
+      document.querySelector( '[src="' + image + '"]' ).parentElement.nextElementSibling.style.display = "none";
     }
   })
 
