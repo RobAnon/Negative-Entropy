@@ -143,6 +143,15 @@ import SharePrompt from '../components/SharePrompt.svelte';
 
   onMount(async () => {
 
+    var total = await getCount();
+
+    if (Number(params.id) === total - 1) {
+      document.getElementById('navR').style.opacity = '0';
+    }
+    if (Number(params.id) === 0) {
+      document.getElementById('navL').style.opacity = '0';
+    }
+
     await getData();
     if (params.origin == null || params.origin == '') {
       params.origin = 'public';
@@ -258,6 +267,10 @@ import SharePrompt from '../components/SharePrompt.svelte';
     font-size: 16px;
     margin: 0;
     margin-bottom: 10px;
+  }
+
+  #navR, #navL {
+    transition: opacity 0.4s;
   }
 
 @media only screen and (max-width: 1200px) {
