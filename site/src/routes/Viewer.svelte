@@ -9,6 +9,7 @@
   import router from "page";
   import page from 'page';
 import SharePrompt from '../components/SharePrompt.svelte';
+import { LogLuvEncoding } from 'three/build/three.module';
 
 
  
@@ -102,7 +103,7 @@ import SharePrompt from '../components/SharePrompt.svelte';
     var count = await getCount();
     if(nextId >= count) {
       //We've reached the end, loop the content
-      right = token.id;
+      right = 0;
     } else {
       right = nextId;
     }
@@ -110,8 +111,9 @@ import SharePrompt from '../components/SharePrompt.svelte';
   
   async function navLeft() {
     var nextId = Number(token.id) - 1;
+    var count = await getCount() - 1;
     if(nextId < 0) {
-      left = token.id;
+      left = count;
     } else {
       left = nextId;
     }
@@ -145,13 +147,6 @@ import SharePrompt from '../components/SharePrompt.svelte';
 
     var total = await getCount();
 
-    if (Number(params.id) === total - 1) {
-      document.getElementById('navR').style.opacity = '0';
-    }
-    if (Number(params.id) === 0) {
-      document.getElementById('navL').style.opacity = '0';
-    }
-
     await getData();
     if (params.origin == null || params.origin == '') {
       params.origin = 'public';
@@ -164,6 +159,9 @@ import SharePrompt from '../components/SharePrompt.svelte';
     
     image = json.image;
     name = json.name;
+    console.log(params.id);
+
+    json.attributes[9].trait_type = 'Seed';
 
     data = json;
     attributes = [];
@@ -176,6 +174,8 @@ import SharePrompt from '../components/SharePrompt.svelte';
     await navLeft();
 
     window.scrollTo(window.scrollX, window.scrollY + 1);
+
+    document.getElementById('page-counter').innerHTML = (Number(params.id) + 1) + ' | ' + total;
   });
 
   
@@ -237,6 +237,7 @@ import SharePrompt from '../components/SharePrompt.svelte';
   .viewer-buttons {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     margin-top: 40px;
   }
 
@@ -268,11 +269,10 @@ import SharePrompt from '../components/SharePrompt.svelte';
     margin: 0;
     margin-bottom: 10px;
   }
-
-  #navR, #navL {
-    transition: opacity 0.4s;
+  #page-counter {
+    align-self: center;
+    margin: 0;
   }
-
 @media only screen and (max-width: 1200px) {
   .output {
     display: block;
@@ -335,7 +335,7 @@ import SharePrompt from '../components/SharePrompt.svelte';
               </svg>
             </button>
           </div>
-
+          <p id="page-counter"></p>
           <div id="navR">
             <button class="button-main" on:click={navigateRight}>
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right-square" viewBox="0 0 16 16">
@@ -354,6 +354,9 @@ import SharePrompt from '../components/SharePrompt.svelte';
           <h3>Attributes</h3>
           <ul>
             {#each attributes as attribute}
+              {#if attribute === 'sec'}
+              <p></p>
+              {/if}
               <li><strong>{attribute.key}</strong>: {attribute.value}</li>
             {/each}
           </ul>
