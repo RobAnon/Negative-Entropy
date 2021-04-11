@@ -161,7 +161,6 @@ import { LogLuvEncoding } from 'three/build/three.module';
     name = json.name;
     console.log(params.id);
 
-    json.attributes[9].trait_type = 'Seed';
 
     data = json;
     attributes = [];
