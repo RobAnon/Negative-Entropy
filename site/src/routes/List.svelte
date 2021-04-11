@@ -17,7 +17,7 @@
   let rebuild = 0;
   let startIndex = 0;
   let endIndex = maxPerPage;
-  let baseWebm = 'https://gateway.ipfs.io/ipfs/QmULnqLrTuG9fAxCwctH89sjb7YRL4ig77JJ2Fn78X541j';
+  let baseWebm = '';
 
   export let params;
   $: params; 
@@ -43,20 +43,20 @@
     var nextParam = Number(params.id)+1;
     if(nextParam*maxPerPage>=tokenCount) {
       nextParam = Number(params.id);
+    } else {
+      router("/gallery/"+nextParam);
+      location.reload();
     }
-    router("/gallery/"+nextParam);
-    //Quick and dirty, but effective
-    location.reload();
   }
 
   function navLeft() {
     var nextParam = Number(params.id)-1;
     if(nextParam < 0) {
       nextParam = 0;
+    } else {
+      router("/gallery/"+nextParam);
+      location.reload();
     }
-    router("/gallery/"+nextParam);
-    //Improve this method later
-    location.reload();
   }
 
   async function buildLists() {
@@ -73,6 +73,17 @@
         alert("Failed to load token list. Please reload your page");
       }
       tokenCount = Number(count.count);
+
+      /* grey out button if you're at start/end */
+      if((Number(params.id) + 1)*maxPerPage>tokenCount) {
+        document.getElementById('navR').style.opacity="0";
+      }
+      if((Number(params.id) - 1) < 0) {
+        document.getElementById('navL').style.opacity="0";
+      }
+      /* page count at bottom */
+      document.getElementById('page-counter').innerHTML = (Number(params.id) + 1) + ' | ' + Math.round(tokenCount/maxPerPage);
+
       
       if(endIndex > tokenCount) {
         endIndex = tokenCount;
@@ -99,7 +110,7 @@
             end:endIndex
           })
       });
-      tokenArrayResponse = await response.json();
+      tokenArrayResponse = await response.json();    
       } catch (e) {
         console.log(e);
       }
@@ -150,7 +161,15 @@
   .viewer-buttons {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     margin-top: 40px;
+  }
+
+  #navL, #navR {
+    transition: opacity 0.4s;
+  }
+  #page-counter {
+    align-self: center;
   }
   .gallery-container {
     max-height: 0px;
@@ -211,7 +230,7 @@
         </svg>
       </button>
     </div>
-
+    <p id="page-counter"></p>
     <div id="navR">
       <button class="button-main" on:click={navRight}>
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right-square" viewBox="0 0 16 16">

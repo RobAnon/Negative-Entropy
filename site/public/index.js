@@ -5,13 +5,19 @@ $(document).ready(function() {
     /* handle menu show on hamburger click */
     $('.hamburger').click(function() {
         if ($(this).hasClass('is-active')) {
-            $(this).removeClass('is-active');
-            $('.navbar-links').css({'right': '-100%', 'opacity': '0'});
-            $('body').css('overflow', 'visible');
+            
+            if (!$(this).is('#three-hamburger')) {
+                $(this).removeClass('is-active');
+                $('.navbar-links').css({'right': '-100%', 'opacity': '0'});
+                $('body').css('overflow', 'visible');
+            } 
         } else {
-            $(this).addClass('is-active');
-            $('.navbar-links').css({'right': '0', 'opacity': '1'});
-            $('body').css('overflow', 'hidden');
+            
+            if (!$(this).is('#three-hamburger')) {
+                $(this).addClass('is-active');
+                $('.navbar-links').css({'right': '0', 'opacity': '1'});
+                $('body').css('overflow', 'hidden');
+            } 
         }
     })
 

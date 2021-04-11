@@ -193,7 +193,7 @@ header {
   min-height: 100vh;
   position: fixed;
   top: 0;
-  right: -50%;
+  right: -100%;
   z-index: 99;
   text-align: center;
   background-color: var(--xblack);
@@ -574,14 +574,14 @@ header {
   transition: fill 0.4s;
 }
 .mint-container button svg:hover {
-  fill: var(--xlightblue) !important;
+  fill: var(--xgreen) !important;
 }
 
 .mint-text-area {
   display: block;
   width: 800px;
   max-width: 100%;
-  margin: 40px auto 30px;
+  margin: 20px auto 30px;
   padding: 10px 30px;
   font-size: 18px;
   font-family: 'roboto mono';
