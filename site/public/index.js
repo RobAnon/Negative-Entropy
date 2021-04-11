@@ -6,12 +6,22 @@ $(document).ready(function() {
     $('.hamburger').click(function() {
         if ($(this).hasClass('is-active')) {
             $(this).removeClass('is-active');
-            $('.navbar-links').css({'right': '-100%', 'opacity': '0'});
-            $('body').css('overflow', 'visible');
+
+            if (!$(this).is('#three-hamburger')) {
+                $('.navbar-links').css({'right': '-100%', 'opacity': '0'});
+                $('body').css('overflow', 'visible');
+            } else {
+                $('.mint-container .button-actual').css({'max-height': '0px', 'opacity': "0", "padding-bottom": "0px"});
+            }
         } else {
             $(this).addClass('is-active');
-            $('.navbar-links').css({'right': '0', 'opacity': '1'});
-            $('body').css('overflow', 'hidden');
+
+            if (!$(this).is('#three-hamburger')) {
+                $('.navbar-links').css({'right': '0', 'opacity': '1'});
+                $('body').css('overflow', 'hidden');
+            } else {
+                $('.mint-container .button-actual').css({'max-height': '250px', 'opacity': "1", "padding-bottom": "5px"});
+            }
         }
     })
 

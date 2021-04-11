@@ -514,58 +514,80 @@ header {
   text-align: center;
 }
 .mint-container .canvas-container .button-container {
-  width: 100px;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: center;
+  width: 55px;
+  background-color: var(--xblack);
+  border-radius: 6px;
 }
 .canvas-container canvas {
   margin: 0 auto !important;
 }
+#three-hamburger {
+  margin: -5px 0 0 !important;
+}
 .mint-container .button-container {
   position: absolute;
   margin-top: 20px;
-  top: calc(50% - 20px);
-  left: 40px;
-  transform: translateY(-50%);
+  top: 20px;
+  right: 40px;
+}
+.mint-container .button-actual {
+  max-height: 0;
+  opacity: 0;
+  transition: all 0.6s;
+  transition-delay: 0.6s overflow;
+  padding-bottom: 0px;
 }
 #lock, #headlamp, #stabilize, #hide {
   border: none;
   outline: none;
   background: none;
+  position: relative;
   display: block !important;
-  margin-bottom: 20px;
+  padding: 10px 0px;
+  overflow: visible;
 }
 #lock svg {
-  height: 40px;
+  height: 35px;
+  position: relative;
+  top: -3px;
 }
 #headlamp svg {
-  height: 45px;
-}
-#stabilize svg {
-  height: 30px;
-}
-#hide svg {
   height: 40px;
 }
-#inner_div {
-  display: inline;
+#stabilize svg {
+  height: 25px;
+}
+#hide svg {
+  height: 35px;
 }
 .controls-info {
   font-family: 'roboto mono';
   font-weight: 200;
   position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  opacity: 0;
-  z-index: 9;
-  transition: all 0.2s;
+  top: 0;
+  right: 100%;
+  z-index: 0;
+  transition: all 0.4s;
   width: max-content;
-  background-color: var(--xgrey);
-  border: 1px solid white;
+  max-width: 0;
+  height: 100%;
+  background-color: var(--xblack);
   border-radius: 3px;
-  padding: 4px 8px;
+  padding: 4px 0px;
+  overflow: hidden;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
 }
 .mint-container button:hover .controls-info {
-  opacity: 1;
-  transition-delay: 0.5s;
+  max-width: 160px;
+  padding: 4px 8px;
+  transition-delay: 0.6s;
+
 }
 .mint-container button svg {
   width: 100%;
