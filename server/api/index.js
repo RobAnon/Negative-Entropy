@@ -16,8 +16,8 @@ const nthline = require('nthline');
 var Web3WsProvider = require('web3-providers-ws');
 
 //Declare various other constants
-const LENGTH = 399;//We know the exact length
-const filePath = './public/thelastquestion.txt';
+const LENGTH = 611;//We know the exact length
+const filePath = './public/output.txt';
 
 let options = {
     timeout: 30000, // ms
