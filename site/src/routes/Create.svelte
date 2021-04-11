@@ -993,9 +993,11 @@
   }
   
   #seed-note {
-	margin-top: 50px;
+	margin-top: 0px;
 	font-size: 14px;
 	text-align: center;
+}
+#seed-note span {
 	color: #defe47; 
 }
 
@@ -1159,7 +1161,7 @@
 	  </div>  
   
 	  {#if params.seed != null && params.seed != ''} 
-	  <p id="please-note">The seed that brought you here was:<span id="seed-note"> {params.seed}</span></p>
+	  <p id="seed-note">The seed that brought you here was: <span> {params.seed}</span></p>
  	 {/if}
 	  <textarea class="form-control mint-text-area fade-in fade-in-2" name="textarea" id="textareaID" placeholder="Choose a unique name (300 char. limit) for your NFT and hit Load Seed..." maxlength="300"></textarea>
   
