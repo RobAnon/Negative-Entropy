@@ -19,7 +19,15 @@ import router from "page";
   let seed = Date();
 
 onMount(async () => {
-   
+  var seedResp = await fetch(BACKEND+"randomLine");
+  var respSeed = await seedResp.json();
+  var seedLine = respSeed.line;
+  
+  var rand = Math.random()*256;
+  var binary = (rand >>> 0).toString(2);
+
+  seed = binary + " " + seedLine + " " + binary;
+
   token.json = quickJSON;
 
   data = quickJSON;

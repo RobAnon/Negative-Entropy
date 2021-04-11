@@ -12,7 +12,12 @@ const helmet = require("helmet");
 const createClient = require('ipfs-http-client');
 const app = express();
 const ipfs = createClient('https://ipfs.infura.io:5001');
+const nthline = require('nthline');
 var Web3WsProvider = require('web3-providers-ws');
+
+//Declare various other constants
+const LENGTH = 399;//We know the exact length
+const filePath = './public/thelastquestion.txt';
 
 let options = {
     timeout: 30000, // ms
@@ -56,6 +61,7 @@ app.use(function(req, res, next) {
 app.get('/api', (req, res) => {
 	return res.send('Received a GET HTTP method');
 });
+
 
 app.options('/api/tokenCount', function (req, res) {
 	handleCORS(req, res);
@@ -214,6 +220,19 @@ app.post('/api/file', (req, res) => {
 	.then(function(url) {
 		return res.send(JSON.stringify(url));
 	});
+	return express.Router();
+});
+
+app.options('/api/randomLine', function (req, res) {
+	handleCORS(req, res);
+});
+
+app.get('/api/randomLine', (req, res) => {
+  	const rowIndex = Math.floor(Math.random() * LENGTH);
+	nthline(rowIndex, filePath)
+	.then(function(line) {
+		return res.send(JSON.stringify({line}));
+	})
 	return express.Router();
 });
 

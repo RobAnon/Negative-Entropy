@@ -55,6 +55,7 @@
     "helmet": "^4.4.1",
     "https": "^1.0.0",
     "ipfs-http-client": "^49.0.4",
+    "nthline": "^1.0.2",
     "rollup": "^2.44.0",
     "rollup-plugin-auto-named-exports": "^1.0.0-beta.3",
     "rollup-plugin-babel": "^4.4.0",
