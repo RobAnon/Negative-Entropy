@@ -52,6 +52,25 @@ import Confirmation from '../components/Confirmation.svelte';
 		helpContainer.style.display = "none";
 	})
 
+
+	var hamburger = document.getElementById('three-hamburger');
+	var buttons = document.getElementsByClassName('button-actual')[0];
+	console.log('bttn', buttons);
+
+	hamburger.addEventListener('click', function() {
+		if (hamburger.classList.contains('is-active')) {
+			hamburger.classList.remove('is-active');
+			buttons.style.maxHeight = "0px";
+			buttons.style.opacity = "0";
+			buttons.style.paddingBottom = "0px";
+		} else {
+			hamburger.classList.add('is-active');
+			buttons.style.maxHeight = "250px";
+			buttons.style.opacity = "1";
+			buttons.style.paddingBottom = "5px";
+		}
+	})
+
   })
 
   let contract = $app.contract;
@@ -671,7 +690,7 @@ export const headlamp = e => {
 			HEADLAMP = false;
 			camera.remove(headlight);
 		} else {
-			$headlamp.style.fill = "#00b3fe";
+			$headlamp.style.fill = "#defe47";
 			HEADLAMP = true;
 			camera.add(headlight);
 		}
@@ -684,7 +703,7 @@ export const stabilize = e => {
 			$stabilize.style.fill = "#ddd";
 			parameters.stabilize = false;
 		} else {
-			$stabilize.style.fill = "#00b3fe";
+			$stabilize.style.fill = "#defe47";
 			parameters.stabilize = true;
 		}
 
@@ -699,7 +718,7 @@ export const lock = e => {
 			$lock.style.fill = "#ddd";
 			parameters.lock = false;
 		} else {
-			$lock.style.fill = "#00b3fe";
+			$lock.style.fill = "#defe47";
 			parameters.lock = true;
 		}
 }
