@@ -1205,6 +1205,9 @@
 	<div id = load_ind>
 	<Moon size="180" color="#FFFFFF" unit="px" duration="2s"></Moon>
 	</div>
+	<div id=load_ind>
+		<p> Please wait, creating NFT – slowed frames are normal during recording</p>
+	</div>
 	{/if}
   
 	  <div>
