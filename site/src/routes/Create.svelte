@@ -600,12 +600,7 @@
 		  //User is on Internet Explorer, CCapture will not work for them
 		  alert("Our apologies, the plugin used to record the webm of your NFT does not work on Internet Explorer.\n We recommend Chrome for the optimal user-experience");
 		  return;
-	  }
-	  if (navigator.userAgent.indexOf("/Mobi/") > -1) {
-		  alert("Our apologies, the plugin used to record the webm of your NFT does not work on Mobile.\n We recommend Chrome for the optimal user-experience");
-		  return;
-	  }
-  
+	  }  
   
   
 	 
