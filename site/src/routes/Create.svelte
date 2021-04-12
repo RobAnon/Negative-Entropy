@@ -567,6 +567,7 @@
   }
   
   export const start = async (e) => {
+	gtag('event', 'mint-clicked', {});
 	  var txt = document.getElementById("textareaID").value.trim();
 	  if(txt != seed && (seed != params.seed || txt != "")) {
 		  _reset();
@@ -913,6 +914,7 @@
 		minting = false;
 		return;
 	  }
+	  gtag('event', 'mint-accepted', {});
 	  var payload = {}
 	  payload.customer = $app.account;
 	  payload.nft = data;
@@ -958,6 +960,7 @@
 	  .once('confirmation', function(confirmationNumber, receipt){
 		//This is called when the transaction is confirmed
 		console.log("CONFRIMED");
+		gtag('event', 'mint-finished', {});
 		minting = false;
 		dispatch('minted');
 		router("/viewer/" + nextId);
