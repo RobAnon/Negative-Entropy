@@ -706,7 +706,7 @@
   }
   
   export const _reset = e => {
-  
+			gtag('event', 'seed_reset', {});
 		  newSeed = document.getElementById("textareaID").value.trim();
   
 		  reset();
