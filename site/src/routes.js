@@ -5,7 +5,7 @@ import About from './routes/About.svelte';
 import Home from './routes/Home.svelte';
 import Viewer from './routes/Viewer.svelte';
 import PageNotExists from './routes/PageNotExists.svelte';
-import Privacy from '/routes/Privacy.svelte';
+import Privacy from './routes/Privacy.svelte';
 
 export default [
 	{
