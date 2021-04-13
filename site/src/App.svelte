@@ -208,4 +208,6 @@
 
   <p>2021 Negative Entropy &copy;</p>
 
+  <p><a href='/privacy'>Privacy</a></p>
+
 </footer>
