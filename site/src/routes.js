@@ -5,6 +5,7 @@ import About from './routes/About.svelte';
 import Home from './routes/Home.svelte';
 import Viewer from './routes/Viewer.svelte';
 import PageNotExists from './routes/PageNotExists.svelte';
+import Privacy from '/routes/Privacy.svelte';
 
 export default [
 	{
@@ -45,6 +46,10 @@ export default [
 		path: '/personal-gallery/:id',
 		component: PersonalGallery,
 		dynamic: true
+	},
+	{
+		path: '/privacy',
+		component: Privacy
 	},
 	{
 		path: '*',
