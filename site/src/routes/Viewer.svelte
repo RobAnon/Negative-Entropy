@@ -272,9 +272,18 @@ import { LogLuvEncoding } from 'three/build/three.module';
     align-self: center;
     margin: 0;
   }
+
+  @media only screen and (max-width: 600px) {
+    .viewer-buttons button {
+      width: 75px;
+    }
+  }
 @media only screen and (max-width: 1200px) {
   .output {
     display: block;
+  }
+  .data {
+    margin-top: 50px;
   }
 }
 
