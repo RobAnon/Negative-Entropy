@@ -294,6 +294,12 @@ import { LogLuvEncoding } from 'three/build/three.module';
   margin-right: 4px;
 }
 
+.big strong {
+  text-transform: capitalize;
+}
+
+
+
 </style>
 <section class="big">
   <br>
@@ -353,9 +359,6 @@ import { LogLuvEncoding } from 'three/build/three.module';
           <h3>Attributes</h3>
           <ul>
             {#each attributes as attribute}
-              {#if attribute === 'sec'}
-              <p></p>
-              {/if}
               <li><strong>{attribute.key}</strong>: {attribute.value}</li>
             {/each}
           </ul>
