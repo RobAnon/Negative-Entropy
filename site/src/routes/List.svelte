@@ -143,6 +143,10 @@
       router("/gallery/0");
       location.reload();
     }
+
+    setTimeout(function() {
+      document.getElementsByClassName('gallery-container')[0].style.overflow = 'visible';
+    }, 800)
   });
 
   function fillArray(value, len) {
@@ -173,15 +177,13 @@
     align-self: center;
   }
   .gallery-container {
+    overflow: hidden;
     max-height: 0px;
-    overflow-x: visible;
-    overflow-y: hidden;
     transition: all 1s;
     margin-top: 50px;
   }
   .list-container {
     max-height: 0px;
-    overflow: visible;
   }
   .list {
     display: grid;
@@ -193,7 +195,6 @@
     padding: 10px 0 30px;
     position: relative;
     color:white;
-    overflow: visible;
   }
 
   @media only screen and (max-width: 550px) {
