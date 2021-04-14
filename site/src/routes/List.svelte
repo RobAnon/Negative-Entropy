@@ -173,25 +173,24 @@
   }
   .gallery-container {
     max-height: 0px;
-    overflow: hidden;
+    overflow-x: visible;
+    overflow-y: hidden;
     transition: all 1s;
     margin-top: 50px;
   }
   .list-container {
     max-height: 0px;
+    overflow: visible;
   }
   .list {
     display: grid;
     justify-content: center;
-    grid-template-columns: repeat(auto-fill, 230px);
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     grid-gap: 20px;
     padding: 10px 0 30px;
     position: relative;
     color:white;
-  }
-  video {
-  height: 230px;
-  width: 100%;
+    overflow: visible;
   }
 
   #gallery-loading {
