@@ -11,7 +11,6 @@
 import SharePrompt from '../components/SharePrompt.svelte';
 import { LogLuvEncoding } from 'three/build/three.module';
 
-
  
   // load json
   // show image and title
@@ -26,6 +25,7 @@ import { LogLuvEncoding } from 'three/build/three.module';
   let left = 0;
   let right = 0;
   let sharing = false;
+  let maxPerPage = 8;
 
   const app = getContext('app');
   const opensea_base = "https://opensea.io/assets/";
@@ -130,7 +130,10 @@ import { LogLuvEncoding } from 'three/build/three.module';
     if(params.origin.trim() == 'private') {
       router("/personal-gallery/" + $app.account);
     } else {
-      router("/gallery/0");//TODO: Make this dynamic
+      console.log(Number.parseInt(token.id));
+      console.log(maxPerPage);
+      var page_origin = Math.floor(Number.parseInt(token.id)/maxPerPage);
+      router("/gallery/" + page_origin);//TODO: Make this dynamic
     } 
   }
 

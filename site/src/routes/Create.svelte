@@ -1,11 +1,9 @@
 <script>
-	//TODO: ADD IN EXTERNAL_URL FOR OPENSEA
-	import { createEventDispatcher, getContext, onMount } from 'svelte';
-	import defaultCode from '../conf/code.js';
-	import Sandbox from '@beyondnft/sandbox';
-	import { ipfs } from '../utils.js';
-	// import { init } from "../components/captureWebM"
-	import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+  import { createEventDispatcher, getContext, onMount } from 'svelte';
+  import defaultCode from '../conf/code.js';
+  import Sandbox from '@beyondnft/sandbox';
+  import { ipfs } from '../utils.js';
+  import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
   import { HemisphereLight, LinearToneMapping, Box3, SpotLight, Scene, Color, Object3D, Vector3, PerspectiveCamera, PointLight, SphereGeometry, MeshStandardMaterial, InstancedMesh, Matrix4, AxesHelper, WebGLRenderer } from 'three'
   import seedrandom from 'seedrandom'
   import CCapture from '../components/ccapture.js/src/CCapture.js'

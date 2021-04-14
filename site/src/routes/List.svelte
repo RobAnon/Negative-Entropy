@@ -1,4 +1,5 @@
 <script>
+  //TODO: Improve link population via pre-calculation of what each article should link to
   import { getContext } from 'svelte';
   import Token from '../components/Token.svelte';
   import { onMount } from 'svelte';
