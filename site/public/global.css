@@ -93,6 +93,9 @@ p {
   font-size: 20px;
 }
 
+canvas {
+  cursor: pointer;
+}
 
 a {
   text-decoration: none;

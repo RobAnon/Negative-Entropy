@@ -83,7 +83,7 @@
         document.getElementById('navL').style.opacity="0";
       }
       /* page count at bottom */
-      document.getElementById('page-counter').innerHTML = (Number(params.id) + 1) + ' | ' + Math.round(tokenCount/maxPerPage);
+      document.getElementById('page-counter').innerHTML = (Number(params.id) + 1) + ' | ' + Math.ceil(tokenCount/maxPerPage);
 
       
       if(endIndex > tokenCount) {
@@ -185,6 +185,8 @@
   }
   .list {
     display: grid;
+    margin: 0 auto;
+    align-content: center;
     justify-content: center;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     grid-gap: 20px;
@@ -192,6 +194,12 @@
     position: relative;
     color:white;
     overflow: visible;
+  }
+
+  @media only screen and (max-width: 550px) {
+    .list {
+      display: block;
+    }
   }
 
   #gallery-loading {

@@ -40,6 +40,14 @@
     border: 1px solid black;
     border-radius: 4px;
     transition: all 0.4s;
+    max-width: 300px;
+  }
+
+  @media only screen and (max-width: 550px) {
+    article {
+      display: block;
+      margin: 20px auto;
+    }
   }
 
   article:hover {
@@ -86,7 +94,7 @@
     overflow: hidden;
     height: 100%;
     position: relative;
-    top: -20px;
+    top: -30px;
   }
 
 
@@ -102,9 +110,9 @@
 
   
   video {
-    height: auto;
-    min-width: 100%;
-    max-height: 100%;
+    max-width: 100%;
+    min-height: 100%;
+    object-fit: cover;
   }
 </style>
 <article>
