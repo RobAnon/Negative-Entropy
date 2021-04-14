@@ -275,9 +275,18 @@ import { LogLuvEncoding } from 'three/build/three.module';
     align-self: center;
     margin: 0;
   }
+
+  @media only screen and (max-width: 600px) {
+    .viewer-buttons button {
+      width: 75px;
+    }
+  }
 @media only screen and (max-width: 1200px) {
   .output {
     display: block;
+  }
+  .data {
+    margin-top: 50px;
   }
 }
 
@@ -296,6 +305,12 @@ import { LogLuvEncoding } from 'three/build/three.module';
   top: 2px;
   margin-right: 4px;
 }
+
+.big strong {
+  text-transform: capitalize;
+}
+
+
 
 </style>
 <section class="big">
@@ -356,9 +371,6 @@ import { LogLuvEncoding } from 'three/build/three.module';
           <h3>Attributes</h3>
           <ul>
             {#each attributes as attribute}
-              {#if attribute === 'sec'}
-              <p></p>
-              {/if}
               <li><strong>{attribute.key}</strong>: {attribute.value}</li>
             {/each}
           </ul>

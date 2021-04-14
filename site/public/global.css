@@ -629,12 +629,32 @@ header {
 
 /* --- FOOTER --- */
 footer {
+  text-align: center;
   margin: 60px 0px;
 }
 footer p {
-  font-size: 18px;
-  text-align: center;
+  font-size: 18px; 
   margin-top: 40px;
+}
+footer p a {
+  font-family: inherit;
+  margin: 0;
+  position: relative;
+}
+footer p a:after {
+  content: '';
+  display: inline-block;
+  width: 0%;
+  height: 1px;
+  background-color: var(--xwhite);
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  transform: translateX(-50%);
+  transition: all 0.3s;
+}
+footer p a:hover:after {
+  width: 100%;
 }
 footer .footer-icons-container {
   width: max-content;
@@ -690,7 +710,7 @@ footer .footer-icons-container a:last-child {
   }
   .button-main, .button-secondary {
     font-size: 16px;
-    padding: 10px 6px;
+    padding: 14px 6px;
     width: 130px;
   }
   .navbar-right button:nth-child(1) {

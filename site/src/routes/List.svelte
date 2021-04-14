@@ -203,6 +203,12 @@
     font-size: 30px;
   }
 
+  @media only screen and (max-width: 600px) {
+    .viewer-buttons button {
+      width: 75px;
+    }
+  }
+
 </style>
 
 <section>

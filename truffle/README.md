@@ -49,11 +49,8 @@ truffle deploy --network development
 
 When you have deployed, you need to do two things:
 - copy the contract address and use it in [the site .env file](../site/.env)
-- copy the contract abi (located inside the big json truffle/build/contracts/InteractiveNFT.json) in [the site's src/conf/abi.json](../site/src/conf/abi.json). Note that this project comes with an ABI already valid in site and you should only modify it if you modify the contract and need to update the abi.
+- copy the contract abi (located inside the big json truffle/build/contracts/InteractiveNFT.json) in [the site's src/conf/abi.json](../site/src/conf/abi.json). 
 
-## Tests
-
-@TODO but the contract is a very basic ERC721 contract. Shouldn't really need tests.
 
 ## Verify
 

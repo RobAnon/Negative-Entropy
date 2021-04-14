@@ -93,6 +93,11 @@
 
   .preview strong {
     background-color: var(--xblack);
+    display: block;
+    max-height: 50px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
   }
 
   
