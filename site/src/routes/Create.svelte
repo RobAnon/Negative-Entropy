@@ -905,6 +905,7 @@
 		)
 	  ) {
 		minting = false;
+		rejectWebM();
 		return;
 	  }
 	  gtag('event', 'mint-accepted', {});
