@@ -628,6 +628,7 @@
 	  minting = true;
   
 	  document.getElementById("textareaID").style.opacity = '0.2';
+	  document.getElementsByClassName('button-container')[0].style.display = 'none';
   
 	const $start = document.getElementById('start');
   
