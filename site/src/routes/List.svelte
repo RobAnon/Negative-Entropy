@@ -83,7 +83,7 @@
         document.getElementById('navL').style.opacity="0";
       }
       /* page count at bottom */
-      document.getElementById('page-counter').innerHTML = (Number(params.id) + 1) + ' | ' + Math.round(tokenCount/maxPerPage);
+      document.getElementById('page-counter').innerHTML = (Number(params.id) + 1) + ' | ' + Math.ceil(tokenCount/maxPerPage);
 
       
       if(endIndex > tokenCount) {
@@ -143,6 +143,10 @@
       router("/gallery/0");
       location.reload();
     }
+
+    setTimeout(function() {
+      document.getElementsByClassName('gallery-container')[0].style.overflow = 'visible';
+    }, 800)
   });
 
   function fillArray(value, len) {
@@ -173,8 +177,8 @@
     align-self: center;
   }
   .gallery-container {
-    max-height: 0px;
     overflow: hidden;
+    max-height: 0px;
     transition: all 1s;
     margin-top: 50px;
   }
@@ -183,16 +187,20 @@
   }
   .list {
     display: grid;
+    margin: 0 auto;
+    align-content: center;
     justify-content: center;
-    grid-template-columns: repeat(auto-fill, 230px);
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     grid-gap: 20px;
     padding: 10px 0 30px;
     position: relative;
     color:white;
   }
-  video {
-  height: 230px;
-  width: 100%;
+
+  @media only screen and (max-width: 550px) {
+    .list {
+      display: block;
+    }
   }
 
   #gallery-loading {

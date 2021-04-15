@@ -36,11 +36,18 @@
 
 <style>
   article {
-    width: 230px;
-    height: 300px;
+    height: 350px;
     border: 1px solid black;
     border-radius: 4px;
     transition: all 0.4s;
+    max-width: 300px;
+  }
+
+  @media only screen and (max-width: 550px) {
+    article {
+      display: block;
+      margin: 20px auto;
+    }
   }
 
   article:hover {
@@ -87,23 +94,25 @@
     overflow: hidden;
     height: 100%;
     position: relative;
-    top: -20px;
+    top: -30px;
   }
 
 
   .preview strong {
     background-color: var(--xblack);
     display: block;
-    max-height: 50px;
+    height: 80px;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
+    padding-top: 45px;
   }
 
   
   video {
-  height: 230px;
-  width: 100%;
+    max-width: 100%;
+    min-height: 100%;
+    object-fit: cover;
   }
 </style>
 <article>
