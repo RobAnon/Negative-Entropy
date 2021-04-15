@@ -904,7 +904,6 @@
 		  `Are you sure you would like to mint this token?`
 		)
 	  ) {
-		minting = false;
 		rejectWebM();
 		return;
 	  }
@@ -1184,7 +1183,7 @@
 		<button class="button-main" id="start" on:click={(e)=>start(e)}>Mint&nbsp;&nbsp;Ξ0.15</button> 
 	  </div>
 	  <p id="please-note">We use the <b><a href="https://github.com/BeyondNFT/sandbox">BeyondNFT iNFT Standard</a></b>. Your NFT will be viewable on any website that has adopted that standard, not just our own.</p>
-	  <p id="please-note">Please note: Due to the complexity of the design and the minting process injecting data directly onto the blockchain, gas prices exceed the typical range and are expected to lie between 0.05 and 0.1 Ξ.</p>
+	  <p id="please-note">Please note: Due to the complexity of the design and the minting process injecting data directly onto the blockchain, gas prices may exceed the typical range and are expected to lie between 0.025 and 0.05 Ξ.</p>
 	  <div id="help-container">
 		  <div class="help-inner-container">
 			  <h2>Need help?</h2>
