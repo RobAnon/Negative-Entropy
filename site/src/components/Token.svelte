@@ -36,17 +36,16 @@
 
 <style>
   article {
-    height: 350px;
+    height: 385px;
     border: 1px solid black;
     border-radius: 4px;
     transition: all 0.4s;
-    max-width: 300px;
   }
 
   @media only screen and (max-width: 550px) {
     article {
       display: block;
-      margin: 20px auto;
+      margin: 50px auto;
     }
   }
 
@@ -108,10 +107,14 @@
     padding-top: 45px;
   }
 
+  .preview > div {
+    height: 100%;
+    width: 100%;
+  }
   
   video {
-    max-width: 100%;
-    min-height: 100%;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
   }
 </style>
