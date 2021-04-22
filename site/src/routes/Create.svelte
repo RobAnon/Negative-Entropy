@@ -4,7 +4,7 @@
   import Sandbox from '@beyondnft/sandbox';
   import { ipfs } from '../utils.js';
   import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-  import { HemisphereLight, LinearToneMapping, Box3, SpotLight, Scene, Color, Object3D, Vector3, PerspectiveCamera, PointLight, SphereGeometry, MeshStandardMaterial, InstancedMesh, Matrix4, AxesHelper, WebGLRenderer } from 'three'
+  import { HemisphereLight, LinearToneMapping, Box3, SpotLight, Scene, Color, Object3D, Vector3, PerspectiveCamera, PointLight, SphereGeometry, MeshStandardMaterial, InstancedMesh, Matrix4, AxesHelper, WebGLRenderer, Quaternion, LinearFilter } from 'three'
   import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
   import seedrandom from 'seedrandom'
   import CCapture from '../components/ccapture.js/src/CCapture.js'
@@ -25,6 +25,7 @@
 	let webmURL = "https://gateway.ipfs.io/ipfs/QmULnqLrTuG9fAxCwctH89sjb7YRL4ig77JJ2Fn78X541j";
 	export let params;
 	let seed = 'Buck';
+	let gltfData;
   
 	onMount(async ()=>{
 		await main().catch(error => {
@@ -229,10 +230,10 @@
   }
   //Declare global vars
   let rand, random, b, dummy, visPos, pos, totalAve, offsets, recording, frame, speedMult, count, amount, newSeed, palette;
-  let size, intensityBoost, metaly, rough, emissivity, random2, random3, random4, rotationRate, rotationRate2, rotationRate3, controls, container;
+  let size, intensityBoost, metaly, rough, emissivity, random2, random3, random4, rotationRate, rotationRate2, rotationRate3, controls, container, rotVec, lookVec;
   
   async function main() {
-	const gltfData = await modelLoader('doge.glb');
+	gltfData = await modelLoader('doge.glb');
 	init(gltfData);
   	
   }
@@ -249,6 +250,8 @@
 	  pos = [];
 	  totalAve = new Vector3();
 	  offsets = new Vector3();
+	  rotVec = new Vector3();
+	  lookVec = new Vector3(1, 1, 1);
 	  recording = false;
 	  frame = 0;
 	  speedMult = 1;
@@ -259,9 +262,9 @@
 	  randomize();
   
   
-	  amount = 10;
+	  amount = 7 + random * 5;
 	  count = Math.pow( amount, 3 );
-	
+	  
   
 	  var props = {
 		  metal: (metaly > 0),
@@ -291,18 +294,15 @@
 	  scene = new Scene();
 	  scene.background = new Color( 0x1a1a1a );
 	  initLights(scene, camera);
+
 	  
-	  
-	  gltfData.scene.traverse(function(child){
-    console.log(child.name);
-});
 
 	  const dogeMesh = gltfData.scene.getObjectByName("Capa_1_doge2_mtl0_0");//new SphereGeometry( size, 5, 3 );
+	  dogeMesh.rotation.y -= Math.PI/8;
       var geometry = dogeMesh.geometry.clone();
 
 	  const defaultTransform = new Matrix4()
-					.makeRotationX( Math.PI )
-					.multiply( new Matrix4().makeScale( 7, 7, 7 ) );
+					.multiply( new Matrix4().makeScale( 5*size, 5*size, 5*size ) );
 		
 	  geometry.applyMatrix4(defaultTransform);
 	  var material = dogeMesh.material.clone();
@@ -310,14 +310,7 @@
 	  material.metalness = metaly;
 	  material.emissiveIntensity = emissivity;
 	  material.emissive.set(0x25fae8);
-
-	  /*const material = new MeshStandardMaterial( {
-		  color: 0xffffff,
-		  roughness: rough, //Shinyness
-		  metalness: metaly,
-		  emissiveIntensity: emissivity,
-		  emissive: 0x25fae8
-	  });*/
+	  material.map.minFilter = LinearFilter;	  
 	  
 	  material.color = material.color.convertSRGBToLinear();
 	  material.emissive = material.emissive.convertSRGBToLinear();
@@ -353,7 +346,8 @@
 		  }
   
 	  }
-  
+	  const axesHelper = new AxesHelper( 50 );
+	  scene.add( axesHelper );
   
 	  scene.add( mesh );
 	  geometry.dispose();
@@ -384,7 +378,7 @@
 	  animate();
   }
   
-  function reset() {
+  async function reset() {
 	  seed = (' ' + newSeed).slice(1);//Force deep copy of newSeed
   
 	  //Remove all
@@ -411,7 +405,7 @@
   
 	  renderer.renderLists.dispose();
   
-	  init();
+	  await init(gltfData);
 	onWindowResize();
   }
   
@@ -804,9 +798,9 @@
 				  totalAve.set(0,0,0);
 			  }
   
-			  mesh.rotation.x += rotationRate2*random3;
-				mesh.rotation.y += rotationRate*random2;
-				 mesh.rotation.z += rotationRate3*random4;
+			  //mesh.rotation.x += rotationRate2*random3;
+				//mesh.rotation.y += rotationRate*random2;
+				 //mesh.rotation.z += rotationRate3*random4;
 			  let i = 0;
   
 			  while(i < count) {	
@@ -818,10 +812,16 @@
 				  var dy = position.y/SCALING_FACTOR;
 				  var dz = position.z/SCALING_FACTOR;
 					
-				  var x1 = (-b*dx+Math.sin(dy))*random/4;
-				  var y1 = (-b*dy+Math.sin(dz))*random/4;
-				  var z1 = (-b*dz+Math.sin(dx))*random/4;
+				  var x1 = (-b*dx+Math.sin(dy))*random;
+				  var y1 = (-b*dy+Math.sin(dz))*random;
+				  var z1 = (-b*dz+Math.sin(dx))*random;
   
+				  var mx = new Matrix4().lookAt(position,rotVec.set(x1, y1, z1),lookVec);
+				  var rotate = new Quaternion().setFromRotationMatrix(mx)
+				  dummy.setRotationFromQuaternion(rotate);
+				  dummy.rotation.x += Math.PI;
+				  dummy.rotation.y += Math.PI;
+				  dummy.rotation.z += Math.PI;
 				  //var randCall = rand();
 				  var xm = rand();
 				  var ym = rand();//randCall*random3;
