@@ -5,6 +5,7 @@
   import { ipfs } from '../utils.js';
   import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
   import { HemisphereLight, LinearToneMapping, Box3, SpotLight, Scene, Color, Object3D, Vector3, PerspectiveCamera, PointLight, SphereGeometry, MeshStandardMaterial, InstancedMesh, Matrix4, AxesHelper, WebGLRenderer } from 'three'
+  import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
   import seedrandom from 'seedrandom'
   import CCapture from '../components/ccapture.js/src/CCapture.js'
   import { get, writable } from 'svelte/store';
@@ -25,7 +26,10 @@
 	export let params;
 	let seed = 'Buck';
   
-	onMount(()=>{
+	onMount(async ()=>{
+		await main().catch(error => {
+			console.error(error);
+ 		 });
 	  window.scrollTo(window.scrollX,1);
 	  const renderer = document.getElementById('canvas')
 	  document.getElementById('canvas-container').appendChild(renderer);
@@ -183,6 +187,7 @@
   const limit = 20;
   const actual = 5;
   let sizes = 350;
+  const loader = new GLTFLoader();
   const recorder = new CCapture({
 	  verbose: false,
 	  display: false,
@@ -207,7 +212,8 @@
   }
   const color = new Color();
   var attr;
-  
+  var webMfile = writable();
+
   function getTier(rarity) {
 	  if (rarity < 6) {
 		  return "Common";
@@ -225,11 +231,15 @@
   let rand, random, b, dummy, visPos, pos, totalAve, offsets, recording, frame, speedMult, count, amount, newSeed, palette;
   let size, intensityBoost, metaly, rough, emissivity, random2, random3, random4, rotationRate, rotationRate2, rotationRate3, controls, container;
   
+  async function main() {
+	const gltfData = await modelLoader('doge.glb');
+	init(gltfData);
+  	
+  }
   
+  export const init = async (gltfData) => {
   
-  export const init = async () => {
-  
-  
+      var model = gltfData.scene;
 	  palette = [ 0xEEF50C, 0x3498DB, 0xEAEDED, 0xF2B077, 0xF24405 , 0x68F904, 0xBCC112, 0xA93226];
 	  rand = new seedrandom(seed);
 	  random = rand();
@@ -249,7 +259,7 @@
 	  randomize();
   
   
-	  amount = rand()*20+20;
+	  amount = 10;
 	  count = Math.pow( amount, 3 );
 	
   
@@ -281,17 +291,34 @@
 	  scene = new Scene();
 	  scene.background = new Color( 0x1a1a1a );
 	  initLights(scene, camera);
-  
-  
-	  const geometry = new SphereGeometry( size, 5, 3 );
-  
-	  const material = new MeshStandardMaterial( {
+	  
+	  
+	  gltfData.scene.traverse(function(child){
+    console.log(child.name);
+});
+
+	  const dogeMesh = gltfData.scene.getObjectByName("Capa_1_doge2_mtl0_0");//new SphereGeometry( size, 5, 3 );
+      var geometry = dogeMesh.geometry.clone();
+
+	  const defaultTransform = new Matrix4()
+					.makeRotationX( Math.PI )
+					.multiply( new Matrix4().makeScale( 7, 7, 7 ) );
+		
+	  geometry.applyMatrix4(defaultTransform);
+	  var material = dogeMesh.material.clone();
+	  material.roughness = rough;
+	  material.metalness = metaly;
+	  material.emissiveIntensity = emissivity;
+	  material.emissive.set(0x25fae8);
+
+	  /*const material = new MeshStandardMaterial( {
 		  color: 0xffffff,
 		  roughness: rough, //Shinyness
 		  metalness: metaly,
 		  emissiveIntensity: emissivity,
 		  emissive: 0x25fae8
-	  });
+	  });*/
+	  
 	  material.color = material.color.convertSRGBToLinear();
 	  material.emissive = material.emissive.convertSRGBToLinear();
   
@@ -354,6 +381,7 @@
 	  }
   
 	  controls = new OrbitControls(camera, renderer.domElement);
+	  animate();
   }
   
   function reset() {
@@ -448,9 +476,12 @@
 	
   }
   
-  
-  init();
-  
+  function modelLoader(url) {
+  	return new Promise((resolve, reject) => {
+    	loader.load(url, data=> resolve(data), null, reject);
+ 	});
+  }
+
   
   function fitCameraToSelection( camera, controls, posArray, fitOffset = 1.2 ) {
 	
@@ -787,9 +818,9 @@
 				  var dy = position.y/SCALING_FACTOR;
 				  var dz = position.z/SCALING_FACTOR;
 					
-				  var x1 = (-b*dx+Math.sin(dy))*random;
-				  var y1 = (-b*dy+Math.sin(dz))*random;
-				  var z1 = (-b*dz+Math.sin(dx))*random;
+				  var x1 = (-b*dx+Math.sin(dy))*random/4;
+				  var y1 = (-b*dy+Math.sin(dz))*random/4;
+				  var z1 = (-b*dz+Math.sin(dx))*random/4;
   
 				  //var randCall = rand();
 				  var xm = rand();
@@ -825,11 +856,8 @@
   
   }
   
-  animate();
+
   
-  
-  
-  var webMfile = writable();
   
   
   async function onRecordingEnd() {
@@ -967,6 +995,8 @@
 		payment.removeListener('error');
 	  });
   }
+
+  
   
   </script>
   
