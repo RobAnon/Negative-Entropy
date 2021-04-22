@@ -798,9 +798,9 @@
 				  totalAve.set(0,0,0);
 			  }
   
-			  //mesh.rotation.x += rotationRate2*random3;
-				//mesh.rotation.y += rotationRate*random2;
-				 //mesh.rotation.z += rotationRate3*random4;
+			  mesh.rotation.x += rotationRate2*random3;
+			  mesh.rotation.y += rotationRate*random2;
+			  mesh.rotation.z += rotationRate3*random4;
 			  let i = 0;
   
 			  while(i < count) {	
