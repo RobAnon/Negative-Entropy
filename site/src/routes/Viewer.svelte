@@ -175,7 +175,8 @@ import { LogLuvEncoding } from 'three/build/three.module';
     await navRight();
     await navLeft();
 
-    window.scrollTo(window.scrollX, window.scrollY + 1);
+    window.scrollTo(window.scrollX, 0);
+		window.scrollTo(window.scrollX, 2);
 
     document.getElementById('page-counter').innerHTML = (Number(params.id) + 1) + ' | ' + total;
   });

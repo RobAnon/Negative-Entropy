@@ -26,7 +26,8 @@
 	let seed = 'Buck';
   
 	onMount(()=>{
-	  window.scrollTo(window.scrollX,1);
+		window.scrollTo(window.scrollX, 0);
+		window.scrollTo(window.scrollX, 2);
 	  const renderer = document.getElementById('canvas')
 	  document.getElementById('canvas-container').appendChild(renderer);
 	  document.getElementById('canvas').setAttribute('style', 'width: 100%; height: 100%;' )
@@ -1025,6 +1026,7 @@
 	  border: 1px solid #767676;
 	  width: 950px;
 	  max-width: calc(100% - 40px);
+	  z-index: 99;
   }
   .help-inner-container {
 	  position: relative;
@@ -1041,6 +1043,9 @@
 	  background: none;
 	  border: none;
 	  outline: none;
+  }
+  .help-inner-container button:hover {
+	  color: var(--xgreen);
   }
   .help-inner-container h2 {
 	  width: max-content;

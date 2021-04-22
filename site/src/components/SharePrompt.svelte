@@ -52,6 +52,10 @@
         align-items: center;
     }
 
+    .gfycat-popup-header button:hover {
+        color: var(--xgreen);
+    }
+
     .gfycat-popup img {
         margin: 0 auto;
     }
@@ -86,6 +90,9 @@
         width: 25px;
         margin-left: 15px;
         cursor: pointer;
+    }
+    .url svg:hover {
+        fill: var(--xgreen);
     }
     
     .url #copy-message {

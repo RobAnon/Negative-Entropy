@@ -147,6 +147,9 @@
     setTimeout(function() {
       document.getElementsByClassName('gallery-container')[0].style.overflow = 'visible';
     }, 800)
+
+    window.scrollTo(window.scrollX, 0);
+    window.scrollTo(window.scrollX, 2);
   });
 
   function fillArray(value, len) {
