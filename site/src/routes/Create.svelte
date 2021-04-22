@@ -65,7 +65,7 @@
 	
 	  //FORM PRELIMINARY JSON STRUCTURE FOR UPLOAD
 	  let name = '';
-	  let description = 'An NFT of Negative Entropy: Series 1: Thomas'; //TODO include minter address in here + number it is
+	  let description = 'An NFT of Negative Entropy: Series 1: Thomas – This limited edition commemorates the launch of iDOGE and the brave men and women who in early 2021 put a doge on the moon'; //TODO include minter address in here + number it is
 	  let attributes = [];
 	  let image = '';
 	  let dependencies = [];
@@ -75,7 +75,7 @@
 	  let code_uri = "https://gateway.ipfs.io/ipfs/Qmd7vtcHC5XieQ94akRZaMbZptYa883A89fm9GWsJYR5qi";
 	
 	  // temp values
-	  let attrKey = '';
+	  let attrKey = '';	
 	  let attrValue = '';
 	  let dependency = '';
 	  let dependencyType = 'script';
@@ -272,6 +272,7 @@
 				'"Size of Particles"' +':"' + size.toFixed(3) + '", ' +
 				'"Speed mutliplier"' +':"'+ random.toFixed(3) + '", ' + 
 				'"Series":"Series 1: Thomas"' + ', ' +
+				'"Partnership":"iDOGE' + ', ' +
 				'"Tier"' +':"' + getTier(rarity.toFixed(0)) + '"}';
 	
 	 
