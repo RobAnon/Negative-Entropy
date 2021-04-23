@@ -629,7 +629,7 @@
 		  alert("All NFT's have been claimed!")
 		  return;
 		}
-		if(nextId >= 49) {
+		if(nextId >= 48) {
 			alert("All limited edition iDOGE have been claimed!")
 			return;
 		}
