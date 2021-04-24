@@ -25,7 +25,7 @@ import { LogLuvEncoding } from 'three/build/three.module';
   let left = 0;
   let right = 0;
   let sharing = false;
-  let maxPerPage = 8;
+  let maxPerPage = 6;
 
   const app = getContext('app');
   const opensea_base = "https://opensea.io/assets/";
@@ -130,8 +130,8 @@ import { LogLuvEncoding } from 'three/build/three.module';
     if(params.origin.trim() == 'private') {
       router("/personal-gallery/" + $app.account);
     } else {
-      console.log(Number.parseInt(token.id));
-      console.log(maxPerPage);
+      console.log('TOKEN:', Number.parseInt(token.id));
+      console.log('MAX PER PAGE', maxPerPage);
       var page_origin = Math.floor(Number.parseInt(token.id)/maxPerPage);
       router("/gallery/" + page_origin);//TODO: Make this dynamic
     } 
