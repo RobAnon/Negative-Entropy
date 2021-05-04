@@ -18,6 +18,10 @@
   --xgreen: #defe47;
 }
 
+::selection {
+  background: var(--xgreen);
+  color: black;
+}
 
 html, body {
   position: relative;

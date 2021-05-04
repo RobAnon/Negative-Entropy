@@ -20,6 +20,8 @@
   let endIndex = maxPerPage;
   let baseWebm = '';
 
+  let globalNonce;
+
   export let params;
   $: params; 
 
@@ -40,27 +42,64 @@
   buildLists();
 
 
-  function navRight() {
-    var nextParam = Number(params.id)+1;
-    if(nextParam*maxPerPage>=tokenCount) {
-      nextParam = Number(params.id);
-    } else {
-      router("/gallery/"+nextParam);
-      location.reload();
-    }
+  function timeout(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 
-  function navLeft() {
-    var nextParam = Number(params.id)-1;
-    if(nextParam < 0) {
-      nextParam = 0;
-    } else {
-      router("/gallery/"+nextParam);
-      location.reload();
+  async function navRight() {
+
+    if (Number(params.id) + 1 < Math.ceil(tokenCount/maxPerPage)) {
+
+      params.id = Number(params.id) + 1;
+  
+      document.getElementById('blind').style.left = 'auto';
+      document.getElementById('blind').style.right = '0px';
+      document.getElementById('blind').style.width = '100%';
+      
+      buildLists();
+  
+      router("/gallery/"+Number(params.id));
+  
+      await timeout(750);
+  
+      document.getElementById('blind').style.left = '0px';
+      document.getElementById('blind').style.right = 'auto';
+      document.getElementById('blind').style.width = '0%';
     }
+
+
   }
+
+
+  async function navLeft() {
+
+    if (Number(params.id) > 0) {
+      
+      params.id = Number(params.id) - 1;
+  
+      document.getElementById('blind').style.left = '0px';
+      document.getElementById('blind').style.right = 'auto';
+      document.getElementById('blind').style.width = '100%';
+  
+      buildLists();
+  
+      router("/gallery/"+Number(params.id));
+  
+      await timeout(750);
+  
+      document.getElementById('blind').style.left = 'auto';
+      document.getElementById('blind').style.right = '0px';
+      document.getElementById('blind').style.width = '0%';
+
+    }
+
+  }
+
 
   async function buildLists() {
+
+      const localNonce = globalNonce = new Object();
+
       var mult = Number(params.id)+1;
       startIndex = Number(params.id)*maxPerPage;
       endIndex = maxPerPage * mult;
@@ -78,9 +117,18 @@
       /* grey out button if you're at start/end */
       if((Number(params.id) + 1)*maxPerPage>tokenCount) {
         document.getElementById('navR').style.opacity="0";
+        document.getElementById('navR').style.pointerEvents="none";
+      } else {
+        document.getElementById('navR').style.opacity="1";
+        document.getElementById('navR').style.pointerEvents="auto";
       }
+
       if((Number(params.id) - 1) < 0) {
         document.getElementById('navL').style.opacity="0";
+        document.getElementById('navL').style.pointerEvents="none";
+      } else {
+        document.getElementById('navL').style.opacity="1";
+        document.getElementById('navL').style.pointerEvents="auto";
       }
       /* page count at bottom */
       document.getElementById('page-counter').innerHTML = (Number(params.id) + 1) + ' | ' + Math.ceil(tokenCount/maxPerPage);
@@ -92,11 +140,12 @@
       var amount = endIndex-startIndex;
       webms = fillArray(baseWebm, amount);
       names = fillArray("Loading...", amount);
-      ids = fillArray(1, amount);
 
-      console.log("Count is " + count)
-      console.log("Starting at:" + startIndex);
-      console.log("Ending at: " + endIndex);
+      ids = [];
+      for (var i = 0; i<amount; i++) {
+        ids.push(startIndex + i);
+      }
+
       let response
       let tokenArrayResponse;
       try{
@@ -112,21 +161,25 @@
           })
       });
       tokenArrayResponse = await response.json();    
+
       } catch (e) {
         console.log(e);
       }
 
+      if (localNonce === globalNonce) {
 
-      for(let i = 0; i < tokenArrayResponse.length; i++) {
-        ids[i] =tokenArrayResponse[i].id
-        const res = await fetch(tokenArrayResponse[i].tokenURI);
-        const json = await res.json();
-        if(replObj.hasOwnProperty(ids[i])) {
-          webms[i]=Object.getOwnPropertyDescriptor(replObj,ids[i]).value;
-        } else {
-          webms[i]=json.image;
+        for(let i = 0; i < tokenArrayResponse.length; i++) {
+          ids[i] =tokenArrayResponse[i].id
+          const res = await fetch(tokenArrayResponse[i].tokenURI);
+          const json = await res.json();
+          if(replObj.hasOwnProperty(ids[i])) {
+            webms[i]=Object.getOwnPropertyDescriptor(replObj,ids[i]).value;
+          } else {
+            webms[i]=json.image;
+          }
+          names[i]=json.name;
         }
-        names[i]=json.name;
+
       }
 
       //Dev stuff
@@ -166,6 +219,15 @@
 
 
 <style>
+
+  @keyframes loading {
+    0% {width: 0%;}
+    50% {width: 50%;}
+    100% {width: 0%;}
+  }
+  #blind-strip.animate-width {
+    animation: loading 1s;
+  }
   .viewer-buttons {
     display: flex;
     justify-content: space-between;
@@ -180,10 +242,12 @@
     align-self: center;
   }
   .gallery-container {
+    position: relative;
     overflow: hidden;
     max-height: 0px;
     transition: all 1s;
     margin-top: 50px;
+    min-height: 910px;
   }
   .list-container {
     max-height: 0px;
@@ -218,24 +282,39 @@
     }
   }
 
-  #gallery-loading {
-    text-align: center;
-    overflow: hidden;
-    height: 100px;
-    transition: all 0.4s;
-    font-size: 30px;
-  }
-
   @media only screen and (max-width: 600px) {
     .viewer-buttons button {
       width: 75px;
     }
   }
 
+  #blind {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 0%;
+    height: 100%;
+    transition: width 0.6s;
+    background-color: var(--xblack);
+  }
+  .blind-banner {
+    width: 100%;
+    height: 100%;
+    position: relative;
+  }
+  .blind-banner div {
+    position: absolute;
+    top: 50%;
+    left: 3%;
+    transform: translateY(-50%);
+    height: 1px;
+    width: 94%;
+    background: var(--xgreen);
+  }
+
 </style>
 
 <section>
-  <div id="gallery-loading"><h2>Loading...</h2></div>
   <div class="gallery-container">
     <strong>{tokenCount} Token(s)</strong>
     <br>
@@ -250,6 +329,9 @@
         {/each} 
       </div>
     </div>
+  <div id="blind">
+    <div class="blind-banner"><div id="blind-strip" class="animate-width"></div></div>
+  </div>
   </div>
   <div class="viewer-buttons">
 
