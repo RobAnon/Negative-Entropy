@@ -1,5 +1,5 @@
 <script>
-  import { onMount } from 'svelte';
+  import { afterUpdate, onMount } from 'svelte';
   import { getContext } from 'svelte';
   import Sandbox from '@beyondnft/sandbox';
   import App from '../App.svelte';
@@ -26,14 +26,19 @@ import { LogLuvEncoding } from 'three/build/three.module';
   let right = 0;
   let sharing = false;
   let maxPerPage = 6;
+  var total = '';
+
 
   const app = getContext('app');
   const opensea_base = "https://opensea.io/assets/";
   let opensea = ""; 
 
-
+  function timeout(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
 
   function renderSandbox() {
+
     new Sandbox({
       target: view,
       props: {
@@ -84,17 +89,85 @@ import { LogLuvEncoding } from 'three/build/three.module';
     data = result;
   }
   
+  var canMove = true;
+
+  var blind = document.createElement('div');
+  blind.id = 'blind';
+  var blindInner = ''
+
+
   //Clunky and inefficient, but they solve the problem
-  function navigateRight() {
-    params.id = right;
-    router("/viewer/"+right+"/"+params.origin.trim());
-    location.reload();
+  async function navigateRight() {
+
+    if (canMove) {
+      
+      canMove = false;
+      var blind = document.getElementById('blind')
+      blind.style.left = 'auto';
+      blind.style.right = '0px';
+      blind.style.width = '100%';
+
+      await timeout(400)
+
+      var canv = document.getElementById('render');
+      while (canv.firstChild) {
+        canv.removeChild(canv.firstChild);
+      }
+
+  
+      if (Number(params.id) + 1 < total) {
+        params.id = Number(params.id) + 1;
+      } else {
+        params.id = 0;
+      }
+      await getData();
+      await parseData();
+      router("/viewer/"+ params.id +"/"+params.origin.trim());
+
+      await timeout(50);
+      blind.style.left = '0px';
+      blind.style.right = 'auto';
+      blind.style.width = '0%';
+
+      canMove = true;
+    }
+
   }
 
-  function navigateLeft() {
-    params.id = left;
-    router("/viewer/"+left+"/"+params.origin.trim());
-    location.reload();
+  async function navigateLeft() {
+
+    if (canMove) {
+      canMove = false;
+
+      var blind = document.getElementById('blind')
+      blind.style.left = '0px';
+      blind.style.right = 'auto';
+      blind.style.width = '100%';
+
+      await timeout(400)
+      
+      var canv = document.getElementById('render');
+      while (canv.firstChild) {
+        canv.removeChild(canv.firstChild);
+      }
+  
+      if (Number(params.id) - 1 > 0) {
+        params.id = Number(params.id) - 1;
+      } else {
+        params.id = total - 1;
+      }
+      await getData();
+      await parseData();
+      router("/viewer/"+params.id+"/"+params.origin.trim());
+
+      await timeout(50);
+      blind.style.left = 'auto';
+      blind.style.right = '0px';
+      blind.style.width = '0%';
+
+      canMove = true;
+    }
+
   }
 
   async function navRight() {
@@ -145,40 +218,49 @@ import { LogLuvEncoding } from 'three/build/three.module';
   function closeShare() {
     sharing = false;
   }
+  async function parseData() {
+
+      const res = await fetch(data.tokenURI, {mode: 'cors'});
+      const json = await res.json();
+      
+      token.json = json;
+      token.id = data.id;
+      
+      image = json.image;
+      name = json.name;
+
+      data = json;
+      attributes = [];
+      Object.keys(data.attributes).forEach((key) => {
+        attributes.push({ key: data.attributes[key].trait_type, value: data.attributes[key].value });
+      });
+      opensea = opensea_base + String(process.env.CONTRACT_ADDRESS).toLowerCase() + "/" + token.id;
+      renderSandbox();
+    
+  }
+
+  var current = Number(params.id) + 1
+  afterUpdate(() => {
+    current = Number(params.id) + 1;
+  })
 
   onMount(async () => {
 
-    var total = await getCount();
+    total = await getCount();
 
     await getData();
     if (params.origin == null || params.origin == '') {
       params.origin = 'public';
     }
-    const res = await fetch(data.tokenURI, {mode: 'cors'});
-    const json = await res.json();
-    
-    token.json = json;
-    token.id = data.id;
-    
-    image = json.image;
-    name = json.name;
-    console.log(params.id);
+    parseData();
 
-
-    data = json;
-    attributes = [];
-    Object.keys(data.attributes).forEach((key) => {
-      attributes.push({ key: data.attributes[key].trait_type, value: data.attributes[key].value });
-    });
-    opensea = opensea_base + String(process.env.CONTRACT_ADDRESS).toLowerCase() + "/" + token.id;
-    renderSandbox();
     await navRight();
     await navLeft();
 
     window.scrollTo(window.scrollX, 0);
 		window.scrollTo(window.scrollX, 2);
 
-    document.getElementById('page-counter').innerHTML = (Number(params.id) + 1) + ' | ' + total;
+    //document.getElementById('page-counter').innerHTML = (Number(params.id) + 1) + ' | ' + total;
   });
 
   
@@ -195,10 +277,16 @@ import { LogLuvEncoding } from 'three/build/three.module';
   .big .output {
     min-height: 600px;
   }
+
+
  
   h2 {
     margin: 0px;
     color: white;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    height: 56px;
   }
  
   #open {
@@ -272,7 +360,7 @@ import { LogLuvEncoding } from 'three/build/three.module';
     margin: 0;
     margin-bottom: 10px;
   }
-  #page-counter {
+  #viewer-page-counter {
     align-self: center;
     margin: 0;
   }
@@ -311,7 +399,39 @@ import { LogLuvEncoding } from 'three/build/three.module';
   text-transform: capitalize;
 }
 
+.viewer-buttons {
+  height: 45px;
+}
+.render-container > div:nth-of-type(1) {
+  position: relative;
+  width: 100%;
+  height: min-content;
+}
 
+
+#blind {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 0%;
+    height: 100%;
+    transition: width 0.4s;
+    background-color: var(--xblack);
+  }
+  .blind-banner {
+    width: 100%;
+    height: 100%;
+    position: relative;
+  }
+  .blind-banner div {
+    position: absolute;
+    top: 50%;
+    left: 3%;
+    transform: translateY(-50%);
+    height: 1px;
+    width: 94%;
+    background: var(--xgreen);
+  }
 
 </style>
 <section class="big">
@@ -342,19 +462,26 @@ import { LogLuvEncoding } from 'three/build/three.module';
     <div class="output">
 
       <div class="render-container">
-        <div class="render" bind:this={view}></div>
+        <div>
+            <div class="render" id="render" bind:this={view}></div>
+            <div id="blind">
+              <div class="blind-banner">
+                <div id="blind-strip" class="animate-width"></div>
+              </div>
+            </div>
+        </div>
 
         <div class="viewer-buttons">
 
-          <div id="navL">
+          <div id="viewer-navL">
             <button class="button-main" on:click={navigateLeft}>
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-square" viewBox="0 0 16 16">
                 <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm11.5 5.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"/>
               </svg>
             </button>
           </div>
-          <p id="page-counter"></p>
-          <div id="navR">
+          <p id="viewer-page-counter">{current} | {total}</p>
+          <div id="viewer-navR">
             <button class="button-main" on:click={navigateRight}>
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right-square" viewBox="0 0 16 16">
                 <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm4.5 5.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z"/>

@@ -61,7 +61,6 @@
       router("/gallery/"+Number(params.id));
   
       await timeout(750);
-  
       document.getElementById('blind').style.left = '0px';
       document.getElementById('blind').style.right = 'auto';
       document.getElementById('blind').style.width = '0%';
