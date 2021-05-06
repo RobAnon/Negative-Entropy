@@ -12,7 +12,9 @@
 	import { Moon } from 'svelte-loading-spinners';
 	import router from 'page';
 	import Confirmation from '../components/Confirmation.svelte';
-	import {dogeJSON} from "../conf/dogeview";
+	import {renaJSON} from "../conf/renamodel";
+	import {checkerJSON} from "../conf/checkermodel";
+	import { Group, MaterialLoader } from 'three/build/three.module';
 
 
 	  let prompt = false;
@@ -226,7 +228,7 @@
 	}
 	//Declare global vars
 	let rand, random, b, dummy, visPos, pos, totalAve, offsets, recording, frame, speedMult, count, amount, newSeed, palette;
-	let size, intensityBoost, metaly, rough, emissivity, random2, random3, random4, rotationRate, rotationRate2, rotationRate3, controls, container;
+	let size, intensityBoost, metaly, rough, emissivity, random2, random3, random4, rotationRate, rotationRate2, rotationRate3, controls, renaCount, checkerCount;
 	
 	
 	
@@ -253,7 +255,7 @@
 		randomize();
 	
 	
-		amount = 7 + random * 5;
+		amount = 7 + Math.floor(random * 5);
 		count = Math.pow( amount, 3 );
 	  
 	
@@ -287,21 +289,34 @@
 		scene.background = new Color( 0x1a1a1a );
 		initLights(scene, camera);
 	
-	
-		var model = loader.parse( dogeJSON );
+		
+		var model = loader.parse( renaJSON );
+		var model2 = loader.parse(checkerJSON);
+		console.log(model);
 
-		const geometry = model.geometry;
-		geometry.scale(size*5, size*5, size*5);
-		const material = model.material;
+		const geometry = model.children[0].geometry;
+		const geometry2 = model2.children[0].geometry;
+
+		geometry.scale(size, size, size);
+		geometry2.scale(size, size, size);
+
+		const material = model.children[0].material;
 		material.roughness = rough;
 		material.metalness = metaly;
 		material.color.set( 0xffffff);
 		material.emissiveIntensity = emissivity;
 		material.emissive.set(0x25fae8);
-		material.map.minFilter = LinearFilter;
+		
+		var rng = rand()/2;
+
+		renaCount = Math.floor((1 - rng) * count);
+		console.log(renaCount);
+		checkerCount = count - renaCount;
+		console.log(checkerCount);
 	
-		mesh = new InstancedMesh( geometry, material, count );
-	
+		var mesh1 = new InstancedMesh( geometry, material, renaCount );
+		var mesh2 = new InstancedMesh( geometry2, material, checkerCount);
+		mesh = new Group();
 		let counter = 0;
 		const offset = ( amount - 1 ) / 2;
 	
@@ -312,14 +327,19 @@
 			for ( let y = 0; y < amount; y ++ ) {
 	
 				for ( let z = 0; z < amount; z ++ ) {
-	
+					
 					matrix.setPosition( offset - x, offset - y, offset - z );
 	
 					var index = getQuadrant(x,y,z,offset);
 					color.setHex(palette[index]).convertSRGBToLinear();
-	
-					mesh.setMatrixAt( counter, matrix );
-					mesh.setColorAt( counter, color );
+					
+					if(counter < renaCount) {
+						mesh1.setMatrixAt( counter, matrix );
+						mesh1.setColorAt( counter, color );
+					} else {
+						mesh2.setMatrixAt( counter-renaCount, matrix );
+						mesh2.setColorAt( counter-renaCount, color );
+					}
 				
 					var position = new Vector3( offset - x, offset - y, offset - z );
 					pos.push(position);
@@ -331,7 +351,8 @@
 			}
 	
 		}
-	
+		mesh.add(mesh1);
+		mesh.add(mesh2);
 	
 		scene.add( mesh );
 		geometry.dispose();
@@ -822,13 +843,18 @@
 					}
 					
 					dummy.updateMatrix();
-					mesh.setMatrixAt( i++, dummy.matrix );
+					if(i < renaCount) {
+						mesh.children[0].setMatrixAt( i++, dummy.matrix );
+						mesh.children[0].instanceColor.needsUpdate = true;
+					} else {
+						mesh.children[1].setMatrixAt(i++ - renaCount, dummy.matrix);
+						mesh.children[1].instanceMatrix.needsUpdate = true;
+					}
 				}
 				reps++;
 			}
-			mesh.instanceMatrix.needsUpdate = true;
-			mesh.instanceColor.needsUpdate = true;
-	
+			mesh.children[0].instanceMatrix.needsUpdate = true;
+			mesh.children[1].instanceColor.needsUpdate = true;
 		}
 		if(parameters.lock) {
 			fitCameraToSelection(camera, controls, visPos, 1.3)
