@@ -7,6 +7,10 @@
   import { beforeUpdate, afterUpdate } from 'svelte';
   import router from "page";
   import {replObj} from "../utils.js";
+  import * as animateScroll from 'svelte-scrollto';
+  import jQuery from 'jQuery';
+import { each } from 'svelte/internal';
+
 
   let tokens = [];
   export let tokenSlice = [];
@@ -46,11 +50,21 @@
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
-  async function navRight() {
+  async function navRight(x = 1) {
 
     if (Number(params.id) + 1 < Math.ceil(tokenCount/maxPerPage)) {
 
-      params.id = Number(params.id) + 1;
+      params.id = Number(params.id) + x;
+
+      calculateScroller();
+
+      var numbers = document.getElementsByClassName('page-number');
+      for (var i = 0; i<numbers.length; i++) {
+        numbers[i].classList.remove('current-page');
+        if (Number(params.id) === i) {
+          numbers[i].classList.add('current-page');
+        }
+      }
   
       document.getElementById('blind').style.left = 'auto';
       document.getElementById('blind').style.right = '0px';
@@ -64,17 +78,29 @@
       document.getElementById('blind').style.left = '0px';
       document.getElementById('blind').style.right = 'auto';
       document.getElementById('blind').style.width = '0%';
-    }
 
+
+    }
 
   }
 
 
-  async function navLeft() {
+  async function navLeft(x = 1) {
 
     if (Number(params.id) > 0) {
       
-      params.id = Number(params.id) - 1;
+      params.id = Number(params.id) - x;
+
+      calculateScroller();
+
+      var numbers = document.getElementsByClassName('page-number');
+      for (var i = 0; i<numbers.length; i++) {
+        numbers[i].classList.remove('current-page');
+        if (Number(params.id) === i) {
+          numbers[i].classList.add('current-page');
+        }
+      }
+    
   
       document.getElementById('blind').style.left = '0px';
       document.getElementById('blind').style.right = 'auto';
@@ -92,6 +118,23 @@
 
     }
 
+  }
+
+
+  async function goToPage() {
+    var page = this.innerHTML;
+
+    if (Number(page) === Number(params.id) + 1) {
+      return;
+    }
+
+    if (Number(page) > Number(params.id) + 1) {
+      navRight(Number(page) - Number(params.id) - 1);
+    }
+
+    if (Number(page) < Number(params.id) + 1) {
+      navLeft(Number(params.id) - Number(page) + 1);
+    }
   }
 
 
@@ -129,8 +172,6 @@
         document.getElementById('navL').style.opacity="1";
         document.getElementById('navL').style.pointerEvents="auto";
       }
-      /* page count at bottom */
-      document.getElementById('page-counter').innerHTML = (Number(params.id) + 1) + ' | ' + Math.ceil(tokenCount/maxPerPage);
 
       
       if(endIndex > tokenCount) {
@@ -185,8 +226,22 @@
       rebuild++;
   }
 
+  function calculateScroller() {
+
+    var scroller = document.getElementById('page-scroller');
+    var scrollerWidth = window.getComputedStyle(scroller).getPropertyValue('width').split('px')[0];
+    var difference = 350 - scrollerWidth;
+    var scrollAmt = Number(params.id) * 50 + (difference/2);
+    scroller.scroll({
+      left: scrollAmt,
+      behavior: 'smooth'
+    })
+
+  }
+
   //CONSIDER Await blocks
-	onMount(function() {
+	onMount(async function() {
+
     fadeIn();
 		window.scrollTo(window.scrollX, window.scrollY + 1);
 
@@ -196,12 +251,46 @@
       location.reload();
     }
 
+
+    try{ 
+      var countRes = await fetch(BACKEND+"tokenCount", {mode: 'cors'});
+      var count = await countRes.json();
+    } catch(e) {
+      console.log(e);
+      alert("Failed to load token list. Please reload your page");
+    }
+    tokenCount = Number(count.count);
+
+    var pageNumberContainer = document.getElementsByClassName('page-scroller')[0];
+
+    for (var i = 0; i < Math.ceil(tokenCount/maxPerPage); i++) {
+      var el = document.createElement('p');
+      el.classList.add('page-number');
+      el.innerHTML = i + 1;
+      el.onclick = goToPage;
+      if (Number(params.id) === i) {
+        el.classList.add('current-page');
+      }
+      pageNumberContainer.appendChild(el); 
+    } 
+
+    calculateScroller();
+
     setTimeout(function() {
       document.getElementsByClassName('gallery-container')[0].style.overflow = 'visible';
     }, 800)
 
-    window.scrollTo(window.scrollX, 0);
-    window.scrollTo(window.scrollX, 2);
+
+    // scroll horizontally on vertical scroll when hovered over page numbers
+    function scrollHorizontally(e) {
+        e = window.event || e;
+        var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
+        document.getElementById('page-scroller').scrollLeft -= (delta * 4);
+        e.preventDefault();
+    }
+    document.getElementById('page-scroller').addEventListener('mousewheel', scrollHorizontally, false);
+    document.getElementById('page-scroller').addEventListener('DOMMouseScroll', scrollHorizontally, false);
+
   });
 
   function fillArray(value, len) {
@@ -212,12 +301,69 @@
     return a;
   }
 
+
+
 </script>
 
 
 
 
 <style>
+
+  .page-scroller {
+    display: inline-block;
+    width: 100%;
+    overflow: auto;
+    white-space: nowrap;
+  }
+  .page-scroller-container {
+    position: relative;
+    max-width: 350px;
+    min-width: 0;
+    flex-shrink: 2;
+  }
+  .page-scroller-container:after, .page-scroller-container:before {
+    content: '';
+    display: block;
+    width: 100px;
+    height: 100%;
+    position: absolute;
+    pointer-events: none;
+  }
+  .page-scroller-container:after {
+    background: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(17, 17, 17, 1));
+    right: 0;
+    top: 0;
+    z-index: 2;
+  }
+  .page-scroller-container:before {
+    background: linear-gradient(to right, rgba(17, 17, 17, 1), rgba(0, 0, 0, 0));
+    left: 0;
+    z-index: 2;
+  }
+  :global(.page-number) {
+    margin: 0;
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    text-align: center;
+    line-height: 50px;
+    transition: margin-left 0.3s;
+    position: relative;
+    cursor: pointer;
+    box-sizing: content-box;
+    transition: all 0.4s;
+  }
+  :global(.page-number:nth-child(1)) {
+    padding-left: 150px;
+  }
+  :global(.page-number:nth-last-child(1)) {
+    padding-right: 150px;
+  }
+  :global(.current-page) {
+     text-shadow: 0px 0px 8px var(--xgreen);
+     color: var(--xgreen);
+  }
 
   @keyframes loading {
     0% {width: 0%;}
@@ -231,14 +377,11 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 40px;
+    margin-top: 20px;
   }
 
   #navL, #navR {
     transition: opacity 0.4s;
-  }
-  #page-counter {
-    align-self: center;
   }
   .gallery-container {
     position: relative;
@@ -266,11 +409,14 @@
   @media only screen and (max-width: 550px) {
     .list {
       display: block;
-      padding: 0px 25px;
+      padding: 0px;
       grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
     }
     article {
       margin-bottom: 20px;
+    }
+    .viewer-buttons {
+      margin-top: 100px;
     }
   }
 
@@ -335,15 +481,17 @@
   <div class="viewer-buttons">
 
     <div id="navL">
-      <button class="button-main" on:click={navLeft}>
+      <button class="button-main" on:click={() => navLeft(1) }>
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-square" viewBox="0 0 16 16">
           <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm11.5 5.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"/>
         </svg>
       </button>
     </div>
-    <p id="page-counter"></p>
+    <div class="page-scroller-container">
+      <div class="page-scroller" id="page-scroller">    </div>
+    </div>
     <div id="navR">
-      <button class="button-main" on:click={navRight}>
+      <button class="button-main" on:click={() => navRight(1) }>
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right-square" viewBox="0 0 16 16">
           <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm4.5 5.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z"/>
         </svg>
@@ -351,6 +499,7 @@
     </div>
 
   </div>
+
 
 </section>
 
