@@ -12,6 +12,9 @@
   import { Moon } from 'svelte-loading-spinners';
   import router from 'page';
   import Confirmation from '../components/Confirmation.svelte';
+
+
+  	var canMint = false; /* for Rob */
   
 	let prompt = false;
 	const app = getContext('app');
@@ -50,6 +53,8 @@
 	  closeHelpButton.addEventListener('click', function() {
 		  helpContainer.style.display = "none";
 	  })
+
+
   
 	})
   
@@ -975,6 +980,25 @@
 	
   
   <style>
+
+.canMint {
+	opacity: 0.4;
+	position: relative;
+}
+.canMint:after {
+	background: url('/padlock.svg') no-repeat;
+	background-size: 35px;
+	background-position: center;
+	display: block;
+	content: '';
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 50px;
+	height: 50px;
+	z-index: 9;
+}
   
   #load_ind {
 	  background: none;
@@ -1186,7 +1210,7 @@
 			  </svg>
 		  </button>
 		<button class="button-secondary" id="reset" on:click={()=>_reset()}>Load Seed</button>
-		<button class="button-main" id="start" on:click={(e)=>start(e)}>Mint&nbsp;&nbsp;Ξ0.15</button> 
+		<button class="{canMint ? 'button-main' : 'button-main canMint'}" id="start" on:click={(e)=>start(e)}>Mint&nbsp;&nbsp;Ξ0.15</button> 
 	  </div>
 	  <p id="please-note">We use the <b><a href="https://github.com/BeyondNFT/sandbox">BeyondNFT iNFT Standard</a></b>. Your NFT will be viewable on any website that has adopted that standard, not just our own.</p>
 	  <p id="please-note">Please note: Due to the complexity of the design and the minting process injecting data directly onto the blockchain, gas prices may exceed the typical range and are expected to lie between 0.025 and 0.05 Ξ.</p>
