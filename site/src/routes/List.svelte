@@ -331,6 +331,8 @@ import { each } from 'svelte/internal';
     width: 100%;
     overflow: auto;
     white-space: nowrap;
+    position: relative;
+    top: 6px;
   }
   .page-scroller-container {
     position: relative;
@@ -395,6 +397,28 @@ import { each } from 'svelte/internal';
     align-items: center;
     margin-top: 20px;
   }
+  @media only screen and (max-width: 600px) {
+    .viewer-buttons .button-secondary {
+      width: 55px !important;
+    }
+  }
+  .viewer-buttons .button-secondary {
+    width: 100px;
+    height: 40px;
+    border-width: 1px;
+    padding: 0;
+  }
+  .viewer-buttons .button-secondary h3 {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    line-height: 34px;
+    text-align: center;
+    font-size: 28px;
+    font-weight: 600;
+    pointer-events: none;
+    transform: scaleX(0.4);
+  }
 
   #navL, #navR {
     transition: opacity 0.4s;
@@ -443,11 +467,6 @@ import { each } from 'svelte/internal';
     }
   }
 
-  @media only screen and (max-width: 600px) {
-    .viewer-buttons button {
-      width: 75px;
-    }
-  }
 
   #blind {
     position: absolute;
@@ -497,20 +516,16 @@ import { each } from 'svelte/internal';
   <div class="viewer-buttons">
 
     <div id="navL">
-      <button class="button-main" on:click={() => navLeft(1) }>
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-square" viewBox="0 0 16 16">
-          <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm11.5 5.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"/>
-        </svg>
+      <button class="button-secondary" on:click={() => navLeft(1) }>
+        <h3>&lt;</h3>
       </button>
     </div>
     <div class="page-scroller-container">
       <div class="page-scroller" id="page-scroller">    </div>
     </div>
     <div id="navR">
-      <button class="button-main" on:click={() => navRight(1) }>
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right-square" viewBox="0 0 16 16">
-          <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm4.5 5.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z"/>
-        </svg>
+      <button class="button-secondary" on:click={() => navRight(1) }>
+        <h3>&gt;</h3>
       </button>
     </div>
 
