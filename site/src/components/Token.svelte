@@ -17,9 +17,16 @@
   $:image;
   $:name; 
 
+
   afterUpdate(() => {
+
     if (image !== "") {
       document.querySelector( '[src="' + image + '"]' ).parentElement.nextElementSibling.style.display = "none";
+    } else {
+      var els = document.getElementsByClassName('moon-container');
+      for (let el of els) {
+        el.style.display = 'block';
+      }
     }
   })
 
@@ -28,8 +35,6 @@
     var height = document.getElementsByClassName('list')[0].offsetHeight;
     document.getElementsByClassName('gallery-container')[0].style.maxHeight = height + 50 + "px";
     document.getElementsByClassName('list-container')[0].style.maxHeight = height + 50 + "px";
-
-    document.getElementById('gallery-loading').style.height = "0px";
     
   });
 </script>
