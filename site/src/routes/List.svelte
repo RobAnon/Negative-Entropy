@@ -285,7 +285,7 @@ import { each } from 'svelte/internal';
     function scrollHorizontally(e) {
         e = window.event || e;
         var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
-        document.getElementById('page-scroller').scrollLeft -= (delta * 4);
+        document.getElementById('page-scroller').scrollLeft -= (delta * 7);
         e.preventDefault();
     }
     document.getElementById('page-scroller').addEventListener('mousewheel', scrollHorizontally, false);
@@ -309,6 +309,22 @@ import { each } from 'svelte/internal';
 
 
 <style>
+
+  .page-scroller::-webkit-scrollbar {
+    height: 10px;
+  }
+  .page-scroller:hover::-webkit-scrollbar-thumb {
+    background: rgba(5, 5, 5, 1);
+    transition: background 3s;
+  }
+  .page-scroller::-webkit-scrollbar-track {
+    background-color: var(--xblack);
+  }
+  .page-scroller::-webkit-scrollbar-thumb {
+    background: rgba(5, 5, 5, 0);
+    border-radius: 10px;
+    transition: background 3s;
+  }
 
   .page-scroller {
     display: inline-block;
