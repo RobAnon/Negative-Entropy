@@ -39,7 +39,8 @@ async function getUserTokens() {
 
 
 onMount(function() {
-  window.scrollTo(window.scrollX, window.scrollY + 1);
+  window.scrollTo(window.scrollX, 0);
+	window.scrollTo(window.scrollX, 2);
 });
 
   

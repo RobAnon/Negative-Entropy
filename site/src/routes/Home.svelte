@@ -36,8 +36,12 @@ onMount(async () => {
 
   renderSandbox();
 
-  window.scrollTo(window.scrollX, window.scrollY + 1);
-})
+  console.log('mounted');
+
+  window.scrollTo(window.scrollX, 0);
+  window.scrollTo(window.scrollX, 2);
+
+});
 
 async function getCount() {
     var backend_dest = BACKEND + "tokenCount";

@@ -13,7 +13,7 @@
   let tokenCount = 0;
   let origin = 'public';
 
-  let maxPerPage = 8;
+  let maxPerPage = 6;
   let lower = 0;
   let rebuild = 0;
   let startIndex = 0;
@@ -147,6 +147,9 @@
     setTimeout(function() {
       document.getElementsByClassName('gallery-container')[0].style.overflow = 'visible';
     }, 800)
+
+    window.scrollTo(window.scrollX, 0);
+    window.scrollTo(window.scrollX, 2);
   });
 
   function fillArray(value, len) {
@@ -190,8 +193,8 @@
     margin: 0 auto;
     align-content: center;
     justify-content: center;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    grid-gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(245px, 1fr));
+    grid-gap: 50px;
     padding: 10px 0 30px;
     position: relative;
     color:white;
@@ -200,6 +203,18 @@
   @media only screen and (max-width: 550px) {
     .list {
       display: block;
+      padding: 0px 25px;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    }
+    article {
+      margin-bottom: 20px;
+    }
+  }
+
+  @media only screen and (max-width: 750px) {
+    .list {
+      grid-gap: 25px;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     }
   }
 

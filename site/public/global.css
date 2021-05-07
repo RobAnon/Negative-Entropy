@@ -182,6 +182,11 @@ header {
   margin-right: 40px;
   height: 60px;
   width: auto;
+  transition: box-shadow 0.6s;
+  border-radius: 50%;
+}
+#logo:hover {
+  box-shadow: white 0px 0px 20px -10px;
 }
 #logo img {
   width: 60px;
@@ -215,10 +220,10 @@ header {
   position: relative;
   font-size: 22px;
   font-weight: 200;
-  margin-bottom: 30px;
+  margin: 0 auto 30px;
   cursor: pointer;
   text-shadow: 0px 0px 8px var(--xwhite);
-  width: 100%;
+  width: max-content;
   transition: all 0.4s;
 }
 .navbar-link:after {
@@ -239,7 +244,7 @@ header {
   text-shadow: 0px 0px 32px white, 0px 0px 16px var(--xwhite);
 }
 .navbar-link:hover:after {
-  width: 100%;
+  width: 125px;
 }
 #gallery {
   display: none;
@@ -291,6 +296,9 @@ header {
   }
   .navbar-links a:nth-child(5), .navbar-links a:nth-child(6) {
     display: none;
+  }
+  .navbar-link:hover:after {
+    width: 100%;
   }
   #gallery {
     display: block;
@@ -666,6 +674,11 @@ footer .footer-icons-container {
 footer svg {
   width: 40px;
   height: 40px;
+  fill: var(--xwhite);
+  transition: fill 0.2s;
+}
+footer svg:hover {
+  fill: var(--xgreen);
 }
 footer a {
   margin-right: 40px;
@@ -710,6 +723,7 @@ footer .footer-icons-container a:last-child {
   }
   #logo {
     margin-right: 10px;
+    transition: box-shadow 0.4s;
   }
   .button-main, .button-secondary {
     font-size: 16px;
