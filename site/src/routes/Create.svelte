@@ -255,7 +255,7 @@
 		randomize();
 	
 	
-		amount = 7 + Math.floor(random * 5);
+		amount = 7 + Math.floor(random * 7);
 		count = Math.pow( amount, 3 );
 	  
 	
