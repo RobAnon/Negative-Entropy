@@ -425,13 +425,8 @@ import { each } from 'svelte/internal';
   .gallery-container {
     position: relative;
     overflow: hidden;
-    max-height: 0px;
     transition: all 1s;
     margin-top: 50px;
-    min-height: 840px;
-  }
-  .list-container {
-    max-height: 0px;
   }
   .list {
     display: grid;
