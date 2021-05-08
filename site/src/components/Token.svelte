@@ -30,13 +30,6 @@
     }
   })
 
-  onMount(() => {
-    
-    var height = document.getElementsByClassName('list')[0].offsetHeight;
-    document.getElementsByClassName('gallery-container')[0].style.maxHeight = height + 50 + "px";
-    document.getElementsByClassName('list-container')[0].style.maxHeight = height + 50 + "px";
-    
-  });
 </script>
 
 <style>

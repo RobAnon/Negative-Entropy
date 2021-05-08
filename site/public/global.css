@@ -59,7 +59,7 @@ h1 b:after {
   transition: all 0.4s;
 }
 h1 b:hover:after {
-  height: 38px;
+  height: 50%;
   bottom: 13px;
 }
 
@@ -86,7 +86,7 @@ h2 b:after {
   transition: all 0.4s;
 }
 h2 b:hover:after {
-  height: 30px;
+  height: 50%;
   bottom: 10px;
 }
 
@@ -367,12 +367,14 @@ header {
 
 /* - homepage header - */
 .homepage-heading {
-  margin-top: 20%;
   position: relative;
-  min-height: calc(100vh - 180px);
+  min-height: calc(100vh - 115px);
 }
 .header-text {
   cursor: default;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
 }
 .tokens-remaining {
   font-size: 16px !important;
@@ -393,7 +395,7 @@ header {
 }
 
 .homepage-graphic {
-  height: 800px;
+  height: 600px;
   width: 100%;
   position: absolute;
   top: 50%;
@@ -430,7 +432,7 @@ header {
 @media only screen and (min-width: 900px) {
   .homepage-heading {
     display: flex;
-    min-height: calc(100vh - 100px);
+    min-height: calc(100vh - 115px);
     margin-top: 0px;
     align-items: center;
   }
@@ -438,12 +440,13 @@ header {
     max-width: 52%;
   }
   .homepage-graphic {
-    flex-grow: 1;
-    margin-top: 0px;
+    margin-top: -30px;
     margin-left: auto;
     position: static;
     transform: translate(0, 0);
-    height: 650px;
+    height: 600px;
+    width: 600px;
+    justify-self: right;
   }
   .homepage-graphic .render {
     margin-top: 0px;
