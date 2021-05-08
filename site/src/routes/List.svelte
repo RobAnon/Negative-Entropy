@@ -395,7 +395,6 @@ import { each } from 'svelte/internal';
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 20px;
   }
   @media only screen and (max-width: 600px) {
     .viewer-buttons .button-secondary {
@@ -429,7 +428,7 @@ import { each } from 'svelte/internal';
     max-height: 0px;
     transition: all 1s;
     margin-top: 50px;
-    min-height: 910px;
+    min-height: 840px;
   }
   .list-container {
     max-height: 0px;
@@ -454,9 +453,6 @@ import { each } from 'svelte/internal';
     }
     article {
       margin-bottom: 20px;
-    }
-    .viewer-buttons {
-      margin-top: 100px;
     }
   }
 
@@ -496,10 +492,6 @@ import { each } from 'svelte/internal';
 
 <section>
   <div class="gallery-container">
-    <strong>{tokenCount} Token(s)</strong>
-    <br>
-    <br>
-    <br>
     <div class="list-container">
       <div class="list">
         {#each ids as ident, i}
