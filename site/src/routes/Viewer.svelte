@@ -284,6 +284,21 @@ import { LogLuvEncoding } from 'three/build/three.module';
     
   }
 
+  const calculateShiny = () => {
+    var shiny = document.querySelectorAll('.data ul li:nth-of-type(1)')[0];
+    if (shiny) {
+      if (shiny.innerHTML.includes('True')) {
+        shiny.style.textShadow = "0px 0px 10px var(--xwhite)";
+      } else {
+        shiny.style.textShadow = "none";
+      }
+    }
+  }
+
+  afterUpdate(() => {
+    calculateShiny();
+  })
+
   onMount(async () => {
 
     total = await getCount();
@@ -310,6 +325,7 @@ import { LogLuvEncoding } from 'three/build/three.module';
     } 
 
     calculateScroller();
+    calculateShiny()
 
   });
 
@@ -318,6 +334,10 @@ import { LogLuvEncoding } from 'three/build/three.module';
 </script>
 
 <style>
+
+  :global(.data ul li:nth-of-type(1)) {
+    transition: text-shadow 0.6s;
+  }
 
 .page-scroller::-webkit-scrollbar {
     height: 10px;
