@@ -288,7 +288,7 @@ import { LogLuvEncoding } from 'three/build/three.module';
     var shiny = document.querySelectorAll('.data ul li:nth-of-type(1)')[0];
     if (shiny) {
       if (shiny.innerHTML.includes('True')) {
-        shiny.style.textShadow = "0px 0px 10px var(--xwhite)";
+        shiny.style.textShadow = "0px 0px 15px var(--xwhite)";
       } else {
         shiny.style.textShadow = "none";
       }
@@ -325,7 +325,16 @@ import { LogLuvEncoding } from 'three/build/three.module';
     } 
 
     calculateScroller();
-    calculateShiny()
+    calculateShiny();
+    
+    function scrollHorizontally(e) {
+        e = window.event || e;
+        var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
+        document.getElementById('page-scroller').scrollLeft -= (delta * 7);
+        e.preventDefault();
+    }
+    document.getElementById('page-scroller').addEventListener('mousewheel', scrollHorizontally, false);
+    document.getElementById('page-scroller').addEventListener('DOMMouseScroll', scrollHorizontally, false);
 
   });
 
@@ -505,14 +514,19 @@ import { LogLuvEncoding } from 'three/build/three.module';
   margin: 0 auto;
   margin-top: 30px;
   width: max-content;
+  width: 160px;
+  line-height: 19px;
+  position: relative;
+  padding-left: 35px
 }
 
 .gfycat-button svg {
   fill: white;
-  height: 15px;
-  position: relative;
-  top: 2px;
-  margin-right: 4px;
+  height: 20px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 32px;
 }
 
 .big strong {
@@ -649,7 +663,7 @@ import { LogLuvEncoding } from 'three/build/three.module';
             <a href={opensea} title="Buy on OpenSea" target="_blank"><img style="width:160px; border-radius:5px; box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.25);" src="https://storage.googleapis.com/opensea-static/opensea-brand/buy-button-white.png" alt="Buy on OpenSea badge" /></a>
           </div>
           <div id="share">
-            <button class="button-main gfycat-button" on:click={()=>share()}>
+            <button class="button-secondary gfycat-button" on:click={()=>share()}>
               <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 88.1 88.1" style="enable-background:new 0 0 88.1 88.1;" xml:space="preserve">
                 <g id="_x37_7_Essential_Icons_58_">
                   <path id="Share" d="M69.05,58.1c-4.8,0-9.1,2.3-11.8,5.8l-24.3-14.1c1.5-3.7,1.5-7.8,0-11.5l24.3-14.1c2.7,3.5,7,5.8,11.8,5.8
@@ -660,7 +674,7 @@ import { LogLuvEncoding } from 'three/build/three.module';
                     S75.15,84.1,69.05,84.1z"/>
                 </g>
               </svg>
-              Share to Gfycat
+              Gfycat
             </button>
           </div>
           {/if}
