@@ -1165,9 +1165,9 @@
 	  {#if params.seed != null && params.seed != ''} 
 	  <p id="seed-note">The seed that brought you here was: <span> {params.seed}</span></p>
  	 {/if}
-	  <textarea class="form-control mint-text-area fade-in fade-in-2" name="textarea" id="textareaID" placeholder="Choose a unique name (300 char. limit) for your NFT and hit Load Seed..." maxlength="300"></textarea>
+	  <textarea class="form-control mint-text-area fade-in fade-in-1" name="textarea" id="textareaID" placeholder="Choose a unique name (300 char. limit) for your NFT and hit Load Seed..." maxlength="300"></textarea>
   
-	  <div class="mint-buttons fade-in fade-in-3">
+	  <div class="mint-buttons fade-in fade-in-2">
 		  <button id="help-button">
 			  <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
 				  <g>
@@ -1188,8 +1188,8 @@
 		<button class="button-secondary" id="reset" on:click={()=>_reset()}>Load Seed</button>
 		<button class="button-main" id="start" on:click={(e)=>start(e)}>Mint&nbsp;&nbsp;Ξ0.15</button> 
 	  </div>
-	  <p id="please-note" class="fade-in fade-in-2">We use the <b><a href="https://github.com/BeyondNFT/sandbox">BeyondNFT iNFT Standard</a></b>. Your NFT will be viewable on any website that has adopted that standard, not just our own.</p>
-	  <p id="please-note" class="fade-in fade-in-2">Please note: Due to the complexity of the design and the minting process injecting data directly onto the blockchain, gas prices may exceed the typical range and are expected to lie between 0.025 and 0.05 Ξ.</p>
+	  <p id="please-note" class="fade-in fade-in-3">We use the <b><a href="https://github.com/BeyondNFT/sandbox">BeyondNFT iNFT Standard</a></b>. Your NFT will be viewable on any website that has adopted that standard, not just our own.</p>
+	  <p id="please-note" class="fade-in fade-in-3">Please note: Due to the complexity of the design and the minting process injecting data directly onto the blockchain, gas prices may exceed the typical range and are expected to lie between 0.025 and 0.05 Ξ.</p>
 	  <div id="help-container">
 		  <div class="help-inner-container">
 			  <h2>Need help?</h2>
