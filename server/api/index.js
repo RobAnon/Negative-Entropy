@@ -13,7 +13,9 @@ const createClient = require('ipfs-http-client');
 const app = express();
 const ipfs = createClient('https://ipfs.infura.io:5001');
 const nthline = require('nthline');
+const stateRecorder = './public/state.txt'
 var Web3WsProvider = require('web3-providers-ws');
+
 
 //Declare various other constants
 const LENGTH = 611;//We know the exact length
@@ -68,6 +70,8 @@ app.options('/api/tokenCount', function (req, res) {
 });
 
 app.get('/api/tokenCount', (req, res) => {
+	checkLockAndUpdate();
+
 	var provider = new Web3WsProvider(process.env.NETWORK, options);
 
 	res.setHeader('Cache-Control', 's-max-age=1, stale-while-revalidate')
@@ -86,6 +90,7 @@ app.options('/api/seed', function (req, res) {
 });
 
 app.get('/api/seed', (req, res) => {
+	checkLockAndUpdate();
 	var provider = new Web3WsProvider(process.env.NETWORK, options);
 	let seed = req.query.seed;
 	const web3 = new Web3(provider);
@@ -115,6 +120,7 @@ app.options('/api/token', function (req, res) {
 });
 
 app.post('/api/token', (req, res) => {
+	checkLockAndUpdate();
 	var provider = new Web3WsProvider(process.env.NETWORK, options);
 	res.setHeader('Cache-Control', 's-max-age=1, stale-while-revalidate')
 	const web3 = new Web3(provider);
@@ -147,6 +153,7 @@ app.options('/api/allTokens', function (req, res) {
 });
 
 app.post('/api/allTokens', (req, res) => {
+	checkLockAndUpdate();
 	let provider = new Web3WsProvider(process.env.NETWORK, options);
 	var start = -1;
 	var end = -1;
@@ -169,7 +176,13 @@ app.options('/api/signature', function (req, res) {
 	handleCORS(req, res);
 });
 
-app.post('/api/signature', (req, res) => {  	
+app.post('/api/signature', (req, res) => {
+	checkLockAndUpdate();  	
+	if(req.rena) {
+		if(cannotMint()) {
+			return res.send(JSON.stringify("Cannot mint!"));
+		}
+	}
 	var provider = new Web3WsProvider(process.env.NETWORK, options);
 	res.setHeader('Cache-Control', 's-max-age=1, stale-while-revalidate')
 
@@ -214,6 +227,7 @@ app.options('/api/file', function (req, res) {
 });
 
 app.post('/api/file', (req, res) => {
+	checkLockAndUpdate();
 	//TODO: Add authorization to prevent this from being abused
 	var file = req.files.file.data;
 	getImageURL(file)
@@ -228,6 +242,7 @@ app.options('/api/randomLine', function (req, res) {
 });
 
 app.get('/api/randomLine', (req, res) => {
+	checkLockAndUpdate();
   	const rowIndex = Math.floor(Math.random() * LENGTH);
 	nthline(rowIndex, filePath)
 	.then(function(line) {
@@ -373,3 +388,14 @@ function handleCORS(req, res) {
 	res.end();
 }
 
+function checkLockAndUpdate() { 
+	const contract = new web3.eth.Contract(abi, process.env.CONTRACT_ADDRESS);
+	getTokenCount(contract)
+	.then(function(count) {
+		nthline(0, stateRecorder)
+		.then(function(line) {
+			
+		});
+	});
+
+}

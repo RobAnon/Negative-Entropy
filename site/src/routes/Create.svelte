@@ -1,5 +1,4 @@
 <script>
-<<<<<<< HEAD
   import { createEventDispatcher, getContext, onMount } from 'svelte';
   import defaultCode from '../conf/code.js';
   import Sandbox from '@beyondnft/sandbox';
@@ -88,114 +87,14 @@
 	$: view && code && data && renderSandbox();
   
 	$: {
-	  let _data = {
-		name,
-		description,
-		attributes,
-		image,
-	  };
-  
-	  if (code) {
-		_data.interactive_nft = {
-		  code_uri,
-		  dependencies,
-		  version:"0.0.8"	
-=======
-	import { createEventDispatcher, getContext, onMount } from 'svelte';
-	import defaultCode from '../conf/code.js';
-	import Sandbox from '@beyondnft/sandbox';
-	import { ipfs } from '../utils.js';
-	import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-	import { HemisphereLight, LinearToneMapping, Box3, SpotLight, Scene, Color, Object3D, Vector3, PerspectiveCamera, PointLight, SphereGeometry, MeshStandardMaterial, InstancedMesh, Matrix4, AxesHelper, WebGLRenderer, ObjectLoader, LinearFilter} from 'three'
-	import seedrandom from 'seedrandom'
-	import CCapture from '../components/ccapture.js/src/CCapture.js'
-	import { get, writable } from 'svelte/store';
-	import { ViewerScript } from '../components/ViewerScript';
-	import { Moon } from 'svelte-loading-spinners';
-	import router from 'page';
-	import Confirmation from '../components/Confirmation.svelte';
-	import {renaJSON} from "../conf/renamodel";
-	import {checkerJSON} from "../conf/checkermodel";
-	import { Group, MaterialLoader } from 'three/build/three.module';
-
-
-	  let prompt = false;
-	  const app = getContext('app');
-	  const dispatch = createEventDispatcher();
-	  const myApp = writable({camera: null, renderer: null})
-	  export let innerHeight;
-	  export let innerWidth;
-	  let minting = false;
-	  let TOTAL_SUPPLY = 1000;
-	  let webmURL = "https://gateway.ipfs.io/ipfs/QmULnqLrTuG9fAxCwctH89sjb7YRL4ig77JJ2Fn78X541j";
-	  export let params;
-	  let seed = 'Buck';
-	
-	  onMount(()=>{
-		  window.scrollTo(window.scrollX, 0);
-		  window.scrollTo(window.scrollX, 2);
-		const renderer = document.getElementById('canvas')
-		document.getElementById('canvas-container').appendChild(renderer);
-		document.getElementById('canvas').setAttribute('style', 'width: 100%; height: 100%;' )
-		onWindowResize();
-		if (params.seed != null && params.seed != '') {
-			seed = (' ' + params.seed).slice(1);;
-			newSeed = (' ' + params.seed).slice(1);
-			reset();
-			console.log("seed loaded: " + seed);
-			console.log("params seed is: " + params.seed)
-		}
-		window.scrollTo(window.scrollX, window.scrollY + 1);
-	
-		var helpContainer = document.getElementById('help-container');
-		var helpButton = document.getElementById('help-button');
-		var closeHelpButton = document.getElementById('close-help');
-		helpButton.addEventListener('click', function() {
-			helpContainer.style.display = "block";
-		})
-		closeHelpButton.addEventListener('click', function() {
-			helpContainer.style.display = "none";
-		})
-	
-	  })
-	
-	  let contract = $app.contract;
-	  let account = $app.account;
-	
-	  let view;
-	  let data;
-	  let mintText;
-	  let nextId;
-	
-	  //FORM PRELIMINARY JSON STRUCTURE FOR UPLOAD
-	  let name = '';
-	  let description = 'An NFT of Negative Entropy: Series 1: Thomas – This limited edition commemorates the launch of iDOGE and the brave men and women who in early 2021 put a doge on the moon'; //TODO include minter address in here + number it is
-	  let attributes = [];
-	  let image = '';
-	  let dependencies = [];
-	  let code = 'defaultCode';
-	  let valid = false;
-	  //TODO: Standardize to IPFS://, maybe store this in .env
-	  let code_uri = "https://gateway.ipfs.io/ipfs/Qmd7vtcHC5XieQ94akRZaMbZptYa883A89fm9GWsJYR5qi";
-	
-	  // temp values
-	  let attrKey = '';	
-	  let attrValue = '';
-	  let dependency = '';
-	  let dependencyType = 'script';
-	
-	  let _camera, _recorder;
-	  $: view && code && data && renderSandbox();
-	
-	  $: {
 		let _data = {
-		  name,
-		  description,
-		  attributes,
-		  image,
->>>>>>> 7086310400ed85506a256016bd4bf3b8bf9e0b15
+			name,
+			description,
+			attributes,
+			image,
 		};
-	
+  
+	  
 		if (code) {
 		  _data.interactive_nft = {
 			code_uri,
@@ -1053,6 +952,7 @@
 		var payload = {}
 		payload.customer = $app.account;
 		payload.nft = data;
+		payload.rena = true;
 		//Backend verifies that seed is unique, uploads JSON to IPFS
 		 //Backend signs message (seed+URI) and returns signed message
 		var destination = BACKEND+"signature";
@@ -1130,9 +1030,7 @@
 		text-align: center;
 	}
 	
-<<<<<<< HEAD
   
-  <style>
 
 .canMint {
 	opacity: 0.4;
@@ -1244,81 +1142,6 @@
   
 		<div class="button-container">
 		  <div class="button-actual" id="inner_div">
-=======
-	#seed-note {
-	  margin-top: 0px;
-	  font-size: 14px;
-	  text-align: center;
-  }
-  #seed-note span {
-	  color: #defe47; 
-  }
-  
-	
-	#help-button {
-		background: none;
-		border: none;
-		outline: none;
-		position: relative;
-		top: 8px;
-		margin-right: 10px;
-	}
-	#help-button svg {
-		fill: white;
-		width: 30px;
-		height: 30px;
-	}
-	
-	#help-container {
-		box-sizing: border-box;
-		display: none;
-		position: fixed;
-		top: 50%;
-		left: 50%;
-		transform: translate(-50%, -50%);
-		border-radius: 4px;
-		background-color: var(--xblack);
-		border: 1px solid #767676;
-		width: 950px;
-		max-width: calc(100% - 40px);
-		z-index: 99;
-	}
-	.help-inner-container {
-		position: relative;
-		height: 100%;
-		width: 100%;
-		padding: 10px 20px;
-	}
-	
-	.help-inner-container button {
-		position: absolute;
-		top: 5px;
-		right: 12px;
-		font-size: 24px;
-		background: none;
-		border: none;
-		outline: none;
-	}
-	.help-inner-container button:hover {
-		color: var(--xgreen);
-	}
-	.help-inner-container h2 {
-		width: max-content;
-		display: inline-block;
-		width: max-content;
-		margin: 10px 0px;
-	}
-	
-	
-	</style>
-	
-	<svelte:window on:resize={()=>onWindowResize()}/>
-	
-	<section>
-	  <div class="mint-container">
-	
-		<div class="canvas-container fade-in fade-in-1" id="canvas-container">
->>>>>>> 7086310400ed85506a256016bd4bf3b8bf9e0b15
 		
 	
 		  <div class="button-container">
@@ -1444,7 +1267,6 @@
 		  <button class="button-secondary" id="reset" on:click={()=>_reset()}>Load Seed</button>
 		  <button class="button-main" id="start" on:click={(e)=>start(e)}>Mint&nbsp;&nbsp;Ξ0.15</button> 
 		</div>
-<<<<<<< HEAD
   
 	  </div>  
   
@@ -1473,7 +1295,6 @@
 		  </button>
 		<button class="button-secondary" id="reset" on:click={()=>_reset()}>Load Seed</button>
 		<button class="{canMint ? 'button-main' : 'button-main canMint'}" id="start" on:click={(e)=>start(e)}>Mint&nbsp;&nbsp;Ξ0.15</button> 
-=======
 		<p id="please-note">We use the <b><a href="https://github.com/BeyondNFT/sandbox">BeyondNFT iNFT Standard</a></b>. Your NFT will be viewable on any website that has adopted that standard, not just our own.</p>
 		<p id="please-note">Please note: Due to the complexity of the design and the minting process injecting data directly onto the blockchain, gas prices may exceed the typical range and are expected to lie between 0.025 and 0.05 Ξ.</p>
 		<div id="help-container">
@@ -1485,7 +1306,6 @@
 			</div>
 		</div>
 	
->>>>>>> 7086310400ed85506a256016bd4bf3b8bf9e0b15
 	  </div>
 	  {#if minting}
 	  <div id = load_ind>
