@@ -414,9 +414,9 @@ import { each } from 'svelte/internal';
     line-height: 34px;
     text-align: center;
     font-size: 28px;
-    font-weight: 600;
+    font-weight: 500;
     pointer-events: none;
-    transform: scaleX(0.4);
+    transform: scaleX(0.6);
   }
 
   #navL, #navR {

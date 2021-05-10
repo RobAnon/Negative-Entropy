@@ -93,11 +93,33 @@ import { LogLuvEncoding } from 'three/build/three.module';
 
   var blind = document.createElement('div');
   blind.id = 'blind';
-  var blindInner = ''
+  var blindInner = '';
+
+
+  function calculateScroller() {
+
+    var scroller = document.getElementById('page-scroller');
+    var scrollerWidth = window.getComputedStyle(scroller).getPropertyValue('width').split('px')[0];
+    var difference = 350 - scrollerWidth;
+    var scrollAmt = Number(params.id) * 50 + (difference/2);
+    scroller.scroll({
+      left: scrollAmt,
+      behavior: 'smooth'
+    })
+
+    var numbers = document.getElementsByClassName('page-number');
+      for (var i = 0; i<numbers.length; i++) {
+        numbers[i].classList.remove('current-page');
+        if (Number(params.id) === i) {
+          numbers[i].classList.add('current-page');
+        }
+      }
+
+  }
 
 
   //Clunky and inefficient, but they solve the problem
-  async function navigateRight() {
+  async function navigateRight(amt = 1) {
 
     if (canMove) {
       
@@ -107,6 +129,13 @@ import { LogLuvEncoding } from 'three/build/three.module';
       blind.style.right = '0px';
       blind.style.width = '100%';
 
+      if (Number(params.id) + 1 < total) {
+        params.id = Number(params.id) + Number(amt);
+      } else {
+        params.id = 0;
+      }
+      calculateScroller();
+
       await timeout(400)
 
       var canv = document.getElementById('render');
@@ -114,12 +143,6 @@ import { LogLuvEncoding } from 'three/build/three.module';
         canv.removeChild(canv.firstChild);
       }
 
-  
-      if (Number(params.id) + 1 < total) {
-        params.id = Number(params.id) + 1;
-      } else {
-        params.id = 0;
-      }
       await getData();
       await parseData();
       router("/viewer/"+ params.id +"/"+params.origin.trim());
@@ -134,7 +157,9 @@ import { LogLuvEncoding } from 'three/build/three.module';
 
   }
 
-  async function navigateLeft() {
+  async function navigateLeft(amt = 1) {
+
+    console.log(amt);
 
     if (canMove) {
       canMove = false;
@@ -144,21 +169,24 @@ import { LogLuvEncoding } from 'three/build/three.module';
       blind.style.right = 'auto';
       blind.style.width = '100%';
 
+      if (Number(params.id) - 1 >= 0) {
+        params.id = Number(params.id) - Number(amt);
+      } else {
+        params.id = total - 1;
+      }
+      calculateScroller();
+
       await timeout(400)
       
       var canv = document.getElementById('render');
       while (canv.firstChild) {
         canv.removeChild(canv.firstChild);
       }
-  
-      if (Number(params.id) - 1 > 0) {
-        params.id = Number(params.id) - 1;
-      } else {
-        params.id = total - 1;
-      }
+
       await getData();
       await parseData();
       router("/viewer/"+params.id+"/"+params.origin.trim());
+
 
       await timeout(50);
       blind.style.left = 'auto';
@@ -210,6 +238,23 @@ import { LogLuvEncoding } from 'three/build/three.module';
     } 
   }
 
+  async function goToPage() {
+
+    var page = this.innerHTML;
+
+    if (Number(page) === Number(params.id) + 1) {
+      return;
+    }
+
+    if (Number(page) > Number(params.id) + 1) {
+      navigateRight(Number(page) - Number(params.id) - 1);
+    }
+
+    if (Number(page) < Number(params.id) + 1) {
+      navigateLeft(Number(params.id) - Number(page) + 1);
+    }
+  }
+
   function share() {
     shareURL = image;
     sharing = true;
@@ -239,11 +284,6 @@ import { LogLuvEncoding } from 'three/build/three.module';
     
   }
 
-  var current = Number(params.id) + 1
-  afterUpdate(() => {
-    current = Number(params.id) + 1;
-  })
-
   onMount(async () => {
 
     total = await getCount();
@@ -257,10 +297,20 @@ import { LogLuvEncoding } from 'three/build/three.module';
     await navRight();
     await navLeft();
 
-    window.scrollTo(window.scrollX, 0);
-		window.scrollTo(window.scrollX, 2);
+    var pageNumberContainer = document.getElementsByClassName('page-scroller')[0];
+    for (var i = 0; i < total; i++) {
+      var el = document.createElement('p');
+      el.classList.add('page-number');
+      el.innerHTML = i + 1;
+      el.onclick = goToPage;
+      if (Number(params.id) === i) {
+        el.classList.add('current-page');
+      }
+      pageNumberContainer.appendChild(el); 
+    } 
 
-    //document.getElementById('page-counter').innerHTML = (Number(params.id) + 1) + ' | ' + total;
+    calculateScroller();
+
   });
 
   
@@ -268,6 +318,56 @@ import { LogLuvEncoding } from 'three/build/three.module';
 </script>
 
 <style>
+
+.page-scroller::-webkit-scrollbar {
+    height: 10px;
+  }
+  .page-scroller:hover::-webkit-scrollbar-thumb {
+    background: rgba(5, 5, 5, 1);
+    transition: background 3s;
+  }
+  .page-scroller::-webkit-scrollbar-track {
+    background-color: var(--xblack);
+  }
+  .page-scroller::-webkit-scrollbar-thumb {
+    background: rgba(5, 5, 5, 0);
+    border-radius: 10px;
+    transition: background 3s;
+  }
+
+  .page-scroller {
+    display: inline-block;
+    width: 100%;
+    overflow: auto;
+    white-space: nowrap;
+    position: relative;
+    top: 6px;
+  }
+  .page-scroller-container {
+    position: relative;
+    max-width: 350px;
+    min-width: 0;
+    flex-shrink: 2;
+  }
+  .page-scroller-container:after, .page-scroller-container:before {
+    content: '';
+    display: block;
+    width: 100px;
+    height: 100%;
+    position: absolute;
+    pointer-events: none;
+  }
+  .page-scroller-container:after {
+    background: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(17, 17, 17, 1));
+    right: 0;
+    top: 0;
+    z-index: 2;
+  }
+  .page-scroller-container:before {
+    background: linear-gradient(to right, rgba(17, 17, 17, 1), rgba(0, 0, 0, 0));
+    left: 0;
+    z-index: 2;
+  }
   .big {
     width: 100%;
     height: min-content;
@@ -402,6 +502,28 @@ import { LogLuvEncoding } from 'three/build/three.module';
 .viewer-buttons {
   height: 45px;
 }
+@media only screen and (max-width: 600px) {
+    .viewer-buttons .button-secondary {
+      width: 55px !important;
+    }
+  }
+  .viewer-buttons .button-secondary {
+    width: 100px;
+    height: 40px;
+    border-width: 1px;
+    padding: 0;
+  }
+  .viewer-buttons .button-secondary h3 {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    line-height: 34px;
+    text-align: center;
+    font-size: 28px;
+    font-weight: 500;
+    pointer-events: none;
+    transform: scaleX(0.6);
+  }
 .render-container > div:nth-of-type(1) {
   position: relative;
   width: 100%;
@@ -474,18 +596,18 @@ import { LogLuvEncoding } from 'three/build/three.module';
         <div class="viewer-buttons">
 
           <div id="viewer-navL">
-            <button class="button-main" on:click={navigateLeft}>
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-square" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm11.5 5.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"/>
-              </svg>
+            <button class="button-secondary" on:click={() => navigateLeft()}>
+              <h3>&lt;</h3>
             </button>
           </div>
-          <p id="viewer-page-counter">{current} | {total}</p>
+          
+        <div class="page-scroller-container">
+          <div class="page-scroller" id="page-scroller">    </div>
+        </div>
+
           <div id="viewer-navR">
-            <button class="button-main" on:click={navigateRight}>
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right-square" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm4.5 5.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z"/>
-              </svg>
+            <button class="button-secondary" on:click={() => navigateRight()}>
+              <h3>&gt;</h3>
             </button>
           </div>
     
@@ -533,9 +655,7 @@ import { LogLuvEncoding } from 'three/build/three.module';
         {/await}
         {/if}
       </div>
-    </div>
-
-    
+    </div>    
   
   </div>
 
