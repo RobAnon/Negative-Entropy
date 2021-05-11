@@ -13,8 +13,9 @@ const createClient = require('ipfs-http-client');
 const app = express();
 const ipfs = createClient('https://ipfs.infura.io:5001');
 const nthline = require('nthline');
-const stateRecorder = './public/state.txt'
+const stateRecorder = './public/state.json'
 var Web3WsProvider = require('web3-providers-ws');
+var fs = require('fs');
 
 
 //Declare various other constants
@@ -179,7 +180,8 @@ app.options('/api/signature', function (req, res) {
 app.post('/api/signature', (req, res) => {
 	checkLockAndUpdate();  	
 	if(req.rena) {
-		if(cannotMint()) {
+		if(!canMint()) {
+			res.mintable = false;
 			return res.send(JSON.stringify("Cannot mint!"));
 		}
 	}
@@ -255,6 +257,11 @@ app.listen(process.env.PORT, () =>
   console.log(`App listening on port ${process.env.PORT}!`),
 );
 
+app.get('/api/canMint', (req, res) => {
+	var resp = {};
+	resp.cannot_mint = canMint();
+	res.send(JSON.stringify(resp));
+})
 
 //TODO: Consider also signing with image we want
 function getSignature(web3, address, account, seed, jsonURL){
@@ -388,14 +395,40 @@ function handleCORS(req, res) {
 	res.end();
 }
 
-function checkLockAndUpdate() { 
+function canMint() {
+	var rawdata = fs.readFileSync('./public/state.json');
+	const state = JSON.parse(rawdata);
+	const minute = 1000*60;
+	const hour = minute *120;
+	if(Date.now() > Number(state.time) + hour) {
+		console.log("Can mint");
+		return true;
+	}
+	console.log("Cannot mint");
+	return false;
+}
+
+function checkLockAndUpdate() {
+	var provider = new Web3WsProvider(process.env.NETWORK, options);
+	const web3 = new Web3(provider);
+	console.log("Called check"); 
 	const contract = new web3.eth.Contract(abi, process.env.CONTRACT_ADDRESS);
+
+	var rawdata = fs.readFileSync('./public/state.json');
+	const state = JSON.parse(rawdata);
+
+	var prevCount = Number(state.count);
 	getTokenCount(contract)
-	.then(function(count) {
-		nthline(0, stateRecorder)
-		.then(function(line) {
-			
-		});
+	.then(function(newCount) {
+		if(newCount > prevCount) {
+			state.count = newCount; //Set count to new count
+			state.time = Date.now();
+			fs.writeFileSync(stateRecorder, JSON.stringify(state), err => {
+				if (err) throw err; 	   
+			});		
+		}
 	});
 
+	provider.disconnect();
+	
 }
