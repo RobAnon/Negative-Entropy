@@ -1,17 +1,21 @@
 <script>
-  import { createEventDispatcher, getContext, onMount } from 'svelte';
-  import defaultCode from '../conf/code.js';
-  import Sandbox from '@beyondnft/sandbox';
-  import { ipfs } from '../utils.js';
-  import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-  import { HemisphereLight, LinearToneMapping, Box3, SpotLight, Scene, Color, Object3D, Vector3, PerspectiveCamera, PointLight, SphereGeometry, MeshStandardMaterial, InstancedMesh, Matrix4, AxesHelper, WebGLRenderer } from 'three'
-  import seedrandom from 'seedrandom'
-  import CCapture from '../components/ccapture.js/src/CCapture.js'
-  import { get, writable } from 'svelte/store';
-  import { ViewerScript } from '../components/ViewerScript';
-  import { Moon } from 'svelte-loading-spinners';
-  import router from 'page';
-  import Confirmation from '../components/Confirmation.svelte';
+	import { createEventDispatcher, getContext, onMount } from 'svelte';
+	import defaultCode from '../conf/code.js';
+	import Sandbox from '@beyondnft/sandbox';
+	import { ipfs } from '../utils.js';
+	import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+	import { HemisphereLight, LinearToneMapping, Box3, SpotLight, Scene, Color, Object3D, Vector3, PerspectiveCamera, PointLight, SphereGeometry, MeshStandardMaterial, InstancedMesh, Matrix4, AxesHelper, WebGLRenderer, ObjectLoader, LinearFilter} from 'three'
+	import seedrandom from 'seedrandom'
+	import CCapture from '../components/ccapture.js/src/CCapture.js'
+	import { get, writable } from 'svelte/store';
+	import { ViewerScript } from '../components/ViewerScript';
+	import { Moon } from 'svelte-loading-spinners';
+	import router from 'page';
+	import Confirmation from '../components/Confirmation.svelte';
+	import {renaJSON} from "../conf/renamodel";
+	import {checkerJSON} from "../conf/checkermodel";
+	import { Group, MaterialLoader } from 'three/build/three.module';
+  
 
 
   	var canMint = false; /* for Rob */
@@ -1265,7 +1269,7 @@
 				</svg>
 			</button>
 		  <button class="button-secondary" id="reset" on:click={()=>_reset()}>Load Seed</button>
-		  <button class="button-main" id="start" on:click={(e)=>start(e)}>Mint&nbsp;&nbsp;Ξ0.15</button> 
+		<button class="{canMint ? 'button-main' : 'button-main canMint'}" id="start" on:click={(e)=>start(e)}>Mint&nbsp;&nbsp;Ξ0.15</button> 
 		</div>
   
 	  </div>  
