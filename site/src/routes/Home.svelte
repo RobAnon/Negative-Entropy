@@ -20,7 +20,7 @@ import router from "page";
   let encodedSeed = encodeURIComponent(Date());
 
 onMount(async () => {
-  var seedResp = await fetch(BACKEND+"randomLine");
+  var seedResp = await fetch(BACKEND+"randomDuneLine");
   var respSeed = await seedResp.json();
   var seedLine = respSeed.line;
   

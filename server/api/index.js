@@ -21,6 +21,7 @@ var fs = require('fs');
 //Declare various other constants
 const LENGTH = 611;//We know the exact length
 const filePath = './public/output.txt';
+const filePath2 = './public/lined.txt';
 
 let options = {
     timeout: 30000, // ms
@@ -253,13 +254,31 @@ app.get('/api/randomLine', (req, res) => {
 	return express.Router();
 });
 
+app.options('/api/randomDuneLine', function (req, res) {
+	handleCORS(req, res);
+});
+
+app.get('/api/randomDuneLine', (req, res) => {
+	checkLockAndUpdate();
+  	const rowIndex = Math.floor(Math.random() * 152);
+	nthline(rowIndex, filePath2)
+	.then(function(line) {
+		return res.send(JSON.stringify({line}));
+	})
+	return express.Router();
+});
+
 app.listen(process.env.PORT, () =>
   console.log(`App listening on port ${process.env.PORT}!`),
 );
 
+app.options('/api/canMint', function (req, res) {
+	handleCORS(req, res);
+});
+
 app.get('/api/canMint', (req, res) => {
 	var resp = {};
-	resp.cannot_mint = canMint();
+	resp.canMint = canMint();
 	res.send(JSON.stringify(resp));
 })
 

@@ -32,7 +32,14 @@
 	export let params;
 	let seed = 'Buck';
   
-	onMount(()=>{
+	onMount(async ()=>{
+
+		var canMintRaw = await fetch(BACKEND+"canMint");
+		var respMint = await canMintRaw.json();
+		console.log(respMint);
+		canMint = respMint.canMint;
+		console.log("Mintable: " + canMint);
+
 		window.scrollTo(window.scrollX, 0);
 		window.scrollTo(window.scrollX, 2);
 	  const renderer = document.getElementById('canvas')
@@ -79,7 +86,7 @@
 	let code = 'defaultCode';
 	let valid = false;
 	//TODO: Standardize to IPFS://, maybe store this in .env
-	let code_uri = "https://gateway.ipfs.io/ipfs/QmTBNeRQTjrNEJdcManUaDPEXQgH1h1N47gfzpqtbQXkBL";
+	let code_uri = "https://gateway.ipfs.io/ipfs/QmUBpyF944vfHn15veF3sX4XNfWnaogxR5LuN6aK49cdmw";
   
 	// temp values
 	let attrKey = '';
@@ -88,7 +95,7 @@
 	let dependencyType = 'script';
   
 	let _camera, _recorder;
-	$: view && code && data && renderSandbox();
+	$: view && code && data && canMint && renderSandbox();
   
 	$: {
 		let _data = {
