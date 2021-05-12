@@ -112,6 +112,8 @@
 </style>
 
 <header>	
+  <script src="https://cdn.jsdelivr.net/npm/ipfs-http-client/dist/index.min.js"></script>
+
   <a id="logo" href="/" onclick="window.scrollTo(window.scrollX, window.scrollY + 1)">
     <img src="/logo-main.png" alt="main logo">	
   </a>	
