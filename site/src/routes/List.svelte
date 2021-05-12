@@ -7,6 +7,10 @@
   import { beforeUpdate, afterUpdate } from 'svelte';
   import router from "page";
   import {replObj} from "../utils.js";
+  import * as animateScroll from 'svelte-scrollto';
+  import jQuery from 'jQuery';
+import { each } from 'svelte/internal';
+
 
   let tokens = [];
   export let tokenSlice = [];
@@ -19,6 +23,8 @@
   let startIndex = 0;
   let endIndex = maxPerPage;
   let baseWebm = '';
+
+  let globalNonce;
 
   export let params;
   $: params; 
@@ -40,27 +46,102 @@
   buildLists();
 
 
-  function navRight() {
-    var nextParam = Number(params.id)+1;
-    if(nextParam*maxPerPage>=tokenCount) {
-      nextParam = Number(params.id);
-    } else {
-      router("/gallery/"+nextParam);
-      location.reload();
+  function timeout(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  async function navRight(x = 1) {
+
+    if (Number(params.id) + 1 < Math.ceil(tokenCount/maxPerPage)) {
+
+      params.id = Number(params.id) + x;
+
+      calculateScroller();
+
+      var numbers = document.getElementsByClassName('page-number');
+      for (var i = 0; i<numbers.length; i++) {
+        numbers[i].classList.remove('current-page');
+        if (Number(params.id) === i) {
+          numbers[i].classList.add('current-page');
+        }
+      }
+  
+      document.getElementById('blind').style.left = 'auto';
+      document.getElementById('blind').style.right = '0px';
+      document.getElementById('blind').style.width = '100%';
+      
+      buildLists();
+  
+      router("/gallery/"+Number(params.id));
+  
+      await timeout(750);
+      document.getElementById('blind').style.left = '0px';
+      document.getElementById('blind').style.right = 'auto';
+      document.getElementById('blind').style.width = '0%';
+
+
+    }
+
+  }
+
+
+  async function navLeft(x = 1) {
+
+    if (Number(params.id) > 0) {
+      
+      params.id = Number(params.id) - x;
+
+      calculateScroller();
+
+      var numbers = document.getElementsByClassName('page-number');
+      for (var i = 0; i<numbers.length; i++) {
+        numbers[i].classList.remove('current-page');
+        if (Number(params.id) === i) {
+          numbers[i].classList.add('current-page');
+        }
+      }
+    
+  
+      document.getElementById('blind').style.left = '0px';
+      document.getElementById('blind').style.right = 'auto';
+      document.getElementById('blind').style.width = '100%';
+  
+      buildLists();
+  
+      router("/gallery/"+Number(params.id));
+  
+      await timeout(750);
+  
+      document.getElementById('blind').style.left = 'auto';
+      document.getElementById('blind').style.right = '0px';
+      document.getElementById('blind').style.width = '0%';
+
+    }
+
+  }
+
+
+  async function goToPage() {
+    var page = this.innerHTML;
+
+    if (Number(page) === Number(params.id) + 1) {
+      return;
+    }
+
+    if (Number(page) > Number(params.id) + 1) {
+      navRight(Number(page) - Number(params.id) - 1);
+    }
+
+    if (Number(page) < Number(params.id) + 1) {
+      navLeft(Number(params.id) - Number(page) + 1);
     }
   }
 
-  function navLeft() {
-    var nextParam = Number(params.id)-1;
-    if(nextParam < 0) {
-      nextParam = 0;
-    } else {
-      router("/gallery/"+nextParam);
-      location.reload();
-    }
-  }
 
   async function buildLists() {
+
+      const localNonce = globalNonce = new Object();
+
       var mult = Number(params.id)+1;
       startIndex = Number(params.id)*maxPerPage;
       endIndex = maxPerPage * mult;
@@ -78,12 +159,19 @@
       /* grey out button if you're at start/end */
       if((Number(params.id) + 1)*maxPerPage>tokenCount) {
         document.getElementById('navR').style.opacity="0";
+        document.getElementById('navR').style.pointerEvents="none";
+      } else {
+        document.getElementById('navR').style.opacity="1";
+        document.getElementById('navR').style.pointerEvents="auto";
       }
+
       if((Number(params.id) - 1) < 0) {
         document.getElementById('navL').style.opacity="0";
+        document.getElementById('navL').style.pointerEvents="none";
+      } else {
+        document.getElementById('navL').style.opacity="1";
+        document.getElementById('navL').style.pointerEvents="auto";
       }
-      /* page count at bottom */
-      document.getElementById('page-counter').innerHTML = (Number(params.id) + 1) + ' | ' + Math.ceil(tokenCount/maxPerPage);
 
       
       if(endIndex > tokenCount) {
@@ -92,11 +180,12 @@
       var amount = endIndex-startIndex;
       webms = fillArray(baseWebm, amount);
       names = fillArray("Loading...", amount);
-      ids = fillArray(1, amount);
 
-      console.log("Count is " + count)
-      console.log("Starting at:" + startIndex);
-      console.log("Ending at: " + endIndex);
+      ids = [];
+      for (var i = 0; i<amount; i++) {
+        ids.push(startIndex + i);
+      }
+
       let response
       let tokenArrayResponse;
       try{
@@ -112,29 +201,47 @@
           })
       });
       tokenArrayResponse = await response.json();    
+
       } catch (e) {
         console.log(e);
       }
 
+      if (localNonce === globalNonce) {
 
-      for(let i = 0; i < tokenArrayResponse.length; i++) {
-        ids[i] =tokenArrayResponse[i].id
-        const res = await fetch(tokenArrayResponse[i].tokenURI);
-        const json = await res.json();
-        if(replObj.hasOwnProperty(ids[i])) {
-          webms[i]=Object.getOwnPropertyDescriptor(replObj,ids[i]).value;
-        } else {
-          webms[i]=json.image;
+        for(let i = 0; i < tokenArrayResponse.length; i++) {
+          ids[i] =tokenArrayResponse[i].id
+          const res = await fetch(tokenArrayResponse[i].tokenURI);
+          const json = await res.json();
+          if(replObj.hasOwnProperty(ids[i])) {
+            webms[i]=Object.getOwnPropertyDescriptor(replObj,ids[i]).value;
+          } else {
+            webms[i]=json.image;
+          }
+          names[i]=json.name;
         }
-        names[i]=json.name;
+
       }
 
       //Dev stuff
       rebuild++;
   }
 
+  function calculateScroller() {
+
+    var scroller = document.getElementById('page-scroller');
+    var scrollerWidth = window.getComputedStyle(scroller).getPropertyValue('width').split('px')[0];
+    var difference = 350 - scrollerWidth;
+    var scrollAmt = Number(params.id) * 50 + (difference/2);
+    scroller.scroll({
+      left: scrollAmt,
+      behavior: 'smooth'
+    })
+
+  }
+
   //CONSIDER Await blocks
-	onMount(function() {
+	onMount(async function() {
+
     fadeIn();
 		window.scrollTo(window.scrollX, window.scrollY + 1);
 
@@ -144,12 +251,46 @@
       location.reload();
     }
 
+
+    try{ 
+      var countRes = await fetch(BACKEND+"tokenCount", {mode: 'cors'});
+      var count = await countRes.json();
+    } catch(e) {
+      console.log(e);
+      alert("Failed to load token list. Please reload your page");
+    }
+    tokenCount = Number(count.count);
+
+    var pageNumberContainer = document.getElementsByClassName('page-scroller')[0];
+
+    for (var i = 0; i < Math.ceil(tokenCount/maxPerPage); i++) {
+      var el = document.createElement('p');
+      el.classList.add('page-number');
+      el.innerHTML = i + 1;
+      el.onclick = goToPage;
+      if (Number(params.id) === i) {
+        el.classList.add('current-page');
+      }
+      pageNumberContainer.appendChild(el); 
+    } 
+
+    calculateScroller();
+
     setTimeout(function() {
       document.getElementsByClassName('gallery-container')[0].style.overflow = 'visible';
     }, 800)
 
-    window.scrollTo(window.scrollX, 0);
-    window.scrollTo(window.scrollX, 2);
+
+    // scroll horizontally on vertical scroll when hovered over page numbers
+    function scrollHorizontally(e) {
+        e = window.event || e;
+        var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
+        document.getElementById('page-scroller').scrollLeft -= (delta * 7);
+        e.preventDefault();
+    }
+    document.getElementById('page-scroller').addEventListener('mousewheel', scrollHorizontally, false);
+    document.getElementById('page-scroller').addEventListener('DOMMouseScroll', scrollHorizontally, false);
+
   });
 
   function fillArray(value, len) {
@@ -160,33 +301,132 @@
     return a;
   }
 
+
+
 </script>
 
 
 
 
 <style>
+
+  .page-scroller::-webkit-scrollbar {
+    height: 10px;
+  }
+  .page-scroller:hover::-webkit-scrollbar-thumb {
+    background: rgba(5, 5, 5, 1);
+    transition: background 3s;
+  }
+  .page-scroller::-webkit-scrollbar-track {
+    background-color: var(--xblack);
+  }
+  .page-scroller::-webkit-scrollbar-thumb {
+    background: rgba(5, 5, 5, 0);
+    border-radius: 10px;
+    transition: background 3s;
+  }
+
+  .page-scroller {
+    display: inline-block;
+    width: 100%;
+    overflow: auto;
+    white-space: nowrap;
+    position: relative;
+    top: 6px;
+  }
+  .page-scroller-container {
+    position: relative;
+    max-width: 350px;
+    min-width: 0;
+    flex-shrink: 2;
+  }
+  .page-scroller-container:after, .page-scroller-container:before {
+    content: '';
+    display: block;
+    width: 100px;
+    height: 100%;
+    position: absolute;
+    pointer-events: none;
+  }
+  .page-scroller-container:after {
+    background: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(17, 17, 17, 1));
+    right: 0;
+    top: 0;
+    z-index: 2;
+  }
+  .page-scroller-container:before {
+    background: linear-gradient(to right, rgba(17, 17, 17, 1), rgba(0, 0, 0, 0));
+    left: 0;
+    z-index: 2;
+  }
+  :global(.page-number) {
+    margin: 0;
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    text-align: center;
+    line-height: 50px;
+    transition: margin-left 0.3s;
+    position: relative;
+    cursor: pointer;
+    box-sizing: content-box;
+    transition: all 0.4s;
+  }
+  :global(.page-number:nth-child(1)) {
+    padding-left: 150px;
+  }
+  :global(.page-number:nth-last-child(1)) {
+    padding-right: 150px;
+  }
+  :global(.current-page) {
+     text-shadow: 0px 0px 8px var(--xgreen);
+     color: var(--xgreen);
+  }
+
+  @keyframes loading {
+    0% {width: 0%;}
+    50% {width: 50%;}
+    100% {width: 0%;}
+  }
+  #blind-strip.animate-width {
+    animation: loading 1s;
+  }
   .viewer-buttons {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 40px;
+  }
+  @media only screen and (max-width: 600px) {
+    .viewer-buttons .button-secondary {
+      width: 55px !important;
+    }
+  }
+  .viewer-buttons .button-secondary {
+    width: 100px;
+    height: 40px;
+    border-width: 1px;
+    padding: 0;
+  }
+  .viewer-buttons .button-secondary h3 {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    line-height: 34px;
+    text-align: center;
+    font-size: 28px;
+    font-weight: 600;
+    pointer-events: none;
+    transform: scaleX(0.4);
   }
 
   #navL, #navR {
     transition: opacity 0.4s;
   }
-  #page-counter {
-    align-self: center;
-  }
   .gallery-container {
+    position: relative;
     overflow: hidden;
-    max-height: 0px;
     transition: all 1s;
     margin-top: 50px;
-  }
-  .list-container {
-    max-height: 0px;
   }
   .list {
     display: grid;
@@ -203,7 +443,7 @@
   @media only screen and (max-width: 550px) {
     .list {
       display: block;
-      padding: 0px 25px;
+      padding: 0px;
       grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
     }
     article {
@@ -218,29 +458,35 @@
     }
   }
 
-  #gallery-loading {
-    text-align: center;
-    overflow: hidden;
-    height: 100px;
-    transition: all 0.4s;
-    font-size: 30px;
-  }
 
-  @media only screen and (max-width: 600px) {
-    .viewer-buttons button {
-      width: 75px;
-    }
+  #blind {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 0%;
+    height: 100%;
+    transition: width 0.6s;
+    background-color: var(--xblack);
+  }
+  .blind-banner {
+    width: 100%;
+    height: 100%;
+    position: relative;
+  }
+  .blind-banner div {
+    position: absolute;
+    top: 50%;
+    left: 3%;
+    transform: translateY(-50%);
+    height: 1px;
+    width: 94%;
+    background: var(--xgreen);
   }
 
 </style>
 
 <section>
-  <div id="gallery-loading"><h2>Loading...</h2></div>
   <div class="gallery-container">
-    <strong>{tokenCount} Token(s)</strong>
-    <br>
-    <br>
-    <br>
     <div class="list-container">
       <div class="list">
         {#each ids as ident, i}
@@ -250,26 +496,28 @@
         {/each} 
       </div>
     </div>
+  <div id="blind">
+    <div class="blind-banner"><div id="blind-strip" class="animate-width"></div></div>
+  </div>
   </div>
   <div class="viewer-buttons">
 
     <div id="navL">
-      <button class="button-main" on:click={navLeft}>
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-square" viewBox="0 0 16 16">
-          <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm11.5 5.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"/>
-        </svg>
+      <button class="button-secondary" on:click={() => navLeft(1) }>
+        <h3>&lt;</h3>
       </button>
     </div>
-    <p id="page-counter"></p>
+    <div class="page-scroller-container">
+      <div class="page-scroller" id="page-scroller">    </div>
+    </div>
     <div id="navR">
-      <button class="button-main" on:click={navRight}>
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right-square" viewBox="0 0 16 16">
-          <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm4.5 5.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z"/>
-        </svg>
+      <button class="button-secondary" on:click={() => navRight(1) }>
+        <h3>&gt;</h3>
       </button>
     </div>
 
   </div>
+
 
 </section>
 

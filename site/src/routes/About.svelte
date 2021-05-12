@@ -58,8 +58,8 @@ import { onMount } from 'svelte';
 
 		<br>
 		<h2 class="fade-in fade-in-3"><b>FAQ's</b></h2>
-		<div class="fade-in fade-in-3">
-			<div class="faq">
+		<div>
+			<div class="faq fade-in fade-in-3">
 				<div class="faq-title">
 					<h3>Is there a way to improve the performance of my computer in rendering the ThreeJS sculptures?</h3>
 					<svg fill="#000000" xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 24 24" width="24px" height="24px"><path fill-rule="evenodd" d="M 11 2 L 11 11 L 2 11 L 2 13 L 11 13 L 11 22 L 13 22 L 13 13 L 22 13 L 22 11 L 13 11 L 13 2 Z"/></svg>
@@ -67,7 +67,7 @@ import { onMount } from 'svelte';
 				<li>We recommend that all of our users <b><a href="https://www.lifewire.com/hardware-acceleration-in-chrome-4125122" target="_blank">enable hardware acceleration</a></b> in Chrome, our recommended browser.</li>
 			</div>
 
-			<div class="faq">
+			<div class="faq fade-in fade-in-3">
 				<div class="faq-title">
 					<h3>Is each seed unique? Can someone copy my seed?</h3>
 					<svg fill="#000000" xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 24 24" width="24px" height="24px"><path fill-rule="evenodd" d="M 11 2 L 11 11 L 2 11 L 2 13 L 11 13 L 11 22 L 13 22 L 13 13 L 22 13 L 22 11 L 13 11 L 13 2 Z"/></svg>
@@ -75,7 +75,7 @@ import { onMount } from 'svelte';
 				<li>Each unique seed is stored immutably on the blockchain, and while seeds are case-sensitive, your seed (and therefore, your sculpture) cannot be duplicated by anyone.</li>
 			</div>
 
-			<div class="faq">
+			<div class="faq fade-in fade-in-3">
 				<div class="faq-title">
 					<h3>Will reloading the page during the rendering break my NFT? Does that mean my seed is claimed and I can't get it back?</h3>
 					<svg fill="#000000" xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 24 24" width="24px" height="24px"><path fill-rule="evenodd" d="M 11 2 L 11 11 L 2 11 L 2 13 L 11 13 L 11 22 L 13 22 L 13 13 L 22 13 L 22 11 L 13 11 L 13 2 Z"/></svg>
@@ -83,7 +83,7 @@ import { onMount } from 'svelte';
 				<li>Your seed remains unclaimed and unowned until you've sent the MetaMask transaction, at which point you should remain on the minting page until you are automatically redirected</li>
 			</div>
 
-			<div class="faq">
+			<div class="faq fade-in fade-in-3">
 				<div class="faq-title">
 					<h3>Why is the recording process choppy? Will my NFT look like this in its preview?</h3>
 					<svg fill="#000000" xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 24 24" width="24px" height="24px"><path fill-rule="evenodd" d="M 11 2 L 11 11 L 2 11 L 2 13 L 11 13 L 11 22 L 13 22 L 13 13 L 22 13 L 22 11 L 13 11 L 13 2 Z"/></svg>
@@ -91,7 +91,7 @@ import { onMount } from 'svelte';
 				<li>The recording process captures a webm of your NFT (for use on OpenSea previews and gallery previews). To get smooth FPS in the produced webm, it slows down the NFT, and captures it frame-by-frame.</li>
 			</div>
 
-			<div class="faq">
+			<div class="faq fade-in fade-in-3">
 				<div class="faq-title">
 					<h3>What is the actual NFT? Is it the webm?</h3>
 					<svg fill="#000000" xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 24 24" width="24px" height="24px"><path fill-rule="evenodd" d="M 11 2 L 11 11 L 2 11 L 2 13 L 11 13 L 11 22 L 13 22 L 13 13 L 22 13 L 22 11 L 13 11 L 13 2 Z"/></svg>
@@ -99,7 +99,7 @@ import { onMount } from 'svelte';
 				<li>The NFT that you are claiming when you mint is the seed itself – it can be dynamically regenerated as many times as you want through the code that comes packaged with the NFT. Once the iNFT standard gains widespread adoption, your NFT will be viewable on any site that has the viewer enabled. The webm is a preview image used by OpenSea and others to display what the NFT looks like. OpenSea is reportedly in talks to adopt the iNFT standard, so hopefully soon the webm will be entirely vestigal.</li>
 			</div>
 
-			<div class="faq">
+			<div class="faq fade-in fade-in-3">
 				<div class="faq-title">
 					<h3>Where do these equations come from?</h3>
 					<svg fill="#000000" xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 24 24" width="24px" height="24px"><path fill-rule="evenodd" d="M 11 2 L 11 11 L 2 11 L 2 13 L 11 13 L 11 22 L 13 22 L 13 13 L 22 13 L 22 11 L 13 11 L 13 2 Z"/></svg>
@@ -107,7 +107,7 @@ import { onMount } from 'svelte';
 				<li><a href="https://en.wikipedia.org/wiki/Ren%C3%A9_Thomas_%28biologist%29" target="_blank"><b>René Thomas</b></a> originally derived the equations that constitute this NFT in a <a href="https://doi.org/10.1142%2FS0218127499001383" target="_blank" >1999 paper</a> – the system of equations has since been dubbed "Thomas' cyclically symmetric attractor"</li>
 			</div>
 
-			<div class="faq">
+			<div class="faq fade-in fade-in-3">
 				<div class="faq-title">
 					<h3>Why the gas cost? ~(0.07-0.1 ETH)</h3>
 					<svg fill="#000000" xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 24 24" width="24px" height="24px"><path fill-rule="evenodd" d="M 11 2 L 11 11 L 2 11 L 2 13 L 11 13 L 11 22 L 13 22 L 13 13 L 22 13 L 22 11 L 13 11 L 13 2 Z"/></svg>
