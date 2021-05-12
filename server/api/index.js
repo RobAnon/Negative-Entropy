@@ -179,11 +179,22 @@ app.options('/api/signature', function (req, res) {
 });
 
 app.post('/api/signature', (req, res) => {
-	checkLockAndUpdate();  	
+	checkLockAndUpdate(); 
+	var rawdata = fs.readFileSync('./public/state.json');
+	const state = JSON.parse(rawdata);
+
+	var count = Number(state.count);
+	if(count > 63 && req.rena) {
+		var payload = {};
+		res.status(401);
+		payload.error = "Cannot mint – All Rena NFTs have been claimed";
+		return res.send(JSON.stringify(payload));
+	}
+	
 	if(req.rena) {
 		if(!canMint()) {
 			res.mintable = false;
-			return res.send(JSON.stringify("Cannot mint!"));
+			return res.send(JSON.stringify("Cannot mint"));
 		}
 	}
 	var provider = new Web3WsProvider(process.env.NETWORK, options);

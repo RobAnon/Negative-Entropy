@@ -79,7 +79,7 @@
   
 	//FORM PRELIMINARY JSON STRUCTURE FOR UPLOAD
 	let name = '';
-	let description = 'An NFT of Negative Entropy: Series 1: Thomas'; //TODO include minter address in here + number it is
+	let description = 'An NFT of Negative Entropy: Series 1: Thomas – this NFT commemorates the launch of Rena'; //TODO include minter address in here + number it is
 	let attributes = [];
 	let image = '';
 	let dependencies = [];
@@ -287,7 +287,7 @@
 				'"Size of Particles"' +':"' + size.toFixed(3) + '", ' +
 				'"Speed mutliplier"' +':"'+ random.toFixed(3) + '", ' + 
 				'"Series":"Series 1: Thomas"' + ', ' +
-				'"Partnership":"iDOGE' + ', ' +
+				'"Partnership":"RENA' + ', ' +
 				'"Tier"' +':"' + getTier(rarity.toFixed(0)) + '"}';
 	
 	 
@@ -663,10 +663,7 @@
 		  alert("All NFT's have been claimed!")
 		  return;
 		}
-		if(nextId >= 48) {
-			alert("All limited edition iDOGE have been claimed!")
-			return;
-		}
+		
 	
 		minting = true;
 	
