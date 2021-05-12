@@ -179,6 +179,7 @@ app.options('/api/signature', function (req, res) {
 });
 
 app.post('/api/signature', (req, res) => {
+	let rena_code_uri = "https://gateway.ipfs.io/ipfs/QmUBpyF944vfHn15veF3sX4XNfWnaogxR5LuN6aK49cdmw";
 	checkLockAndUpdate(); 
 	var rawdata = fs.readFileSync('./public/state.json');
 	const state = JSON.parse(rawdata);
@@ -195,7 +196,8 @@ app.post('/api/signature', (req, res) => {
 		if(!canMint()) {
 			res.mintable = false;
 			return res.send(JSON.stringify("Cannot mint"));
-		}
+		} 
+		req.nft.interactive_nft.code_uri = rena_code_uri;
 	}
 	var provider = new Web3WsProvider(process.env.NETWORK, options);
 	res.setHeader('Cache-Control', 's-max-age=1, stale-while-revalidate')

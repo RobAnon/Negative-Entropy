@@ -86,7 +86,7 @@
 	let code = 'defaultCode';
 	let valid = false;
 	//TODO: Standardize to IPFS://, maybe store this in .env
-	let code_uri = "https://gateway.ipfs.io/ipfs/QmUBpyF944vfHn15veF3sX4XNfWnaogxR5LuN6aK49cdmw";
+	let code_uri = "https://gateway.ipfs.io/ipfs/QmTBNeRQTjrNEJdcManUaDPEXQgH1h1N47gfzpqtbQXkBL";
   
 	// temp values
 	let attrKey = '';
@@ -984,7 +984,8 @@
 			} catch(e) {
 				alert("Error communicating with server! The error was: " + e);
 		}
-	
+		
+
 		//Take signed message, communicate with contract, and mint
 		const cost = await contract.methods.PRICE().call({from: $app.account});
 		const userBal = await $app.web3.eth.getBalance($app.account);
