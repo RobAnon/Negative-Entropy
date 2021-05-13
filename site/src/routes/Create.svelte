@@ -646,6 +646,12 @@
 			  alert("Web3 is not Connected!");
 			  return;
 		  }
+
+		  if(!canMint) {
+			  //Mint timer is still active
+			  alert("Minting is currently disabled! Please check back later!")
+			  return;
+		  }
 	
 		contract = $app.contract;
 		account = $app.account;
