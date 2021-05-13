@@ -15,7 +15,8 @@
 	import {renaJSON} from "../conf/renamodel";
 	import {checkerJSON} from "../conf/checkermodel";
 	import { Group, MaterialLoader } from 'three/build/three.module';
-  
+	import { tweened } from 'svelte/motion';
+
 
 
   	var canMint = false; /* for Rob */
@@ -31,14 +32,27 @@
 	let webmURL = "https://gateway.ipfs.io/ipfs/QmULnqLrTuG9fAxCwctH89sjb7YRL4ig77JJ2Fn78X541j";
 	export let params;
 	let seed = 'Buck';
-  
+	let timer = tweened(1000);
+	let mintTime = 100000;
+
 	onMount(async ()=>{
 
 		var canMintRaw = await fetch(BACKEND+"canMint");
 		var respMint = await canMintRaw.json();
 		console.log(respMint);
 		canMint = respMint.canMint;
-		console.log("Mintable: " + canMint);
+	
+		//Initialize timer
+		var mintTimeRaw = await fetch(BACKEND + "mintTime");
+		var respTime = await mintTimeRaw.json();
+		mintTime = Number(respTime.mintTime);
+		if (mintTime < 0) {
+			mintTime = 0;
+		}
+		console.log("Time remaining: " + mintTime);
+		timer = tweened(Math.floor(mintTime/1000));
+
+		
 
 		window.scrollTo(window.scrollX, 0);
 		window.scrollTo(window.scrollX, 2);
@@ -68,6 +82,15 @@
 
   
 	})
+
+	setInterval(() => {
+			if ($timer > 0) $timer--;
+		}, 1000);
+
+	$: minutes = Math.floor($timer / 60);
+	$: minname = minutes > 1 ? "minutes" : "minute";
+	$: seconds = Math.floor($timer - minutes * 60)
+
   
 	let contract = $app.contract;
 	let account = $app.account;
@@ -986,7 +1009,7 @@
 			});
 			result = await response.json();
 			if(!response.ok) {
-				alert("Error communicating with server. The error is: " + result.error);
+				alert("Error! The error was: " + result.error);
 				minting = false;
 				return;
 			}
@@ -1281,8 +1304,13 @@
 		  	<button class="button-secondary" id="reset" on:click={()=>_reset()}>Load Seed</button>
 			<button class="{canMint ? 'button-main' : 'button-main canMint'}" id="start" on:click={(e)=>start(e)}>Mint&nbsp;&nbsp;Ξ0.15</button> 
 		</div>
+		<p class="please-note fade-in fade-in-3">Time Until Mint Unlocks: 
+			<span class="mins">{minutes}</span> {minname} 
+			<span class="secs">{seconds}</span> seconds
+		</p>
 		<p class="please-note fade-in fade-in-3">We use the <b><a href="https://github.com/BeyondNFT/sandbox">BeyondNFT iNFT Standard</a></b>. Your NFT will be viewable on any website that has adopted that standard, not just our own.</p>
 		<p class="please-note fade-in fade-in-3">Please note: Due to the complexity of the design and the minting process injecting data directly onto the blockchain, gas prices may exceed the typical range and are expected to lie between 0.025 and 0.05 Ξ.</p>
+		
 		<div id="help-container">
 			<div class="help-inner-container">
 				<h2>Need help?</h2>

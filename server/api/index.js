@@ -186,20 +186,25 @@ app.post('/api/signature', (req, res) => {
 
 	var count = Number(state.count);
 	if(count > 63 && req.body.rena) {
-		console.log("This method was called");
 		var payload = {};
 		res.status(401);
 		payload.error = "Cannot mint – All Rena NFTs have been claimed";
+		payload.mintable = false;
 		return res.send(JSON.stringify(payload));
 	}
 	
 	if(req.body.rena) {
 		if(!canMint()) {
-			res.mintable = false;
-			return res.send(JSON.stringify("Cannot mint"));
+			var payload = {};
+			var time = getTimeToMint();
+			res.status(401);
+			payload.error = "Cannot mint! Time lock engaged for " + time + " additional ms";
+			payload.mintable = false;
+			payload.time = time;
+			return res.send(JSON.stringify(payload));
 		} 
 		req.body.nft.interactive_nft.code_uri = rena_code_uri;
-		console.log(JSON.stringify(req.body.nft));
+		
 	}
 	var provider = new Web3WsProvider(process.env.NETWORK, options);
 	res.setHeader('Cache-Control', 's-max-age=1, stale-while-revalidate')
@@ -296,6 +301,18 @@ app.get('/api/canMint', (req, res) => {
 	resp.canMint = canMint();
 	res.send(JSON.stringify(resp));
 })
+
+app.options('/api/mintTime', function (req, res) {
+	handleCORS(req, res);
+});
+
+app.get('/api/mintTime', (req, res) => {
+	var resp = {};
+	resp.mintTime = getTimeToMint();
+
+	res.send(JSON.stringify(resp));
+})
+
 
 //TODO: Consider also signing with image we want
 function getSignature(web3, address, account, seed, jsonURL){
@@ -435,17 +452,23 @@ function canMint() {
 	const minute = 1000*60;
 	const hour = minute *120;
 	if(Date.now() > Number(state.time) + hour) {
-		console.log("Can mint");
+
 		return true;
 	}
-	console.log("Cannot mint");
+
 	return false;
+}
+
+function getTimeToMint() {
+	var rawdata = fs.readFileSync('./public/state.json');
+	const state = JSON.parse(rawdata);
+	var unlock = Number(state.time) + 120*1000*60;
+	return (unlock - Date.now());
 }
 
 function checkLockAndUpdate() {
 	var provider = new Web3WsProvider(process.env.NETWORK, options);
 	const web3 = new Web3(provider);
-	console.log("Called check"); 
 	const contract = new web3.eth.Contract(abi, process.env.CONTRACT_ADDRESS);
 
 	var rawdata = fs.readFileSync('./public/state.json');
