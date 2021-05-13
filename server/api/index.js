@@ -185,19 +185,21 @@ app.post('/api/signature', (req, res) => {
 	const state = JSON.parse(rawdata);
 
 	var count = Number(state.count);
-	if(count > 63 && req.rena) {
+	if(count > 63 && req.body.rena) {
+		console.log("This method was called");
 		var payload = {};
 		res.status(401);
 		payload.error = "Cannot mint – All Rena NFTs have been claimed";
 		return res.send(JSON.stringify(payload));
 	}
 	
-	if(req.rena) {
+	if(req.body.rena) {
 		if(!canMint()) {
 			res.mintable = false;
 			return res.send(JSON.stringify("Cannot mint"));
 		} 
-		req.nft.interactive_nft.code_uri = rena_code_uri;
+		req.body.nft.interactive_nft.code_uri = rena_code_uri;
+		console.log(JSON.stringify(req.body.nft));
 	}
 	var provider = new Web3WsProvider(process.env.NETWORK, options);
 	res.setHeader('Cache-Control', 's-max-age=1, stale-while-revalidate')
