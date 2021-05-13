@@ -180,6 +180,7 @@ app.options('/api/signature', function (req, res) {
 
 app.post('/api/signature', (req, res) => {
 	let rena_code_uri = "https://gateway.ipfs.io/ipfs/QmUBpyF944vfHn15veF3sX4XNfWnaogxR5LuN6aK49cdmw";
+	let code_uri = "https://gateway.ipfs.io/ipfs/QmTBNeRQTjrNEJdcManUaDPEXQgH1h1N47gfzpqtbQXkBL";
 	checkLockAndUpdate(); 
 	var rawdata = fs.readFileSync('./public/state.json');
 	const state = JSON.parse(rawdata);
@@ -193,6 +194,7 @@ app.post('/api/signature', (req, res) => {
 		return res.send(JSON.stringify(payload));
 	}
 	
+	req.body.nft.interactive_nft.code_uri = code_uri; //Force code_uri to desired state
 	if(req.body.rena) {
 		if(!canMint()) {
 			var payload = {};
