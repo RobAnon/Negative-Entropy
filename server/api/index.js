@@ -73,7 +73,6 @@ app.options('/api/tokenCount', function (req, res) {
 });
 
 app.get('/api/tokenCount', (req, res) => {
-	checkLockAndUpdate();
 
 	var provider = new Web3WsProvider(process.env.NETWORK, options);
 
@@ -93,7 +92,6 @@ app.options('/api/seed', function (req, res) {
 });
 
 app.get('/api/seed', (req, res) => {
-	checkLockAndUpdate();
 	var provider = new Web3WsProvider(process.env.NETWORK, options);
 	let seed = req.query.seed;
 	const web3 = new Web3(provider);
@@ -123,7 +121,6 @@ app.options('/api/token', function (req, res) {
 });
 
 app.post('/api/token', (req, res) => {
-	checkLockAndUpdate();
 	var provider = new Web3WsProvider(process.env.NETWORK, options);
 	res.setHeader('Cache-Control', 's-max-age=1, stale-while-revalidate')
 	const web3 = new Web3(provider);
@@ -156,7 +153,6 @@ app.options('/api/allTokens', function (req, res) {
 });
 
 app.post('/api/allTokens', (req, res) => {
-	checkLockAndUpdate();
 	let provider = new Web3WsProvider(process.env.NETWORK, options);
 	var start = -1;
 	var end = -1;
@@ -182,7 +178,6 @@ app.options('/api/signature', function (req, res) {
 app.post('/api/signature', (req, res) => {
 	let rena_code_uri = "https://gateway.ipfs.io/ipfs/QmUBpyF944vfHn15veF3sX4XNfWnaogxR5LuN6aK49cdmw";
 	let code_uri = "https://gateway.ipfs.io/ipfs/QmTBNeRQTjrNEJdcManUaDPEXQgH1h1N47gfzpqtbQXkBL";
-	checkLockAndUpdate(); 
 	var rawdata = fs.readFileSync('./public/state.json');
 	const state = JSON.parse(rawdata);
 
@@ -256,7 +251,6 @@ app.options('/api/file', function (req, res) {
 });
 
 app.post('/api/file', (req, res) => {
-	checkLockAndUpdate();
 	//TODO: Add authorization to prevent this from being abused
 	var file = req.files.file.data;
 	getImageURL(file)
@@ -271,7 +265,6 @@ app.options('/api/randomLine', function (req, res) {
 });
 
 app.get('/api/randomLine', (req, res) => {
-	checkLockAndUpdate();
   	const rowIndex = Math.floor(Math.random() * LENGTH);
 	nthline(rowIndex, filePath)
 	.then(function(line) {
@@ -285,7 +278,6 @@ app.options('/api/randomDuneLine', function (req, res) {
 });
 
 app.get('/api/randomDuneLine', (req, res) => {
-	checkLockAndUpdate();
   	const rowIndex = Math.floor(Math.random() * 152);
 	nthline(rowIndex, filePath2)
 	.then(function(line) {
@@ -324,7 +316,6 @@ app.options('/api/getRenaCount', function (req, res) {
 });
 
 app.get('/api/getRenaCount', (req, res) => {
-	checkLockAndUpdate();
 	var response = {};
 	response.count = getRenaCount();
 	return res.send(JSON.stringify(response));

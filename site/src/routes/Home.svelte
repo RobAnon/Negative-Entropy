@@ -44,7 +44,7 @@ onMount(async () => {
 });
 
 async function getCount() {
-    var backend_dest = BACKEND + "getRenaCount";
+    var backend_dest = BACKEND + "tokenCount";
     var response = await fetch(backend_dest);
     var result = await response.json();
     return Number(result.count);
@@ -99,9 +99,9 @@ function renderSandbox() {
         {#await getCount()} 
         ?
         {:then count}
-        {10 - count}
+        {444 - count}
         {/await}
-        / 10 remaining.
+        / 444 remaining.
       </p>
     </div>	
     <div class="homepage-graphic">	
