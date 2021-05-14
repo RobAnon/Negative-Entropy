@@ -518,16 +518,16 @@ async function checkLockAndUpdate() {
 			state.count = newCount; //Set count to new count
 			isRena(contract, newCount)
 			.then((isRena) => {
-				console.log(isRena);
 				if(isRena) {
-					console.log("Should reset lock");
 					state.time = Date.now();
 					state.rena = renaCount + 1;
-					fs.writeFileSync(stateRecorder, JSON.stringify(state), err => {
-						if (err) throw err; 
-						console.log(err);	   
-					});		
 				}	
+			})
+			.finally(() => {
+				fs.writeFileSync(stateRecorder, JSON.stringify(state), err => {
+					if (err) throw err; 
+					console.log(err);	   
+				});			
 			});
 		}
 	});
