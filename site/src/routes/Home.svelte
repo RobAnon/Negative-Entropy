@@ -44,7 +44,7 @@ onMount(async () => {
 });
 
 async function getCount() {
-    var backend_dest = BACKEND + "tokenCount";
+    var backend_dest = BACKEND + "getRenaCount";
     var response = await fetch(backend_dest);
     var result = await response.json();
     return Number(result.count);
@@ -90,7 +90,8 @@ function renderSandbox() {
   <div class="homepage-heading">	
     <div class="header-text">	
 
-      <h1 class="fade-in fade-in-1">How can the net amount of <b>entropy</b> in the universe be decreased?</h1>	
+      <h1 class="fade-in fade-in-1">The <b>Spice</b> must flow.</h1>	
+      <p class="fade-in fade-in-2">Negative Entropy presents: Subseries Rena</p>	
       <p class="fade-in fade-in-2">We make NFT's using Chaos Theory and the iNFT standard.</p>	
       <button class="button-main fade-in fade-in-2"><a href="/mint/{encodedSeed}">Mint</a></button>	
       <button class="button-secondary fade-in fade-in-2"><a href="/about">Learn more</a></button>	
@@ -98,9 +99,9 @@ function renderSandbox() {
         {#await getCount()} 
         ?
         {:then count}
-        {1000 - count}
+        {10 - count}
         {/await}
-        / 1000 remaining.
+        / 10 remaining.
       </p>
     </div>	
     <div class="homepage-graphic">	

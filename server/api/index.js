@@ -16,6 +16,7 @@ const nthline = require('nthline');
 const stateRecorder = './public/state.json'
 var Web3WsProvider = require('web3-providers-ws');
 var fs = require('fs');
+const makeIpfsFetch = require('js-ipfs-fetch')
 
 
 //Declare various other constants
@@ -186,13 +187,6 @@ app.post('/api/signature', (req, res) => {
 	const state = JSON.parse(rawdata);
 
 	var count = Number(state.count);
-	if(count > 63 && req.body.rena) {
-		var payload = {};
-		res.status(401);
-		payload.error = "Cannot mint – All Rena NFTs have been claimed";
-		payload.mintable = false;
-		return res.send(JSON.stringify(payload));
-	}
 	
 	req.body.nft.interactive_nft.code_uri = code_uri; //Force code_uri to desired state
 	if(req.body.rena) {
@@ -205,8 +199,17 @@ app.post('/api/signature', (req, res) => {
 			payload.time = time;
 			return res.send(JSON.stringify(payload));
 		} 
+		const renaCount = getRenaCount();
+		if(renaCount >= 10) {
+			var payload = {};
+			res.status(401);
+			payload.error = "Cannot mint! All Negive Entropy Rena NFTs have been claimed!";
+			payload.mintable = false;
+			return res.send(JSON.stringify(payload));
+
+		}
+
 		req.body.nft.interactive_nft.code_uri = rena_code_uri;
-		
 	}
 	var provider = new Web3WsProvider(process.env.NETWORK, options);
 	res.setHeader('Cache-Control', 's-max-age=1, stale-while-revalidate')
@@ -314,6 +317,17 @@ app.get('/api/mintTime', (req, res) => {
 
 	res.send(JSON.stringify(resp));
 })
+
+app.options('/api/getRenaCount', function (req, res) {
+	handleCORS(req, res);
+});
+
+app.get('/api/getRenaCount', (req, res) => {
+	checkLockAndUpdate();
+	var response = {};
+	response.count = getRenaCount();
+	return res.send(JSON.stringify(response));
+});
 
 
 //TODO: Consider also signing with image we want
@@ -454,7 +468,6 @@ function canMint() {
 	const minute = 1000*60;
 	const hour = minute *120;
 	if(Date.now() > Number(state.time) + hour) {
-
 		return true;
 	}
 
@@ -468,7 +481,28 @@ function getTimeToMint() {
 	return (unlock - Date.now());
 }
 
-function checkLockAndUpdate() {
+function getRenaCount() {
+	var rawdata = fs.readFileSync('./public/state.json');
+	const state = JSON.parse(rawdata);
+	return state.rena;
+}
+
+async function isRena(contract, newCount) {
+	const fetch = await makeIpfsFetch({ipfs})
+	var tokenURI = await getTokenURI(contract, newCount-1); //Get the URI for this token
+	var ipfsURI = tokenURI.replace("https://gateway.ipfs.io/ipfs","ipfs://");
+	var rawResp = await fetch(ipfsURI);
+	var tokenJSON = await rawResp.json();
+	var code_uri = tokenJSON.interactive_nft.code_uri;
+	console.log(code_uri);
+	if(code_uri == "https://gateway.ipfs.io/ipfs/QmUBpyF944vfHn15veF3sX4XNfWnaogxR5LuN6aK49cdmw") {
+		console.log("returning true");
+		return true;
+	}
+	return false;
+}
+
+async function checkLockAndUpdate() {
 	var provider = new Web3WsProvider(process.env.NETWORK, options);
 	const web3 = new Web3(provider);
 	const contract = new web3.eth.Contract(abi, process.env.CONTRACT_ADDRESS);
@@ -477,14 +511,24 @@ function checkLockAndUpdate() {
 	const state = JSON.parse(rawdata);
 
 	var prevCount = Number(state.count);
+	var renaCount = Number(state.rena);
 	getTokenCount(contract)
 	.then(function(newCount) {
 		if(newCount > prevCount) {
 			state.count = newCount; //Set count to new count
-			state.time = Date.now();
-			fs.writeFileSync(stateRecorder, JSON.stringify(state), err => {
-				if (err) throw err; 	   
-			});		
+			isRena(contract, newCount)
+			.then((isRena) => {
+				console.log(isRena);
+				if(isRena) {
+					console.log("Should reset lock");
+					state.time = Date.now();
+					state.rena = renaCount + 1;
+					fs.writeFileSync(stateRecorder, JSON.stringify(state), err => {
+						if (err) throw err; 
+						console.log(err);	   
+					});		
+				}	
+			});
 		}
 	});
 
