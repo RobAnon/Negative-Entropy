@@ -19,7 +19,6 @@
 
 
 
-  	var canMint = false; /* for Rob */
   
 	let prompt = false;
 	const app = getContext('app');
@@ -32,28 +31,8 @@
 	let webmURL = "https://gateway.ipfs.io/ipfs/QmULnqLrTuG9fAxCwctH89sjb7YRL4ig77JJ2Fn78X541j";
 	export let params;
 	let seed = 'Buck';
-	let timer = tweened(1000);
-	let mintTime = 100000;
 
 	onMount(async ()=>{
-
-		var canMintRaw = await fetch(BACKEND+"canMint");
-		var respMint = await canMintRaw.json();
-		console.log(respMint);
-		canMint = respMint.canMint;
-	
-		//Initialize timer
-		var mintTimeRaw = await fetch(BACKEND + "mintTime");
-		var respTime = await mintTimeRaw.json();
-		mintTime = Number(respTime.mintTime);
-		if (mintTime < 0) {
-			mintTime = 0;
-		}
-		console.log("Time remaining: " + mintTime);
-		timer = tweened(Math.floor(mintTime/1000));
-
-		
-
 		window.scrollTo(window.scrollX, 0);
 		window.scrollTo(window.scrollX, 2);
 	  const renderer = document.getElementById('canvas')
@@ -83,13 +62,6 @@
   
 	})
 
-	setInterval(() => {
-			if ($timer > 0) $timer--;
-		}, 1000);
-
-	$: minutes = Math.floor($timer / 60);
-	$: minname = minutes > 1 ? "minutes" : "minute";
-	$: seconds = Math.floor($timer - minutes * 60)
 
   
 	let contract = $app.contract;
@@ -118,7 +90,7 @@
 	let dependencyType = 'script';
   
 	let _camera, _recorder;
-	$: view && code && data && canMint && renderSandbox();
+	$: view && code && data  && renderSandbox();
   
 	$: {
 		let _data = {
@@ -670,11 +642,6 @@
 			  return;
 		  }
 
-		  if(!canMint) {
-			  //Mint timer is still active
-			  alert("Minting is currently disabled! Please check back later!")
-			  return;
-		  }
 	
 		contract = $app.contract;
 		account = $app.account;
@@ -1073,24 +1040,7 @@
 	
   
 
-.canMint {
-	opacity: 0.4;
-	position: relative;
-}
-.canMint:after {
-	background: url('/padlock.svg') no-repeat;
-	background-size: 35px;
-	background-position: center;
-	display: block;
-	content: '';
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-	width: 50px;
-	height: 50px;
-	z-index: 9;
-}
+
   
   #load_ind {
 	  background: none;
@@ -1302,12 +1252,8 @@
 				</svg>
 			</button>
 		  	<button class="button-secondary" id="reset" on:click={()=>_reset()}>Load Seed</button>
-			<button class="{canMint ? 'button-main' : 'button-main canMint'}" id="start" on:click={(e)=>start(e)}>Mint&nbsp;&nbsp;Ξ0.15</button> 
+			<button class="button-main" id="start" on:click={(e)=>start(e)}>Mint&nbsp;&nbsp;Ξ0.15</button> 
 		</div>
-		<p class="please-note fade-in fade-in-3">Time Until Mint Unlocks: 
-			<span class="mins">{minutes}</span> {minname} 
-			<span class="secs">{seconds}</span> seconds
-		</p>
 		<p class="please-note fade-in fade-in-3">We use the <b><a href="https://github.com/BeyondNFT/sandbox">BeyondNFT iNFT Standard</a></b>. Your NFT will be viewable on any website that has adopted that standard, not just our own.</p>
 		<p class="please-note fade-in fade-in-3">Please note: Due to the complexity of the design and the minting process injecting data directly onto the blockchain, gas prices may exceed the typical range and are expected to lie between 0.025 and 0.05 Ξ.</p>
 		

@@ -190,6 +190,7 @@ app.post('/api/signature', (req, res) => {
 	
 	req.body.nft.interactive_nft.code_uri = code_uri; //Force code_uri to desired state
 	if(req.body.rena) {
+		/*
 		if(!canMint()) {
 			var payload = {};
 			var time = getTimeToMint();
@@ -207,7 +208,7 @@ app.post('/api/signature', (req, res) => {
 			payload.mintable = false;
 			return res.send(JSON.stringify(payload));
 
-		}
+		}*/
 
 		req.body.nft.interactive_nft.code_uri = rena_code_uri;
 	}
