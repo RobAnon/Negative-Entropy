@@ -100,7 +100,7 @@ function renderSandbox() {
         {:then count}
         {1000 - count}
         {/await}
-        / 1000 remaining.
+        / 100 remaining.
       </p>
     </div>	
     <div class="homepage-graphic">	
