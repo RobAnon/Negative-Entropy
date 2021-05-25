@@ -98,7 +98,7 @@ function renderSandbox() {
         {#await getCount()} 
         ?
         {:then count}
-        {1000 - count}
+        {100 - count}
         {/await}
         / 100 remaining.
       </p>
