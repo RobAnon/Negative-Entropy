@@ -4,14 +4,19 @@ import abi from './conf/abi.json';
 import cors from 'cors';
 import express from 'express';
 import fileupload from 'express-fileupload'
+import { Readable } from 'stream';
+
+const axios = require('axios');
+const pinataSDK = require('@pinata/sdk');
+const pinata = pinataSDK(process.env.PINATA_KEY, process.env.PINATA_SECRET);
 
 
 const Web3 = require("web3");
 const helmet = require("helmet");
 //const HDWalletProvider = require("@truffle/hdwallet-provider");
-const createClient = require('ipfs-http-client');
+
 const app = express();
-const ipfs = createClient('https://ipfs.infura.io:5001');
+
 const nthline = require('nthline');
 const stateRecorder = './public/state.json'
 var Web3WsProvider = require('web3-providers-ws');
@@ -64,6 +69,13 @@ app.use(function(req, res, next) {
 });
 
 app.get('/api', (req, res) => {
+	pinata.testAuthentication().then((result) => {
+		//handle successful authentication here
+		console.log(result);
+	}).catch((err) => {
+		//handle error here
+		console.log(err);
+	});	
 	return res.send('Received a GET HTTP method');
 });
 
@@ -233,7 +245,9 @@ app.post('/api/signature', (req, res) => {
  			res.status(401);
 			return res.send(JSON.stringify({error:"Seed already exists! Choose a seed that doesn't already exist!"}));
  		} else {
-	    	getURI(JSON.stringify(req.body.nft))
+			const stream = Readable.from(JSON.stringify(req.body.nft));
+			stream.path = "some_filename.json";
+	    	getURI(stream)
 	    	.then(function(json_uri) {
 
 		 		var signature =  getSignature(web3, process.env.CONTRACT_ADDRESS, customer, seed, json_uri)
@@ -253,7 +267,10 @@ app.options('/api/file', function (req, res) {
 app.post('/api/file', (req, res) => {
 	//TODO: Add authorization to prevent this from being abused
 	var file = req.files.file.data;
-	getImageURL(file)
+	const stream = Readable.from(file);
+	stream.path = "some_filename.webm";
+
+		getImageURL(stream)
 	.then(function(url) {
 		return res.send(JSON.stringify(url));
 	});
@@ -431,19 +448,26 @@ async function seedClaimed(contract, seed, address) {
 
 async function getURI(data) {
 	return new Promise(async (resolve, reject) => {
- 		await ipfs.add(data)
+		pinata.pinFileToIPFS(data)
  		.then((result => {
- 			resolve(`https://gateway.ipfs.io/ipfs/${result.path}`)
- 		}))
+
+			resolve(`https://gateway.ipfs.io/ipfs/${result.IpfsHash}`)
+ 		})).catch((err) => {
+			//handle error here
+			console.log(err);
+		});
 	});
 }
 
 async function getImageURL(image) {
 	return new Promise(async (resolve, reject) => {
-		await ipfs.add(image)
+		pinata.pinFileToIPFS(image)
 		.then((result => {
-			resolve(`https://gateway.ipfs.io/ipfs/${result.path}`)
-		}))
+			resolve(`https://gateway.ipfs.io/ipfs/${result.IpfsHash}`)
+		})).catch((err) => {
+			//handle error here
+			console.log(err);
+		});
    }); 
 }
 
