@@ -86,7 +86,11 @@ export async function initGfy(){
   gfyToke = response.access_token;
 }
 
-export const replObj = {8:"https://gateway.ipfs.io/ipfs/QmfRPu9BBCpTGyPwoToUiA6JwyyP5Y8357uqK14pejQkKm", 10:"https://gateway.ipfs.io/ipfs/QmPP6faANMriTNjCdWQKLVUaZNfpLt49nbUw5E3Mw7Hitd"};
+export const replObj = {8:"https://gateway.ipfs.io/ipfs/QmfRPu9BBCpTGyPwoToUiA6JwyyP5Y8357uqK14pejQkKm", 10:"https://gateway.ipfs.io/ipfs/QmPP6faANMriTNjCdWQKLVUaZNfpLt49nbUw5E3Mw7Hitd",
+  53:"https://gateway.ipfs.io/ipfs/Qmayu3Pf4MuPbJf8a7M9qdtrubK3y7qwpRxAyneympihq7", 54:"https://gateway.ipfs.io/ipfs/QmSp8qGUk9iKjPD19ut6CuFNc1yvWzz6zcuEFTgni8KACK", 55:"https://gateway.ipfs.io/ipfs/QmVoX3scGTiaU7cKi2nn4VoMFwcMoafc22YEe42ghxDAY4"
+  , 56: "https://gateway.ipfs.io/ipfs/QmURBFeyuAg4Zpuhpiz3V8suWdXChLVjc2hQvUqEwTtgKB", 59: "https://gateway.ipfs.io/ipfs/QmcJnnSAY9CYSevcwza3DMtfZPUD31zGnWWx6FSTzLYS4p", 60:"https://gateway.ipfs.io/ipfs/QmekrXYLo9R7hETWUD4wEAzxZG56K481ouSpZe3tZ5XQbj",
+    61:"https://gateway.ipfs.io/ipfs/QmQHBEZSREtawe65DoxRAxtqt7NPwoWwH3ZmL24xTXmeKP", 63:"https://gateway.ipfs.io/ipfs/QmR2aZCn1AFS3t9ZRHmM6igmtzaUVi6k2kvB5mvhuDmAbk",
+  64:"https://gateway.ipfs.io/ipfs/QmWBjsMVocTt9r25oDJ54YcG6AKQt14LVs6umMaWiSZHhx", 65:"https://gateway.ipfs.io/ipfs/QmYBcoxF4bvX9TTV5P8tNiAofNHGkz6YEC3qUDRqtwmFJZ"};
 
 export const ipfs = {
   ipfsclient: null,
