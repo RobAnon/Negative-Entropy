@@ -927,21 +927,18 @@
 	async function mint(file) {
 		
 	
-		const formData = new FormData();
-		formData.append('file', file);
-		var destination = BACKEND+"file";
-		var imageUp = await fetch(destination, {
-		method: 'POST',
-		body: formData
-		});
-		console.log(imageUp);
-		const image_uri = await imageUp.json();
-		console.log(image_uri);
-		data.image = image_uri;
-		webmURL = image_uri;
-	
-		prompt = true;
-		minting = false;
+	const base_url = "https://www.negativeentropy.app/viewer/";
+	var extURL = base_url + nextId;
+	data.external_url = extURL;
+  
+	await ipfs.connect('https://ipfs.infura.io:5001');
+	let file_ = await ipfs.add(file);
+	const image_uri = `https://gateway.ipfs.io/ipfs/${file_.path}`;
+	data.image = image_uri;
+	webmURL = image_uri;
+
+	prompt = true;
+	minting = false;
 
 	
 	}
@@ -1280,7 +1277,7 @@
 
 	<div>
 		<Confirmation prompt={prompt} accepted={acceptWebM} rejected={rejectWebM} webmURL={webmURL}/>
-		<p> The preview should be an animated webm.</p>
+		
 	</div>
 
 	<div class="section-break section-break-final"></div> 
