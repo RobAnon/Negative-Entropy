@@ -251,6 +251,7 @@ app.options('/api/file', function (req, res) {
 });
 
 app.post('/api/file', (req, res) => {
+	handleCORS(req, res);
 	//TODO: Add authorization to prevent this from being abused
 	var file = req.files.file.data;
 	getImageURL(file)
