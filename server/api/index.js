@@ -251,7 +251,6 @@ app.options('/api/file', function (req, res) {
 });
 
 app.post('/api/file', (req, res) => {
-	handleCORS(req, res);
 	//TODO: Add authorization to prevent this from being abused
 	var file = req.files.file.data;
 	getImageURL(file)
@@ -449,10 +448,11 @@ async function getImageURL(image) {
 }
 
 function handleCORS(req, res) {
+	/*
 	res.setHeader("Access-Control-Allow-Origin", "*");
 	res.setHeader('Access-Control-Allow-Methods', '*');
 	res.setHeader("Access-Control-Allow-Headers", "*");
-	res.end();
+	res.end();*/
 }
 
 function canMint() {
