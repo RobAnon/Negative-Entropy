@@ -1280,6 +1280,7 @@
 
 	<div>
 		<Confirmation prompt={prompt} accepted={acceptWebM} rejected={rejectWebM} webmURL={webmURL}/>
+		<p> The preview should be an animated webm.</p>
 	</div>
 
 	<div class="section-break section-break-final"></div> 
